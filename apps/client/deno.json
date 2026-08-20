@@ -1,0 +1,5 @@
+{
+    "imports": {
+        "@bowers/mthmtcl": "jsr:@bowers/mthmtcl"
+    }
+}
