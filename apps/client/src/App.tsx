@@ -1,12 +1,12 @@
-import { createSignal } from 'solid-js'
-import { add } from '@bowers/mthmtcl'
-import solidLogo from './assets/solid.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { createSignal } from "solid-js";
+import { add } from "@bowers/mthmtcl";
+import solidLogo from "./assets/solid.svg";
+import viteLogo from "./assets/vite.svg";
+import heroImg from "./assets/hero.png";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = createSignal(0)
+  const [count, setCount] = createSignal(0);
 
   return (
     <>
@@ -101,7 +101,7 @@ function App() {
       <div class="ticks"></div>
       <section id="spacer"></section>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

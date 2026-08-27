@@ -1,19 +1,19 @@
 name: deno CI
 on: [push, pull_request]
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        continue-on-error: ${{ matrix.deno-version == 'canary' }}
-        strategy:
-            matrix:
-                deno-version: [v2.x, canary]
-        steps:
-            - uses: actions/checkout@v6
-            - uses: denoland/setup-deno@v2
-              with:
-                deno-version: ${{ matrix.deno-version }}
-                cache: true
-            - run: deno ci
-            - run: deno fmt --check
-            - run: deno lint
-            - run: deno test --allow-all --coverage
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.deno-version == 'canary' }}
+    strategy:
+      matrix:
+        deno-version: [v2.x, canary]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ matrix.deno-version }}
+          cache: true
+      - run: deno ci
+      - run: deno fmt --check
+      - run: deno lint
+      - run: deno test --allow-all --coverage
