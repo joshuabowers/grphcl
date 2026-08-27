@@ -3,5 +3,8 @@
         "./apps/client",
         "./packages/*"
     ],
-    "nodeModulesDir": "auto"
+    "nodeModulesDir": "auto",
+    "imports": {
+        "@std/expect": "jsr:@std/expect@^1.0.20"
+    }
 }
