@@ -9,5 +9,8 @@
   },
   "fmt": {
     "exclude": ["./**/*.svg"]
+  },
+  "minimumDependencyAge": {
+    "exclude": ["jsr:@bowers/mthmtcl", "npm:@jsr/bowers__mthmtcl"]
   }
 }

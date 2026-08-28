@@ -7,6 +7,7 @@
     "jsr:@std/internal@^1.0.14": "1.0.14",
     "jsr:@std/path@^1.1.6": "1.1.6",
     "npm:@deno/vite-plugin@^2.0.3": "2.0.3_vite@8.2.1__@types+node@24.13.3_@types+node@24.13.3",
+    "npm:@jsr/bowers__mthmtcl@^0.0.1": "0.0.1",
     "npm:@types/node@^24.13.3": "24.13.3",
     "npm:solid-js@^1.9.14": "1.9.15",
     "npm:typescript@~6.0.2": "6.0.3",
@@ -209,6 +210,10 @@
         "@jridgewell/resolve-uri",
         "@jridgewell/sourcemap-codec"
       ]
+    },
+    "@jsr/bowers__mthmtcl@0.0.1": {
+      "integrity": "sha512-1dVvzusEn6iA584IBBla7OJHaRnWTtKCH/JfK3zY89HXlnZuNvo92fz0ZvS57BPclwgh18vxKBSdSt/0qoT3eg==",
+      "tarball": "https://npm.jsr.io/~/11/@jsr/bowers__mthmtcl/0.0.1.tgz"
     },
     "@jsr/deno__loader@0.5.0": {
       "integrity": "sha512-sf/YBwnyAsbyeYYB71Zdj2Ca2Q9tt25EZpAiZdDA9W7Mm3GcpjA2WMeqj19xPIurZK12G3OAsa5yrtPB7E+gvA==",
@@ -706,6 +711,7 @@
         "packageJson": {
           "dependencies": [
             "npm:@deno/vite-plugin@^2.0.3",
+            "npm:@jsr/bowers__mthmtcl@^0.0.1",
             "npm:@types/node@^24.13.3",
             "npm:solid-js@^1.9.14",
             "npm:typescript@~6.0.2",

@@ -1,5 +1,8 @@
 {
   "name": "@bowers/mthmtcl",
   "version": "0.0.1",
-  "exports": "./mod.ts"
+  "exports": "./mod.ts",
+  "publish": {
+    "exclude": ["./**/*.test.ts"]
+  }
 }
