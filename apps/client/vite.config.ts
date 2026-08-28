@@ -4,4 +4,5 @@ import solid from "vite-plugin-solid";
 
 export default defineConfig({
   plugins: [deno(), solid()],
+  base: "/grphcl/"
 });
