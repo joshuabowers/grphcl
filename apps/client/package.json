@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@deno/vite-plugin": "^2.0.3",
-    "solid-js": "^1.9.14"
+    "solid-js": "^1.9.14",
+    "jsr:@bowers/mthmtcl": "^0.0.1"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
