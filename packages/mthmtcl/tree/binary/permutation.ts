@@ -16,5 +16,5 @@ import { BinaryNode } from "./binaryNode.ts";
  * ); // == 6
  * ```
  */
-export class Permuation extends BinaryNode {
+export class Permutation extends BinaryNode {
 }

@@ -1,9 +1,16 @@
 /**
  * Provides coalesced access to every node type used
  * in mthmtcl's Abstract Syntax Tree.
+ *
+ * NB: the trigonometric, arcus, hyperbolic, and
+ * area hyperbolic functions are grouped together in a
+ * namespaced export to avoid name clashes and organize the
+ * classes.
  */
 
 export { TreeNode } from "./treeNode.ts";
+
+export { Variable } from "./variable.ts";
 
 export { Type } from "./types/type.ts";
 export { Boolean } from "./types/boolean.ts";
@@ -25,3 +32,12 @@ export * as AreaHyperbolic from "./unary/areaHyperbolic/mod.ts";
 
 export { BinaryNode } from "./binary/binaryNode.ts";
 export { Addition } from "./binary/addition.ts";
+export { Combination } from "./binary/combination.ts";
+export { Division } from "./binary/division.ts";
+export { Exponentiation } from "./binary/exponentiation.ts";
+export { Logarithm } from "./binary/logarithm.ts";
+export { Multiplication } from "./binary/multiplication.ts";
+export { Permutation } from "./binary/permutation.ts";
+export { Polygamma } from "./binary/polygamma.ts";
+export { Subtraction } from "./binary/subtraction.ts";
+export * from "./binary/relational/mod.ts";
