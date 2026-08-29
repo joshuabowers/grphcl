@@ -1,7 +1,7 @@
 import { TreeNode } from "../treeNode.ts";
 
 /**
- * Represents functions and operators which have single
+ * Represents functions and operators which have a single
  * expression they operate upon.
  */
 export class UnaryNode extends TreeNode {

@@ -1,7 +1,7 @@
 import { TreeNode } from "../treeNode.ts";
 
 /**
- * Represents functions and operators which operator on
+ * Represents functions and operators which operate on
  * two children.
  */
 export class BinaryNode extends TreeNode {
