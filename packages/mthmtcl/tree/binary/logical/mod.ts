@@ -1,0 +1,9 @@
+export { Logical } from "./logical.ts";
+export { AlternativeDenial } from "./alternativeDenial.ts";
+export { Biconditional } from "./biconditional.ts";
+export { Conjunction } from "./conjunction.ts";
+export { ConverseImplication } from "./converseImplication.ts";
+export { Disjunction } from "./disjunction.ts";
+export { ExclusiveDisjunction } from "./exclusiveDisjunction.ts";
+export { Implication } from "./implication.ts";
+export { JointDenial } from "./jointDenial.ts";

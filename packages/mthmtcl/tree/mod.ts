@@ -40,4 +40,5 @@ export { Multiplication } from "./binary/multiplication.ts";
 export { Permutation } from "./binary/permutation.ts";
 export { Polygamma } from "./binary/polygamma.ts";
 export { Subtraction } from "./binary/subtraction.ts";
+export * from "./binary/logical/mod.ts";
 export * from "./binary/relational/mod.ts";
