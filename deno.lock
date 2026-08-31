@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@bowers/mthmtcl@^0.0.1": "0.0.1",
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/expect@^1.0.20": "1.0.20",
     "jsr:@std/internal@^1.0.12": "1.0.14",
@@ -15,6 +16,9 @@
     "npm:vite@^8.2.0": "8.2.1_@types+node@24.13.3"
   },
   "jsr": {
+    "@bowers/mthmtcl@0.0.1": {
+      "integrity": "b128b6351f2ed21bec734ee0565aa5fe26d5f3c82f9d1bc66ee278335d6ebc4b"
+    },
     "@std/assert@1.0.19": {
       "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e",
       "dependencies": [
