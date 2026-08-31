@@ -6,6 +6,8 @@
  * area hyperbolic functions are grouped together in a
  * namespaced export to avoid name clashes and organize the
  * classes.
+ *
+ * @module
  */
 
 export { TreeNode } from "./treeNode.ts";
