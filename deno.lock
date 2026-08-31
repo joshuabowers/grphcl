@@ -1,23 +1,23 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@bowers/mthmtcl@^0.0.1": "0.0.1",
+    "jsr:@bowers/mthmtcl@~0.1.1": "0.1.1",
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/expect@^1.0.20": "1.0.20",
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "jsr:@std/internal@^1.0.14": "1.0.14",
     "jsr:@std/path@^1.1.6": "1.1.6",
-    "npm:@deno/vite-plugin@^2.0.3": "2.0.3_vite@8.2.1__@types+node@24.13.3_@types+node@24.13.3",
-    "npm:@jsr/bowers__mthmtcl@^0.0.1": "0.0.1",
+    "npm:@deno/vite-plugin@^2.0.3": "2.0.3_vite@8.2.1_@types+node@24.13.3",
+    "npm:@jsr/bowers__mthmtcl@~0.1.1": "0.1.1",
     "npm:@types/node@^24.13.3": "24.13.3",
     "npm:solid-js@^1.9.14": "1.9.15",
     "npm:typescript@~6.0.2": "6.0.3",
-    "npm:vite-plugin-solid@^2.11.13": "2.11.14_solid-js@1.9.15_vite@8.2.1__@types+node@24.13.3_@types+node@24.13.3",
+    "npm:vite-plugin-solid@^2.11.13": "2.11.14_solid-js@1.9.15_vite@8.2.1_@types+node@24.13.3",
     "npm:vite@^8.2.0": "8.2.1_@types+node@24.13.3"
   },
   "jsr": {
-    "@bowers/mthmtcl@0.0.1": {
-      "integrity": "b128b6351f2ed21bec734ee0565aa5fe26d5f3c82f9d1bc66ee278335d6ebc4b"
+    "@bowers/mthmtcl@0.1.1": {
+      "integrity": "fedbaa7559dfb1f37e98c7dc576439877706a499690aeae1b9a8ca776a69ada4"
     },
     "@std/assert@1.0.19": {
       "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e",
@@ -180,7 +180,7 @@
         "@babel/helper-validator-identifier"
       ]
     },
-    "@deno/vite-plugin@2.0.3_vite@8.2.1__@types+node@24.13.3_@types+node@24.13.3": {
+    "@deno/vite-plugin@2.0.3_vite@8.2.1_@types+node@24.13.3": {
       "integrity": "sha512-TbIawVRFqIfshSa4CYEPMgLbEIKHg+WXymWvvwlsyct1X8tG4O1OrQldvU/faw6bw7NBCyxVYdT4iIv93jQSig==",
       "dependencies": [
         "@deno/loader@npm:@jsr/deno__loader@0.5.0",
@@ -215,9 +215,9 @@
         "@jridgewell/sourcemap-codec"
       ]
     },
-    "@jsr/bowers__mthmtcl@0.0.1": {
-      "integrity": "sha512-1dVvzusEn6iA584IBBla7OJHaRnWTtKCH/JfK3zY89HXlnZuNvo92fz0ZvS57BPclwgh18vxKBSdSt/0qoT3eg==",
-      "tarball": "https://npm.jsr.io/~/11/@jsr/bowers__mthmtcl/0.0.1.tgz"
+    "@jsr/bowers__mthmtcl@0.1.1": {
+      "integrity": "sha512-mofnd389gsVOGGHUi0Z9CWLJ5Yqg3IAQKUcrOXNiojYwSwSYe26jrS9x9a/VRgP3/KBN41xlyd1eGBO3B84OlA==",
+      "tarball": "https://npm.jsr.io/~/11/@jsr/bowers__mthmtcl/0.1.1.tgz"
     },
     "@jsr/deno__loader@0.5.0": {
       "integrity": "sha512-sf/YBwnyAsbyeYYB71Zdj2Ca2Q9tt25EZpAiZdDA9W7Mm3GcpjA2WMeqj19xPIurZK12G3OAsa5yrtPB7E+gvA==",
@@ -659,7 +659,7 @@
       ],
       "bin": true
     },
-    "vite-plugin-solid@2.11.14_solid-js@1.9.15_vite@8.2.1__@types+node@24.13.3_@types+node@24.13.3": {
+    "vite-plugin-solid@2.11.14_solid-js@1.9.15_vite@8.2.1_@types+node@24.13.3": {
       "integrity": "sha512-7ZVBt8rpoyqmlwin2kRIUveaHoF6/kulY7gsnD+qFh4nS29V4OPAnw+ojoAspXIjObiL9o1xh9a/nTuYHm02Rw==",
       "dependencies": [
         "@babel/core",
@@ -690,7 +690,7 @@
       ],
       "bin": true
     },
-    "vitefu@1.1.3_vite@8.2.1__@types+node@24.13.3_@types+node@24.13.3": {
+    "vitefu@1.1.3_vite@8.2.1_@types+node@24.13.3": {
       "integrity": "sha512-ub4okH7Z5KLjb6hDyjqrGXqWtWvoYdU3IGm/NorpgHncKoLTCfRIbvlhBm7r0YstIaQRYlp4yEbFqDcKSzXSSg==",
       "dependencies": [
         "vite"
@@ -710,12 +710,12 @@
     "members": {
       "apps/client": {
         "dependencies": [
-          "jsr:@bowers/mthmtcl@^0.0.1"
+          "jsr:@bowers/mthmtcl@~0.1.1"
         ],
         "packageJson": {
           "dependencies": [
             "npm:@deno/vite-plugin@^2.0.3",
-            "npm:@jsr/bowers__mthmtcl@^0.0.1",
+            "npm:@jsr/bowers__mthmtcl@~0.1.1",
             "npm:@types/node@^24.13.3",
             "npm:solid-js@^1.9.14",
             "npm:typescript@~6.0.2",
