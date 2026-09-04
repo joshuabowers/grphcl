@@ -10,6 +10,7 @@ import {
 import type {
   Boolean,
   Complex,
+  Numeric,
   Real,
   TreeNode,
   UnaryNode,
@@ -71,6 +72,7 @@ export interface UnaryFn<U extends UnaryNode, R extends TreeNode | void = void>
   (expression: Boolean): Choose<R, Boolean>;
   (expression: Complex): Choose<R, Complex>;
   (expression: Real): Choose<R, Real>;
+  (expression: Numeric): Choose<R, Numeric>;
   (expression: TreeNode): U;
 }
 
