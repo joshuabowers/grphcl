@@ -1,6 +1,6 @@
 import { TreeNode } from "./treeNode.ts";
 import type { Variable } from "./variable.ts";
-import type { Real } from "./types/real.ts";
+import type { Real } from "./fields/real.ts";
 
 /**
  * Represents the direction {@link Limit.target} is

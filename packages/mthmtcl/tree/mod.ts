@@ -14,11 +14,12 @@ export { TreeNode } from "./treeNode.ts";
 
 export { Variable } from "./variable.ts";
 
-export { Type } from "./types/type.ts";
-export { Boolean } from "./types/boolean.ts";
-export { Nil } from "./types/nil.ts";
-export { Real } from "./types/real.ts";
-export { Complex } from "./types/complex.ts";
+export { Numeric } from "./fields/numeric.ts";
+export { Field } from "./fields/field.ts";
+export { Boolean } from "./fields/boolean.ts";
+export { Nil } from "./fields/nil.ts";
+export { Real } from "./fields/real.ts";
+export { Complex } from "./fields/complex.ts";
 
 export { UnaryNode } from "./unary/unaryNode.ts";
 export { Absolute } from "./unary/absolute.ts";

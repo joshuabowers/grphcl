@@ -7,6 +7,7 @@
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "jsr:@std/internal@^1.0.14": "1.0.14",
     "jsr:@std/path@^1.1.6": "1.1.6",
+    "npm:@arrows/multimethod@^2.1.0": "2.1.0",
     "npm:@deno/vite-plugin@^2.0.3": "2.0.3_vite@8.2.1_@types+node@24.13.3",
     "npm:@jsr/bowers__mthmtcl@~0.1.1": "0.1.1",
     "npm:@types/node@^24.13.3": "24.13.3",
@@ -44,6 +45,27 @@
     }
   },
   "npm": {
+    "@arrows/array@1.4.1": {
+      "integrity": "sha512-MGYS8xi3c4tTy1ivhrVntFvufoNzje0PchjEz6G/SsWRgUKxL4tKwS6iPdO8vsaJYldagAeWMd5KRD0aX3Q39g==",
+      "dependencies": [
+        "@arrows/composition"
+      ]
+    },
+    "@arrows/composition@1.2.2": {
+      "integrity": "sha512-9fh1yHwrx32lundiB3SlZ/VwuStPB4QakPsSLrGJFH6rCXvdrd060ivAZ7/2vlqPnEjBkPRRXOcG1YOu19p2GQ=="
+    },
+    "@arrows/error@1.0.2": {
+      "integrity": "sha512-yvkiv1ay4Z3+Z6oQsUkedsQm5aFdyPpkBUQs8vejazU/RmANABx6bMMcBPPHI4aW43VPQmXFfBzr/4FExwWTEA=="
+    },
+    "@arrows/multimethod@2.1.0": {
+      "integrity": "sha512-cq/gyBNY/z7wgB8tD6gSKvSzSZh1jJH7LAk9Wx1mcVBzJaFfeDyRpOst+IqBHUZYyWag+UoX7CccirLNrdkWZg==",
+      "dependencies": [
+        "@arrows/array",
+        "@arrows/composition",
+        "@arrows/error",
+        "fast-deep-equal"
+      ]
+    },
     "@babel/code-frame@7.29.7": {
       "integrity": "sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==",
       "dependencies": [
@@ -428,6 +450,9 @@
     "escalade@3.2.0": {
       "integrity": "sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA=="
     },
+    "fast-deep-equal@3.1.3": {
+      "integrity": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q=="
+    },
     "fdir@6.5.0_picomatch@4.0.5": {
       "integrity": "sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==",
       "dependencies": [
@@ -723,6 +748,11 @@
             "npm:vite@^8.2.0"
           ]
         }
+      },
+      "packages/mthmtcl": {
+        "dependencies": [
+          "npm:@arrows/multimethod@^2.1.0"
+        ]
       }
     }
   }
