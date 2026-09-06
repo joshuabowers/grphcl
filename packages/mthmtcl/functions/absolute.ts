@@ -1,6 +1,6 @@
 import { Absolute, Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
-import { unary, when } from "../factories/unary.ts";
+import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 
@@ -27,7 +27,7 @@ import { real } from "./real.ts";
  * const result = abs(complex(3, 4)) // => new Complex({a: 5, b: 0})
  * ```
  */
-export const abs = unary(Absolute)(
+export const abs: UnaryFn<Absolute> = unary(Absolute)(
   when(is(Boolean), (b) => [b, Action.Application]),
   when(
     is(Complex),

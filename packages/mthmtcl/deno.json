@@ -1,7 +1,12 @@
 {
   "name": "@bowers/mthmtcl",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "exports": {
+    "./functions": "./functions/mod.ts",
+    "./tree/trigonometric": "./tree/unary/trigonometric/mod.ts",
+    "./tree/arcus": "./tree/unary/arcus/mod.ts",
+    "./tree/hyperbolic": "./tree/unary/hyperbolic/mod.ts",
+    "./tree/areaHyperbolic": "./tree/unary/areaHyperbolic/mod.ts",
     "./tree": "./tree/mod.ts",
     ".": "./mod.ts"
   },

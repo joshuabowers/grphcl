@@ -1,6 +1,6 @@
 import { Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
-import { field, when } from "../factories/field.ts";
+import { field, type FieldFn, when } from "../factories/field.ts";
 
 /**
  * Creates instances of {@link Complex} field types.
@@ -23,7 +23,11 @@ import { field, when } from "../factories/field.ts";
  * const z = complex(real(5.5)) // => new Complex({a: 5.5, b: 0})
  * ```
  */
-export const complex = field(
+export const complex: FieldFn<
+  Complex,
+  { a: number; b: number },
+  [number, number]
+> = field(
   Complex,
   ([a, b]: [number, number]) => ({ a, b }),
 )(

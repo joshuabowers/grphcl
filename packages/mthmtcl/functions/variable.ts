@@ -11,4 +11,6 @@ import { Variable } from "../tree/mod.ts";
  * @param name the identifier of the variable
  * @returns a new {@link Variable} instance
  */
-export const variable = (name: string) => new Variable(name);
+export function variable(name: string): Variable {
+  return new Variable(name);
+}

@@ -1,6 +1,6 @@
 import { Boolean, Complex, Negation, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
-import { unary, when } from "../factories/unary.ts";
+import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 
@@ -23,7 +23,7 @@ import { real } from "./real.ts";
  * const z = negate(complex(3, 4)) // => complex(-3, -4);
  * ```
  */
-export const negate = unary(Negation)(
+export const negate: UnaryFn<Negation> = unary(Negation)(
   when(is(Boolean), (b) => [b, Action.Application]),
   when(is(Complex), (c) => [complex(-c.raw.a, -c.raw.b), Action.Application]),
   when(is(Real), (r) => [real(-r.raw), Action.Application]),

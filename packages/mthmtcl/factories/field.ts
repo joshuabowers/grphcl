@@ -29,6 +29,14 @@ export type EdgeCaseFn<Fn extends Multi, Params, T> = (
 ) => Fn;
 
 /**
+ * Describes a function which takes a conversion function
+ * to invoke when generating its {@link method} output.
+ */
+export type ImbueMethodFn<T, I, Params> = (
+  fn: ConvertFn<Params, T>,
+) => typeof method;
+
+/**
  * Used to specify edge cases for a {@link FieldFn} created
  * by {@link field}. The generated {@link method} will delegate
  * to {@link fn} to convert {@link Params} into a {@link T}.
@@ -39,7 +47,7 @@ export type EdgeCaseFn<Fn extends Multi, Params, T> = (
 export const when = <T, I, Params>(
   predicate: Predicate<I>,
   rewrite: RewriteFn<I, Params>,
-) =>
+): ImbueMethodFn<T, I, Params> =>
 (fn: ConvertFn<Params, T>) => method(predicate, (i: I) => fn(rewrite(i)[0]));
 
 /**
@@ -88,7 +96,7 @@ export function field<
   ctor: Constructor<T>,
   convert: ConvertFn<Params, Raw>,
 ): EdgeCaseFn<FieldFn<T, Raw, Params>, Params, T> {
-  return (...edgeCases) => {
+  return (...edgeCases): FieldFn<T, Raw, Params> => {
     return multi(
       ...edgeCases.map((ec) => ec((params) => new ctor(convert(params)))),
       method((...params: Params) => new ctor(convert(params))),

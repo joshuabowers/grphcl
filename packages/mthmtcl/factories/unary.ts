@@ -108,7 +108,7 @@ export function unary<U extends UnaryNode, R extends TreeNode | void = void>(
   ctor: Constructor<U>,
   _ctorR?: Constructor<R>,
 ): EdgeCaseFn<UnaryFn<U, R>> {
-  return (...edgeCases) => {
+  return (...edgeCases): UnaryFn<U, R> => {
     const last = edgeCases.findLast((ec) => ec.context === Context.Otherwise) ??
       otherwise((e) => [new ctor(e), Action.Creation]);
     return multi(

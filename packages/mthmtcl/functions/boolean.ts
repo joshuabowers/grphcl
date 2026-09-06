@@ -1,6 +1,6 @@
 import { Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
-import { field, when } from "../factories/field.ts";
+import { field, type FieldFn, when } from "../factories/field.ts";
 
 /**
  * Creates instances of {@link Boolean} field types.
@@ -21,7 +21,10 @@ import { field, when } from "../factories/field.ts";
  * const b = boolean(complex(0, 0)) // => new Boolean(false)
  * ```
  */
-export const boolean = field(Boolean, ([b]: [boolean]) => b)(
+export const boolean: FieldFn<Boolean, boolean, [boolean]> = field(
+  Boolean,
+  ([b]: [boolean]) => b,
+)(
   when(is(Boolean), (b) => [[b.raw], Action.Identity]),
   when(
     is(Complex),
