@@ -23,6 +23,8 @@ export enum Action {
   Application,
   /** The creation of a new AST node of the given type */
   Creation,
+  /** The conversion of one field type to another */
+  Conversion,
   Idemptency,
   Identity,
   Tautology,
