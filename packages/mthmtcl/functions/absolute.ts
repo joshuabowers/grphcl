@@ -1,6 +1,8 @@
 import { Absolute, Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, when } from "../factories/unary.ts";
+import { complex } from "./complex.ts";
+import { real } from "./real.ts";
 
 /**
  * Creates {@link Absolute} AST nodes;
@@ -14,7 +16,7 @@ import { unary, when } from "../factories/unary.ts";
  *
  * @example
  * ```ts
- * const result = abs(new Real(-10)) // => new Real(10)
+ * const result = abs(real(-10)) // => new Real(10)
  * ```
  *
  * For complex numbers, this calculates the magnitude of the
@@ -22,7 +24,7 @@ import { unary, when } from "../factories/unary.ts";
  *
  * @example
  * ```ts
- * const result = abs(new Complex({a: 3, b: 4})) // => new Complex({a: 5, b: 0})
+ * const result = abs(complex(3, 4)) // => new Complex({a: 5, b: 0})
  * ```
  */
 export const abs = unary(Absolute)(
@@ -30,9 +32,9 @@ export const abs = unary(Absolute)(
   when(
     is(Complex),
     (c) => [
-      new Complex({ a: Math.hypot(c.raw.a, c.raw.b), b: 0 }),
+      complex(Math.hypot(c.raw.a, c.raw.b), 0),
       Action.Absorption,
     ],
   ),
-  when(is(Real), (r) => [new Real(Math.abs(r.raw)), Action.Application]),
+  when(is(Real), (r) => [real(Math.abs(r.raw)), Action.Application]),
 );

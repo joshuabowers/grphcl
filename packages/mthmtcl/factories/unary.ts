@@ -22,22 +22,26 @@ import { method, type Multi, multi } from "@arrows/multimethod";
  * The result contains an {@link Action} to specify why the
  * rewrite occurred.
  */
-export type Perform<T, R = T> = (value: T) => [R, Action];
+export type RewriteFn<T, R = T> = (value: T) => [R, Action];
+
+// TODO: Replace with logging.
+const unwrap = <T, R = T>(rewrite: RewriteFn<T, R>) => (value: T) =>
+  rewrite(value)[0];
 
 /**
  * Creates a {@link method}, providing a type-safe wrapping
  * context to simplify the construction. Used in tandem with
  * {@link unary} to define edge cases.
  * @param predicate a boolean valued guard
- * @param perform a rewrite rule to apply
+ * @param rewrite a rewrite rule to apply
  * @returns a contextual method, consumable by {@link unary}
  */
 export const when = <T, R = T>(
   predicate: Predicate<T>,
-  perform: Perform<T, R>,
+  rewrite: RewriteFn<T, R>,
 ): When<Context.Algebraic> => ({
   context: Context.Algebraic,
-  method: method(predicate, perform),
+  method: method(predicate, unwrap(rewrite)),
 });
 
 /**
@@ -50,14 +54,14 @@ export const when = <T, R = T>(
  * multimethods already have an otherwise block, which produces
  * an instance of their associated class type; this overrides
  * that method. Use with caution.
- * @param perform a rewrite rule to apply
+ * @param rewrite a rewrite rule to apply
  * @returns a contextual method, consumable by {@link unary}
  */
 export const otherwise = <T extends TreeNode, R = T>(
-  perform: Perform<T, R>,
+  rewrite: RewriteFn<T, R>,
 ): When<Context.Otherwise> => ({
   context: Context.Otherwise,
-  method: method(perform),
+  method: method(unwrap(rewrite)),
 });
 
 /**
