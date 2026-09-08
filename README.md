@@ -24,7 +24,7 @@ can be turned off, either entirely or per expression.
 
 Users can input boolean values, integers and reals, and complex numbers.
 (Internally, integers, reals, and complex numbers are stored within IEEE 754
-doubles, so they /will/ present precision and accuracy artifacts. Please do not
+doubles, so they _will_ present precision and accuracy artifacts. Please do not
 rely upon grphcl for anything mission-critical.)
 
 ## Variables
@@ -37,8 +37,8 @@ context of the invocation.
 Variables are either bound or unbound: they have a value assigned to them via
 the assignment operator or via invocation, or they evaluate to `nil`. An unbound
 variable can be used to create expressions in that unbound variable. So, for
-example: `cos(x)` will represent th cosine function applied to the variable `x`.
-Unbound variables do /not/ need to be defined prior to use.
+example: `cos(x)` will represent the cosine function applied to the variable
+`x`. Unbound variables do _not_ need to be defined prior to use.
 
 Variables can be assigned expressions in unbound variables. For example,
 `y := x^2 - 3` will assign the value of `y` to the expression on the right-hand
@@ -49,3 +49,8 @@ would yield value of `22`.
 
 grphcl supports a number of different mathematical functions and operators, most
 of which have been defined to work on all numerical types.
+
+A full discussion of these functions can be read in the
+[function documentation](https://jsr.io/@bowers/mthmtcl/doc/functions) for the
+calculator's internal library,
+[mthmtcl](https://github.com/joshuabowers/grphcl/tree/main/packages/mthmtcl).
