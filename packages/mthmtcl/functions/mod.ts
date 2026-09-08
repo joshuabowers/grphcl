@@ -22,3 +22,9 @@ export { variable } from "./variable.ts";
 
 export { abs } from "./absolute.ts";
 export { negate } from "./negate.ts";
+
+export { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
+
+export { add } from "./add.ts";
+export { multiply } from "./multiply.ts";
+export { raise, reciprocal, sqrt, square } from "./raise.ts";

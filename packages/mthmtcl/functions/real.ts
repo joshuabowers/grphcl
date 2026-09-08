@@ -2,6 +2,8 @@ import { Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { field, type FieldFn, when } from "../factories/field.ts";
 
+export interface RealFn extends FieldFn<Real, number, [number]> {}
+
 /**
  * Creates instances of {@link Real} field types.
  *
@@ -21,7 +23,7 @@ import { field, type FieldFn, when } from "../factories/field.ts";
  * const cast = real(complex(3, 4)) // === new Real(3)
  * ```
  */
-export const real: FieldFn<Real, number, [number]> = field(
+export const real: RealFn = field(
   Real,
   ([n]: [number]) => n,
 )(
