@@ -39,10 +39,9 @@ describe("cos", () => {
 });
 
 describe("cot", () => {
-  // TODO: investigate reciprocal and booleans
-  // it("is Boolean for boolean input", () => {
-  //   expect(cot(boolean(true))).toEqual(boolean(true));
-  // });
+  it("is Boolean for boolean input", () => {
+    expect(cot(boolean(true))).toEqual(boolean(true));
+  });
 
   it("is Complex for complex input", () => {
     expect(cot(complex(1, 2)).raw).toEqual({
@@ -63,6 +62,10 @@ describe("cot", () => {
 });
 
 describe("csc", () => {
+  it("is Boolean for boolean input", () => {
+    expect(csc(boolean(true))).toEqual(boolean(true));
+  });
+
   it("is Complex for complex input", () => {
     expect(csc(complex(1, 2)).raw).toEqual({
       a: expect.closeTo(0.228375065599, 10),
@@ -82,6 +85,10 @@ describe("csc", () => {
 });
 
 describe("sec", () => {
+  it("is Boolean for boolean input", () => {
+    expect(sec(boolean(true))).toEqual(boolean(true));
+  });
+
   it("is Complex for complex input", () => {
     expect(sec(complex(1, 2)).raw).toEqual({
       a: expect.closeTo(0.15117629826, 10),
@@ -101,6 +108,10 @@ describe("sec", () => {
 });
 
 describe("sin", () => {
+  it("is Boolean for boolean input", () => {
+    expect(sin(boolean(false))).toEqual(boolean(false));
+  });
+
   it("is Complex for complex input", () => {
     expect(sin(complex(1, 2)).raw).toEqual({
       a: expect.closeTo(3.16577851321616, 10),
@@ -120,6 +131,10 @@ describe("sin", () => {
 });
 
 describe("tan", () => {
+  it("is Boolean for boolean input", () => {
+    expect(tan(boolean(true))).toEqual(boolean(true));
+  });
+
   it("is Complex for complex input", () => {
     expect(tan(complex(1, 2)).raw).toEqual({
       a: expect.closeTo(0.033812826079, 10),

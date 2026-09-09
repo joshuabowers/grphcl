@@ -1,4 +1,4 @@
-import type { Boolean, Complex, Field, Real } from "../tree/mod.ts";
+import type { Boolean, Complex, Field, Numeric, Real } from "../tree/mod.ts";
 import { method, type Multi, multi } from "@arrows/multimethod";
 import type { Action, Constructor, Predicate } from "./factory.ts";
 
@@ -70,6 +70,8 @@ export interface FieldFn<
   (b: Boolean): T;
   /** Creates a {@link T} from a {@link Complex} */
   (c: Complex): T;
+  /** Generic catch all edge case */
+  (n: Numeric): T;
   /** Creates a {@link T} from a {@link Real} */
   (r: Real): T;
 }

@@ -4,6 +4,7 @@ import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
+import { preserve } from "./preserve.ts";
 import { reciprocal } from "./raise.ts";
 
 /**
@@ -71,7 +72,10 @@ export const cos: UnaryFn<Trigonometric.Cosine> = unary(
 export const csc: UnaryFn<Trigonometric.Cosecant> = unary(
   Trigonometric.Cosecant,
 )(
-  when(is(Numeric), (n) => [reciprocal(sin(n)), Action.Application]),
+  when(
+    is(Numeric),
+    (n) => [preserve(n, reciprocal(sin(n))), Action.Application],
+  ),
 );
 
 /**
@@ -101,7 +105,10 @@ export const csc: UnaryFn<Trigonometric.Cosecant> = unary(
 export const cot: UnaryFn<Trigonometric.Cotangent> = unary(
   Trigonometric.Cotangent,
 )(
-  when(is(Numeric), (n) => [reciprocal(tan(n)), Action.Application]),
+  when(
+    is(Numeric),
+    (n) => [preserve(n, reciprocal(tan(n))), Action.Application],
+  ),
 );
 
 /**
@@ -131,7 +138,10 @@ export const cot: UnaryFn<Trigonometric.Cotangent> = unary(
 export const sec: UnaryFn<Trigonometric.Secant> = unary(
   Trigonometric.Secant,
 )(
-  when(is(Numeric), (n) => [reciprocal(cos(n)), Action.Application]),
+  when(
+    is(Numeric),
+    (n) => [preserve(n, reciprocal(cos(n))), Action.Application],
+  ),
 );
 
 /**
