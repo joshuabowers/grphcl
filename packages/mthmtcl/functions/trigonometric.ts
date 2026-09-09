@@ -6,6 +6,30 @@ import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { reciprocal } from "./raise.ts";
 
+/**
+ * Creates {@link Cosine} AST nodes.
+ *
+ * This is derived from {@link unary}: it expects a single
+ * expression input, and will return different TreeNode
+ * outputs depending upon that input.
+ *
+ * @example Real input:
+ * ```ts
+ * const result = cos(real(Math.PI)) // => real(-1)
+ * ```
+ *
+ * @example Complex input:
+ * ```ts
+ * const result = cos(complex(1, 2))
+ * // ~=> complex(2.03, -3.05)
+ * ```
+ *
+ * @example Unbound input:
+ * ```ts
+ * const result = cos(variable('x'));
+ * // => new Cosine(new Variable('x'))
+ * ```
+ */
 export const cos: UnaryFn<Trigonometric.Cosine> = unary(
   Trigonometric.Cosine,
 )(
@@ -20,24 +44,120 @@ export const cos: UnaryFn<Trigonometric.Cosine> = unary(
   when(is(Real), (r) => [real(Math.cos(r.raw)), Action.Application]),
 );
 
+/**
+ * Creates {@link Cosecant} AST nodes.
+ *
+ * This is derived from {@link unary}: it expects a single
+ * expression input, and will return different TreeNode
+ * outputs depending upon that input.
+ *
+ * @example Real input:
+ * ```ts
+ * const result = csc(real(0.5)) // ~=> real(2.09)
+ * ```
+ *
+ * @example Complex input:
+ * ```ts
+ * const result = csc(complex(1, 2))
+ * // ~=> complex(0.23, -0.14)
+ * ```
+ *
+ * @example Unbound input:
+ * ```ts
+ * const result = csc(variable('x'));
+ * // => new Cosecant(new Variable('x'))
+ * ```
+ */
 export const csc: UnaryFn<Trigonometric.Cosecant> = unary(
   Trigonometric.Cosecant,
 )(
   when(is(Numeric), (n) => [reciprocal(sin(n)), Action.Application]),
 );
 
+/**
+ * Creates {@link Cotangent} AST nodes.
+ *
+ * This is derived from {@link unary}: it expects a single
+ * expression input, and will return different TreeNode
+ * outputs depending upon that input.
+ *
+ * @example Real input:
+ * ```ts
+ * const result = cot(real(0.5)) // ~=> real(1.83)
+ * ```
+ *
+ * @example Complex input:
+ * ```ts
+ * const result = cot(complex(1, 2))
+ * // ~=> complex(0.03, -0.98)
+ * ```
+ *
+ * @example Unbound input:
+ * ```ts
+ * const result = cot(variable('x'));
+ * // => new Cotangent(new Variable('x'))
+ * ```
+ */
 export const cot: UnaryFn<Trigonometric.Cotangent> = unary(
   Trigonometric.Cotangent,
 )(
   when(is(Numeric), (n) => [reciprocal(tan(n)), Action.Application]),
 );
 
+/**
+ * Creates {@link Secant} AST nodes.
+ *
+ * This is derived from {@link unary}: it expects a single
+ * expression input, and will return different TreeNode
+ * outputs depending upon that input.
+ *
+ * @example Real input:
+ * ```ts
+ * const result = sec(real(0.5)) // => real(1.14)
+ * ```
+ *
+ * @example Complex input:
+ * ```ts
+ * const result = sec(complex(1, 2))
+ * // ~=> complex(0.15, 0.23)
+ * ```
+ *
+ * @example Unbound input:
+ * ```ts
+ * const result = sec(variable('x'));
+ * // => new Secant(new Variable('x'))
+ * ```
+ */
 export const sec: UnaryFn<Trigonometric.Secant> = unary(
   Trigonometric.Secant,
 )(
   when(is(Numeric), (n) => [reciprocal(cos(n)), Action.Application]),
 );
 
+/**
+ * Creates {@link Sine} AST nodes.
+ *
+ * This is derived from {@link unary}: it expects a single
+ * expression input, and will return different TreeNode
+ * outputs depending upon that input.
+ *
+ * @example Real input:
+ * ```ts
+ * const result = sin(real(Math.PI)) // => real(0)
+ * ```
+ *
+ * @example Complex input:
+ * ```ts
+ * const result = sin(complex(1, 2))
+ * // ~=> complex(3.17, 1.96)
+ * ```
+ *
+ * @example Unbound input:
+ * ```ts
+ * const result = sin(variable('x'));
+ * // => new Sine(new Variable('x'))
+ * ```
+ */
 export const sin: UnaryFn<Trigonometric.Sine> = unary(
   Trigonometric.Sine,
 )(
@@ -52,6 +172,30 @@ export const sin: UnaryFn<Trigonometric.Sine> = unary(
   when(is(Real), (r) => [real(Math.sin(r.raw)), Action.Application]),
 );
 
+/**
+ * Creates {@link Tangent} AST nodes.
+ *
+ * This is derived from {@link unary}: it expects a single
+ * expression input, and will return different TreeNode
+ * outputs depending upon that input.
+ *
+ * @example Real input:
+ * ```ts
+ * const result = tan(real(0.5)) // => real(0.55)
+ * ```
+ *
+ * @example Complex input:
+ * ```ts
+ * const result = tan(complex(1, 2))
+ * // ~=> complex(0.03, 1.01)
+ * ```
+ *
+ * @example Unbound input:
+ * ```ts
+ * const result = tan(variable('x'));
+ * // => new Tangent(new Variable('x'))
+ * ```
+ */
 export const tan: UnaryFn<Trigonometric.Tangent> = unary(
   Trigonometric.Tangent,
 )(

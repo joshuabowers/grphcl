@@ -40,9 +40,9 @@ describe("cos", () => {
 
 describe("cot", () => {
   // TODO: investigate reciprocal and booleans
-  //   it("is Boolean for boolean input", () => {
-  //     expect(cot(boolean(true))).toEqual(boolean(true));
-  //   });
+  // it("is Boolean for boolean input", () => {
+  //   expect(cot(boolean(true))).toEqual(boolean(true));
+  // });
 
   it("is Complex for complex input", () => {
     expect(cot(complex(1, 2)).raw).toEqual({
