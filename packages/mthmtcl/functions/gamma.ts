@@ -17,7 +17,8 @@ import { factorial } from "./factorial.ts";
 import { ComplexInfinity } from "./complex.ts";
 
 const lanczos = {
-  p: [
+  p: <Numeric[]> [
+    0.99999999999980993,
     676.5203681218851,
     -1259.1392167224028,
     771.32342877765313,
@@ -26,7 +27,7 @@ const lanczos = {
     -0.13857109526572012,
     9.9843695780195716e-6,
     1.5056327351493116e-7,
-  ],
+  ].map(real),
 };
 
 const pi = real(Math.PI), sqrtTwicePi = sqrt(real(2 * Math.PI));
@@ -91,10 +92,9 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
       const one = real(1);
       const z = subtract(n, one);
       const x = lanczos.p.reduce(
-        (s, v, i) => add(s, divide(real(v), add(z, add(real(i), one)))),
-        real(0.99999999999980993) as Numeric,
+        (s, v, i) => add(s, divide(v, add(z, real(i)))),
       );
-      const t = subtract(add(z, real(lanczos.p.length)), real(0.5));
+      const t = subtract(add(z, real(lanczos.p.length - 1)), real(0.5));
       return [
         multiply(
           sqrtTwicePi,
