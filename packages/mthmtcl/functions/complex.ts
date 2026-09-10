@@ -35,3 +35,11 @@ export const complex: FieldFn<
   when(is(Complex), (c) => [[c.raw.a, c.raw.b], Action.Identity]),
   when(is(Real), (r) => [[r.raw, 0], Action.Conversion]),
 );
+
+/**
+ * Represents the value of complex infinity.
+ *
+ * Complex infinity is defined as having an unknown or
+ * undefined imaginary part, and an infinite real part.
+ */
+export const ComplexInfinity = complex(Infinity, NaN);

@@ -21,6 +21,7 @@ import {
   type EdgeCaseFn,
   is,
   type Predicate,
+  type Rewrite,
   type When,
 } from "./factory.ts";
 import { complex } from "../functions/complex.ts";
@@ -62,11 +63,6 @@ export type Guards<Left, Right> =
     guardRight: Predicate<Right>,
     inner?: (left: Left, right: Right) => boolean,
   ) => boolean);
-
-/**
- * Utility type to simplify the definition of {@link when}
- */
-export type Rewrite<Output> = [Output, Action];
 
 /**
  * Describes a function which takes two inputs and maps them

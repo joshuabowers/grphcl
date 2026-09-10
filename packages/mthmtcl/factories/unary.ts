@@ -5,6 +5,7 @@ import {
   Context,
   type EdgeCaseFn,
   type Predicate,
+  type Rewrite,
   type When,
 } from "./factory.ts";
 import type {
@@ -22,11 +23,16 @@ import { method, type Multi, multi } from "@arrows/multimethod";
  * The result contains an {@link Action} to specify why the
  * rewrite occurred.
  */
-export type RewriteFn<T, R = T> = (value: T) => [R, Action];
+export type RewriteFn<T, R = T> = (value: T) => Rewrite<R>;
 
 // TODO: Replace with logging.
-const unwrap = <T, R = T>(rewrite: RewriteFn<T, R>) => (value: T) =>
-  rewrite(value)[0];
+const unwrap = <T, R = T>(
+  rewrite: Rewrite<R> | RewriteFn<T, R>,
+) =>
+(value: T) =>
+  (
+    typeof rewrite === "function" ? rewrite(value) : rewrite
+  )[0];
 
 /**
  * Creates a {@link method}, providing a type-safe wrapping
@@ -38,7 +44,7 @@ const unwrap = <T, R = T>(rewrite: RewriteFn<T, R>) => (value: T) =>
  */
 export const when = <T, R = T>(
   predicate: Predicate<T>,
-  rewrite: RewriteFn<T, R>,
+  rewrite: Rewrite<R> | RewriteFn<T, R>,
 ): When<Context.Algebraic> => ({
   context: Context.Algebraic,
   method: method(predicate, unwrap(rewrite)),

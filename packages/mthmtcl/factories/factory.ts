@@ -25,8 +25,13 @@ export enum Action {
   Creation,
   /** The conversion of one field type to another */
   Conversion,
+  Degeneracy,
+  Delegation,
   Idemptency,
   Identity,
+  Recursion,
+  Reflection,
+  Singularity,
   Tautology,
 }
 
@@ -74,6 +79,11 @@ export type EdgeCaseFn<Fn extends Multi> = (...edgeCases: EdgeCases) => Fn;
  * {@template T}
  */
 export type Predicate<T> = (value: unknown) => value is T;
+
+/**
+ * Utility type to simplify the definition of edge cases
+ */
+export type Rewrite<Output> = [Output, Action];
 
 /**
  * Creates a type guard predicate which asserts type and
