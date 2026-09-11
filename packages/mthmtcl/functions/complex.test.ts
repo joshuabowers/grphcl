@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
 import { Boolean, Complex, Real } from "../tree/mod.ts";
-import { complex } from "./complex.ts";
+import { complex, ComplexInfinity, isComplexInfinity } from "./complex.ts";
 
 describe("complex", () => {
   it("returns a Complex for number-pair input", () => {
@@ -20,5 +20,19 @@ describe("complex", () => {
 
   it("returns a Complex for Real input", () => {
     expect(complex(new Real(5))).toEqual(new Complex({ a: 5, b: 0 }));
+  });
+});
+
+describe("isComplexInfinity", () => {
+  it("returns true for ComplexInfinity", () => {
+    expect(isComplexInfinity(ComplexInfinity)).toBeTruthy();
+  });
+
+  it("returns true for -ComplexInfinity", () => {
+    expect(isComplexInfinity(complex(-Infinity, NaN))).toBeTruthy();
+  });
+
+  it("returns false for rando complexes", () => {
+    expect(isComplexInfinity(complex(-4, 3))).toBeFalsy();
   });
 });

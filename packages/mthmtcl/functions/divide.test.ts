@@ -24,6 +24,12 @@ describe("divide", () => {
       });
     });
 
+    it("handles complex division of 0 correctly", () => {
+      expect(
+        divide(complex(0, 0), complex(0, 2)),
+      ).toEqual(complex(0, 0));
+    });
+
     it("is Real for real inputs", () => {
       expect(divide(real(10), real(5))).toEqual(real(2));
     });

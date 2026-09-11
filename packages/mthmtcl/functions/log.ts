@@ -18,6 +18,9 @@ const lnComplex = (c: Complex) =>
     Math.atan2(c.raw.b, c.raw.a),
   );
 
+const isComplexNaturalLog = (value: unknown): value is Complex =>
+  is(Complex, (c) => c.raw.a === Math.E && c.raw.b === 0)(value);
+
 /**
  * Creates instances of {@link Logarithm} AST nodes.
  *
@@ -51,6 +54,10 @@ export const log: BinaryFn<Logarithm> = binary(Logarithm)(
     boolean(log(real(l), real(r))),
     Action.Application,
   ]),
+  when(
+    [isComplexNaturalLog, is(Complex)],
+    (_l, r) => [lnComplex(r), Action.Application],
+  ),
   when([is(Complex), is(Complex)], (l, r) => [
     divide(lnComplex(r), lnComplex(l)),
     Action.Application,

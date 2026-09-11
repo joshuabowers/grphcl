@@ -2,6 +2,9 @@ import { Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { field, type FieldFn, when } from "../factories/field.ts";
 
+export const isReal = (c: Complex) => c.raw.b === 0;
+export const isImaginary = (c: Complex) => c.raw.a === 0;
+
 /**
  * Creates instances of {@link Complex} field types.
  *
@@ -43,3 +46,15 @@ export const complex: FieldFn<
  * undefined imaginary part, and an infinite real part.
  */
 export const ComplexInfinity = complex(Infinity, NaN);
+
+export const isComplexInfinity = (value: unknown): value is Complex =>
+  is(
+    Complex,
+    (c) =>
+      (
+        c.raw.a === ComplexInfinity.raw.a ||
+        c.raw.a === -ComplexInfinity.raw.a
+      ) && (
+        Number.isNaN(c.raw.b)
+      ),
+  )(value);

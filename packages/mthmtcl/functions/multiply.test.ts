@@ -2,9 +2,10 @@ import { describe, it } from "node:test";
 import { expect } from "@std/expect";
 import { Multiplication, Real, Variable } from "../tree/mod.ts";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
+import { complex, ComplexInfinity } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
+import { negate } from "./negate.ts";
 import { double, multiply } from "./multiply.ts";
 
 describe("multiply", () => {
@@ -19,6 +20,18 @@ describe("multiply", () => {
       expect(
         multiply(complex(2, 3), complex(3, 4)),
       ).toEqual(complex(-6, 17));
+    });
+
+    it("handles -complex * -ComplexInfinity", () => {
+      expect(
+        multiply(complex(0, -0.5), negate(ComplexInfinity)),
+      ).toEqual(ComplexInfinity);
+    });
+
+    it("handles [0 - 0.5i] * [-Infinity + 0i]", () => {
+      expect(
+        multiply(complex(0, -0.5), complex(-Infinity, 0)),
+      ).toEqual(complex(0, Infinity));
     });
 
     it("is Real for real inputs", () => {

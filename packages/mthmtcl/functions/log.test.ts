@@ -51,6 +51,10 @@ describe("lg", () => {
 });
 
 describe("ln", () => {
+  it("is [-Infinity + 0i] for an input of complex 0", () => {
+    expect(ln(complex(0, 0))).toEqual(complex(-Infinity, 0));
+  });
+
   it("is a Logarithm in base `e` of an unbound input", () => {
     expect(ln(variable("x"))).toEqual(
       new Logarithm(

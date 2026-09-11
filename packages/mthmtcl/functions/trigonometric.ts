@@ -8,7 +8,7 @@ import { preserve } from "./preserve.ts";
 import { reciprocal } from "./raise.ts";
 
 /**
- * Creates {@link Cosine} AST nodes.
+ * Creates {@link Trigonometric.Cosine} AST nodes.
  *
  * This is derived from {@link unary}: it expects a single
  * expression input, and will return different TreeNode
@@ -46,7 +46,7 @@ export const cos: UnaryFn<Trigonometric.Cosine> = unary(
 );
 
 /**
- * Creates {@link Cosecant} AST nodes.
+ * Creates {@link Trigonometric.Cosecant} AST nodes.
  *
  * This is derived from {@link unary}: it expects a single
  * expression input, and will return different TreeNode
@@ -79,7 +79,7 @@ export const csc: UnaryFn<Trigonometric.Cosecant> = unary(
 );
 
 /**
- * Creates {@link Cotangent} AST nodes.
+ * Creates {@link Trigonometric.Cotangent} AST nodes.
  *
  * This is derived from {@link unary}: it expects a single
  * expression input, and will return different TreeNode
@@ -112,7 +112,7 @@ export const cot: UnaryFn<Trigonometric.Cotangent> = unary(
 );
 
 /**
- * Creates {@link Secant} AST nodes.
+ * Creates {@link Trigonometric.Secant} AST nodes.
  *
  * This is derived from {@link unary}: it expects a single
  * expression input, and will return different TreeNode
@@ -145,7 +145,7 @@ export const sec: UnaryFn<Trigonometric.Secant> = unary(
 );
 
 /**
- * Creates {@link Sine} AST nodes.
+ * Creates {@link Trigonometric.Sine} AST nodes.
  *
  * This is derived from {@link unary}: it expects a single
  * expression input, and will return different TreeNode
@@ -183,7 +183,7 @@ export const sin: UnaryFn<Trigonometric.Sine> = unary(
 );
 
 /**
- * Creates {@link Tangent} AST nodes.
+ * Creates {@link Trigonometric.Tangent} AST nodes.
  *
  * This is derived from {@link unary}: it expects a single
  * expression input, and will return different TreeNode

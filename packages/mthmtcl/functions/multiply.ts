@@ -1,3 +1,4 @@
+import { _ } from "@arrows/multimethod";
 import { Boolean, Complex, Multiplication, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import {
@@ -8,7 +9,13 @@ import {
   when,
 } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
+import {
+  complex,
+  ComplexInfinity,
+  isComplexInfinity,
+  isImaginary,
+  isReal,
+} from "./complex.ts";
 import { real } from "./real.ts";
 
 /**
@@ -52,6 +59,16 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   when(
     [is(Boolean), is(Boolean)],
     (l, r) => [boolean(l.raw && r.raw), Action.Application],
+  ),
+  when([isComplexInfinity, _], [ComplexInfinity, Action.Absorption]),
+  when([_, isComplexInfinity], [ComplexInfinity, Action.Absorption]),
+  when(
+    [is(Complex, isReal), is(Complex, isImaginary)],
+    (r, c) => [complex(0, r.raw.a * c.raw.b), Action.Application],
+  ),
+  when(
+    [is(Complex, isImaginary), is(Complex, isReal)],
+    (c, r) => [complex(0, c.raw.b * r.raw.a), Action.Application],
   ),
   when(
     [is(Complex), is(Complex)],
