@@ -27,6 +27,9 @@ export { gamma } from "./gamma.ts";
 export { not } from "./not.ts";
 
 export { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
+export { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
+export { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
+export { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
 
 export { add } from "./add.ts";
 export { subtract } from "./subtract.ts";
