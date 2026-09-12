@@ -1,19 +1,100 @@
-name: deno CI
-on: [push, pull_request]
+name: CI/CD
+
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.deno-version == 'canary' }}
-    strategy:
-      matrix:
-        deno-version: [v2.x, canary]
     steps:
-      - uses: actions/checkout@v6
-      - uses: denoland/setup-deno@v2
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: ${{ matrix.deno-version }}
+          deno-version: v2.x
           cache: true
-      - run: deno ci
-      - run: deno fmt --check
-      - run: deno lint
-      - run: deno test --allow-all --coverage
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/client/package-lock.json
+
+      - name: Run Deno checks
+        run: |
+          deno ci
+          deno fmt --check
+          deno lint
+          deno test --allow-all --coverage
+
+      - name: Verify the client with Node
+        run: |
+          npm ci --prefix apps/client
+          npm --prefix apps/client run build
+
+  publish:
+    needs: test
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Publish to JSR
+        working-directory: packages/mthmtcl
+        run: npx jsr publish
+
+  deploy:
+    needs: publish
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/client/package-lock.json
+
+      - name: Install client dependencies
+        run: npm ci --prefix apps/client
+
+      - name: Build client artifact
+        run: npm --prefix apps/client run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: "./apps/client/dist"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
