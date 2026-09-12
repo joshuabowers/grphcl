@@ -40,3 +40,13 @@ export { lb, lg, ln, log } from "./log.ts";
 export { combine, permute } from "./combinatorics.ts";
 
 export { equals, gt, gte, lt, lte, nequals } from "./relational.ts";
+export {
+  and,
+  converse,
+  implies,
+  nand,
+  nor,
+  or,
+  xnor,
+  xor,
+} from "./logical/mod.ts";
