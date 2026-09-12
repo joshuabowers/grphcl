@@ -38,3 +38,5 @@ export { divide } from "./divide.ts";
 export { raise, reciprocal, sqrt, square } from "./raise.ts";
 export { lb, lg, ln, log } from "./log.ts";
 export { combine, permute } from "./combinatorics.ts";
+
+export { equals, gt, gte, lt, lte, nequals } from "./relational.ts";
