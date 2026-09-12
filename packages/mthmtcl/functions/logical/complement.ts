@@ -1,7 +1,26 @@
-import { Boolean, Complement, Complex, Real } from "../../tree/mod.ts";
+import {
+  AlternativeDenial,
+  Biconditional,
+  Boolean,
+  Complement,
+  Complex,
+  Conjunction,
+  ConverseImplication,
+  Disjunction,
+  ExclusiveDisjunction,
+  Implication,
+  JointDenial,
+  Real,
+} from "../../tree/mod.ts";
 import { Action, is } from "../../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../../factories/unary.ts";
 import { boolean } from "../boolean.ts";
+import { and } from "./conjunction.ts";
+import { or } from "./disjunction.ts";
+import { xor } from "./exclusiveDisjunction.ts";
+import { nand } from "./alternativeDenial.ts";
+import { nor } from "./jointDenial.ts";
+import { xnor } from "./biconditional.ts";
 
 /**
  * Creates AST node instances of the logical operator
@@ -43,4 +62,46 @@ export const not: UnaryFn<
     (c) => [boolean(c.raw.a === 0 && c.raw.b === 0), Action.Application],
   ),
   when(is(Real), (r) => [boolean(r.raw === 0), Action.Application]),
+  when(
+    is(Complement),
+    (v) => [v.child, Action.Idempotency],
+  ),
+  when(
+    is(Conjunction),
+    (v) => [nand(v.left, v.right), Action.Complementation],
+  ),
+  when(
+    is(Disjunction),
+    (v) => [nor(v.left, v.right), Action.Complementation],
+  ),
+  when(
+    is(AlternativeDenial),
+    (v) => [and(v.left, v.right), Action.Complementation],
+  ),
+  when(
+    is(JointDenial),
+    (v) => [or(v.left, v.right), Action.Complementation],
+  ),
+  when(
+    is(ExclusiveDisjunction),
+    (v) => [xnor(v.left, v.right), Action.Complementation],
+  ),
+  when(
+    is(Implication),
+    (v) => [
+      and(v.left, not(v.right)),
+      Action.Complementation,
+    ],
+  ),
+  when(
+    is(Biconditional),
+    (v) => [xor(v.left, v.right), Action.Complementation],
+  ),
+  when(
+    is(ConverseImplication),
+    (v) => [
+      and(not(v.left), v.right),
+      Action.Complementation,
+    ],
+  ),
 );

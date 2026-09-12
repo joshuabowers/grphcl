@@ -23,6 +23,7 @@ export enum Action {
   Application,
   /** The creation of a new AST node of the given type */
   Creation,
+  Complementation,
   Contradiction,
   /** The conversion of one field type to another */
   Conversion,
