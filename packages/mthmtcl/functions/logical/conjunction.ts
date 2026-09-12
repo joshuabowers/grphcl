@@ -49,7 +49,7 @@ export const and: BinaryFn<
   ),
   when(
     deepEquals,
-    (l, _r) => [l, Action.Idemptency],
+    (l, _r) => [l, Action.Idempotency],
   ),
   when(
     (l, r) => is(Disjunction)(r) && deepEquals(l, r.left),

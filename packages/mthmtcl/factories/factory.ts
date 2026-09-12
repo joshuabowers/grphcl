@@ -28,7 +28,7 @@ export enum Action {
   Conversion,
   Degeneracy,
   Delegation,
-  Idemptency,
+  Idempotency,
   Identity,
   Recursion,
   Reflection,
