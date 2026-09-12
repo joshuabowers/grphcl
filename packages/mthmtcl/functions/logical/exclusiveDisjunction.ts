@@ -1,9 +1,4 @@
-import {
-  Boolean,
-  ExclusiveDisjunction,
-  Numeric,
-  TreeNode,
-} from "../../tree/mod.ts";
+import { Boolean, ExclusiveDisjunction, Numeric } from "../../tree/mod.ts";
 import { Action, is } from "../../factories/factory.ts";
 import { binary, type BinaryFn, when } from "../../factories/binary.ts";
 import { boolean } from "../boolean.ts";
@@ -30,11 +25,11 @@ export const xor: BinaryFn<
     (l, _r) => [l, Action.Identity],
   ),
   when(
-    [isValue(boolean(true)), is(TreeNode)],
+    [isValue(boolean(true)), _],
     (_l, r) => [not(r), Action.Conversion],
   ),
   when(
-    [is(TreeNode), isValue(boolean(true))],
+    [_, isValue(boolean(true))],
     (l, _r) => [not(l), Action.Conversion],
   ),
   when(

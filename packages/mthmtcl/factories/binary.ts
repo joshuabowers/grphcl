@@ -108,7 +108,11 @@ const identity = <I>(i: I) => i;
  * @param rewrite a rewrite rule to apply
  * @returns a contextual method, consumable by {@link binary}
  */
-export function when<Left, Right, Output = Left | Right>(
+export function when<
+  Left extends TreeNode,
+  Right extends TreeNode,
+  Output = Left | Right,
+>(
   predicate: Guards<Left, Right>,
   rewrite: Rewrite<Output> | RewriteFn<Left, Right, Output>,
 ): When<

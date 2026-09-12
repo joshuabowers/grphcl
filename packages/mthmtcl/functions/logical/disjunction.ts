@@ -79,14 +79,14 @@ export const or: BinaryFn<
     [boolean(true), Action.Tautology],
   ),
   when(
-    [is(Complement), is(TreeNode)],
+    [is(Complement), _],
     (l, r) => [
       implies(l.child, r),
       Action.Conversion,
     ],
   ),
   when(
-    [is(TreeNode), is(Complement)],
+    [_, is(Complement)],
     (l, r) => [
       converse(l, r.child),
       Action.Conversion,
