@@ -3,7 +3,7 @@ import { expect } from "@std/expect";
 import { AlternativeDenial, Variable } from "../../tree/mod.ts";
 import { boolean } from "../boolean.ts";
 import { variable } from "../variable.ts";
-import { not } from "../not.ts";
+import { not } from "./complement.ts";
 import { or } from "./disjunction.ts";
 import { implies } from "./implication.ts";
 import { nand } from "./alternativeDenial.ts";

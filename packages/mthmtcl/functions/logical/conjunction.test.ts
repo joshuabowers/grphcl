@@ -6,7 +6,7 @@ import { real } from "../real.ts";
 import { complex } from "../complex.ts";
 import { variable } from "../variable.ts";
 import { or } from "./disjunction.ts";
-import { not } from "../not.ts";
+import { not } from "./complement.ts";
 import { and } from "./conjunction.ts";
 
 describe("and", () => {

@@ -1,7 +1,7 @@
-import { Boolean, Complement, Complex, Real } from "../tree/mod.ts";
-import { Action, is } from "../factories/factory.ts";
-import { unary, type UnaryFn, when } from "../factories/unary.ts";
-import { boolean } from "./boolean.ts";
+import { Boolean, Complement, Complex, Real } from "../../tree/mod.ts";
+import { Action, is } from "../../factories/factory.ts";
+import { unary, type UnaryFn, when } from "../../factories/unary.ts";
+import { boolean } from "../boolean.ts";
 
 /**
  * Creates AST node instances of the logical operator

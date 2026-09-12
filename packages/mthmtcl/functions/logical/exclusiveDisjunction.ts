@@ -2,7 +2,7 @@ import { Boolean, ExclusiveDisjunction, Numeric } from "../../tree/mod.ts";
 import { Action, is } from "../../factories/factory.ts";
 import { binary, type BinaryFn, when } from "../../factories/binary.ts";
 import { boolean } from "../boolean.ts";
-import { not } from "../not.ts";
+import { not } from "./complement.ts";
 import { and } from "./conjunction.ts";
 import { or } from "./disjunction.ts";
 import { _ } from "@arrows/multimethod";

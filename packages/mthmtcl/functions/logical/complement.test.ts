@@ -1,11 +1,11 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
-import { Complement, Variable } from "../tree/mod.ts";
-import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
-import { variable } from "./variable.ts";
-import { not } from "./not.ts";
+import { Complement, Variable } from "../../tree/mod.ts";
+import { boolean } from "../boolean.ts";
+import { complex } from "../complex.ts";
+import { real } from "../real.ts";
+import { variable } from "../variable.ts";
+import { not } from "./complement.ts";
 
 describe("not", () => {
   it("is Boolean for boolean input", () => {

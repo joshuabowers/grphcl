@@ -1,3 +1,5 @@
+export { not } from "./complement.ts";
+
 export { and } from "./conjunction.ts";
 export { or } from "./disjunction.ts";
 export { xor } from "./exclusiveDisjunction.ts";

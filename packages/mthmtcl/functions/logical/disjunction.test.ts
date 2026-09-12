@@ -5,7 +5,7 @@ import { boolean } from "../boolean.ts";
 import { real } from "../real.ts";
 import { complex } from "../complex.ts";
 import { variable } from "../variable.ts";
-import { not } from "../not.ts";
+import { not } from "./complement.ts";
 import { and } from "./conjunction.ts";
 import { implies } from "./implication.ts";
 import { converse } from "./converseImplication.ts";

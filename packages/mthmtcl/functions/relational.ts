@@ -13,7 +13,7 @@ import {
 import { Action, is } from "../factories/factory.ts";
 import { binary, type BinaryFn, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
-import { not } from "./not.ts";
+import { not } from "./logical/complement.ts";
 import { abs } from "./absolute.ts";
 
 /**

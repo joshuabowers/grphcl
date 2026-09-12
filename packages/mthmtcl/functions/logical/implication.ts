@@ -4,7 +4,7 @@ import { binary, type BinaryFn, when } from "../../factories/binary.ts";
 import { _ } from "@arrows/multimethod";
 import { boolean } from "../boolean.ts";
 import { isValue } from "../../utility/deepEquals.ts";
-import { not } from "../not.ts";
+import { not } from "./complement.ts";
 import { or } from "./disjunction.ts";
 
 export const implies: BinaryFn<
