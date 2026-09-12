@@ -1,6 +1,6 @@
 {
   "name": "@bowers/mthmtcl",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "exports": {
     "./functions": "./functions/mod.ts",
     "./tree/trigonometric": "./tree/unary/trigonometric/mod.ts",
