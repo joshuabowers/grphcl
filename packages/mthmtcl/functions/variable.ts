@@ -1,4 +1,4 @@
-import { Variable } from "../tree/mod.ts";
+import { type TreeNode, Variable } from "../tree/mod.ts";
 
 /**
  * A thin-wrapper around the {@link Variable} constructor,
@@ -14,3 +14,9 @@ import { Variable } from "../tree/mod.ts";
 export function variable(name: string): Variable {
   return new Variable(name);
 }
+
+type Entries = Iterable<readonly [string, TreeNode]>;
+export type Scope = Map<string, TreeNode>;
+
+export const scope = (entries: Entries = []): Scope =>
+  new Map<string, TreeNode>(entries);

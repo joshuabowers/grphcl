@@ -45,3 +45,6 @@ export { Polygamma } from "./binary/polygamma.ts";
 export { Subtraction } from "./binary/subtraction.ts";
 export * from "./binary/logical/mod.ts";
 export * from "./binary/relational/mod.ts";
+
+export { Differentiation } from "./differentiation.ts";
+export { Invocation } from "./invocation.ts";
