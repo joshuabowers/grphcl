@@ -7,6 +7,7 @@ import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { negate } from "./negate.ts";
 import { double, multiply } from "./multiply.ts";
+import { square } from "./raise.ts";
 
 describe("multiply", () => {
   describe("with pairs of numeric inputs", () => {
@@ -36,6 +37,28 @@ describe("multiply", () => {
 
     it("is Real for real inputs", () => {
       expect(multiply(real(4), real(5))).toEqual(real(20));
+    });
+  });
+
+  describe("with unbound inputs", () => {
+    it("squares equal inputs", () => {
+      expect(
+        multiply(variable("x"), variable("x")),
+      ).toEqual(square(variable("x")));
+    });
+  });
+
+  describe("with nested multiplications", () => {
+    it("coalesces numeric values across the nesting threshold", () => {
+      expect(
+        multiply(real(5), multiply(variable("x"), real(10))),
+      ).toEqual(multiply(variable("x"), real(50)));
+    });
+
+    it("coalesces unbound inputs across the nesting threshold", () => {
+      expect(
+        multiply(variable("x"), multiply(real(5), variable("x"))),
+      ).toEqual(multiply(real(5), square(variable("x"))));
     });
   });
 

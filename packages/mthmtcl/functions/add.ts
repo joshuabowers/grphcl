@@ -1,9 +1,11 @@
 import { Addition, Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
-import { binary, type BinaryFn, when } from "../factories/binary.ts";
+import { binary, type BinaryFn, rearrange, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
+import { deepEquals } from "../utility/deepEquals.ts";
+import { double } from "./multiply.ts";
 
 /**
  * Creates {@link Addition} AST nodes.
@@ -61,4 +63,9 @@ export const add: BinaryFn<Addition> = binary(Addition)(
     [is(Real), is(Real)],
     (l, r) => [real(l.raw + r.raw), Action.Application],
   ),
+  when(
+    deepEquals,
+    (l, _r) => [double(l), Action.Idempotency],
+  ),
+  rearrange(Addition, () => add),
 );

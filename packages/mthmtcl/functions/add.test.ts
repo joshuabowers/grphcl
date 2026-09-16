@@ -6,6 +6,7 @@ import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { add } from "./add.ts";
+import { double } from "./multiply.ts";
 
 describe("add", () => {
   describe("with pairs of numerics", () => {
@@ -39,11 +40,31 @@ describe("add", () => {
     });
   });
 
+  describe("with nested additions", () => {
+    it("coalesces numeric values across the nesting threshold", () => {
+      expect(
+        add(real(5), add(variable("x"), real(10))),
+      ).toEqual(add(variable("x"), real(15)));
+    });
+
+    it("coalesces equal unbound sub-trees into a double", () => {
+      expect(
+        add(variable("x"), add(real(5), variable("x"))),
+      ).toEqual(add(real(5), double(variable("x"))));
+    });
+  });
+
   describe("with two variables", () => {
     it("returns an Addition of those variables", () => {
       expect(add(variable("x"), variable("y"))).toEqual(
         new Addition(new Variable("x"), new Variable("y")),
       );
+    });
+
+    it("doubles a doubled-variable", () => {
+      expect(
+        add(variable("x"), variable("x")),
+      ).toEqual(double(variable("x")));
     });
   });
 });

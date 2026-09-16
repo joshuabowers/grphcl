@@ -330,3 +330,147 @@ export function partialRight<
 >(fn: BinaryFn<T>, right: Bound): PartialBinaryFn<T, Bound> {
   return multi(method((left: TreeNode) => fn(left, right)));
 }
+
+/**
+ * Walks the passed node looking for equally precedent
+ * sub-trees, yielding those sub-trees which cross the
+ * precedence threshold.
+ *
+ * Essentially, it looks for self-similar nested binary
+ * nodes, yielding all of their children in a single
+ * iterable which are not of their type.
+ *
+ * Note, this breaks the recursion when it first encounters
+ * a different node type to B, so deep sub-expressions
+ * nested within something not-B will not be yielded as
+ * though they were of equals precedence.
+ *
+ * @example Equal precedence children
+ * ```ts
+ * const children = [
+ *   ...coalesce(Addition, add(real(5), add(variable('x'), real(10))))
+ * ] // => [real(5), variable('x'), real(10)]
+ * ```
+ *
+ * @example Stops at precedence threshold; this example
+ * only has two children!
+ * ```ts
+ * const children = [
+ *   ...coalesce(Addition, add(real(2), cos(add(variable('x'), real(1)))))
+ * ] // => [real(2), cos(...)]
+ * ```
+ * @param ctor a constructor function for type B
+ * @param node a TreeNode to evaluate for similarity
+ */
+export function* coalesce<B extends BinaryNode>(
+  ctor: Constructor<B>,
+  node: TreeNode,
+): Generator<TreeNode> {
+  if (is(ctor)(node)) {
+    yield* coalesce(ctor, node.left);
+    yield* coalesce(ctor, node.right);
+  } else {
+    yield node;
+  }
+}
+
+/**
+ * Creates a bushy, balanced tree out of nested instances
+ * of B-flavored BinaryNodes. This is done by recursively
+ * subdividing the set of arguments supplied to the second
+ * function into halves.
+ *
+ * @example
+ * ```ts
+ * const result = balance(Addition)(real(5), variable('x'), variable('y'));
+ * // => add(add(real(5), variable('x')), variable('y'))
+ * ```
+ * @param ctor a constructor function associated with B
+ * @returns a function which creates a bushy tree out of its arguments
+ */
+export function balance<B extends BinaryNode>(
+  ctor: Constructor<B>,
+): (...args: TreeNode[]) => B {
+  return (
+    ...args: TreeNode[]
+  ): B => {
+    const subdivide = (start: number, end: number): B => {
+      const mid = Math.round((end - start) / 2);
+      return new ctor(
+        (mid - start) > 1 ? subdivide(start, mid) : args[start],
+        (end - (mid + 1)) > 1 ? subdivide(mid + 1, end) : args[mid],
+      );
+    };
+    return subdivide(0, args.length);
+  };
+}
+
+/**
+ * Generates an otherwise function for a {@link BinaryFn}
+ * which attempts to combine the collective inputs of
+ * nested self-similar functions to simplify the tree.
+ * This process captures behavior which is both associative
+ * and commutative; only use this for functions/operators
+ * which exhibit that behavior on their inputs!
+ *
+ * This process will apply the function returned by {@link getFn}
+ * repeatedly across successive pairs of children found
+ * by {@link coalesce}; any results which are non-default are
+ * also added to the list of values to consider; children
+ * which generate a non-default value will be removed from
+ * further consideration, as they were consumed by producing
+ * their output.
+ *
+ * Any input which only creates default nodes with the other
+ * values will be passed to the output node list; when the
+ * process finishes, the resulting output list is passed through
+ * {@link balance} to generate a bushy nested tree of B-nodes.
+ *
+ * @example Adding associativity and commutativity to `add`.
+ * ```ts
+ * const add = binary(Addition)(
+ *   // ...
+ *   rearrange(Addition, () => add)
+ * )
+ * ```
+ * @param ctor a constructor function associated with B
+ * @param getFn a function which returns a binary function associated with B
+ * @returns a {@link Context.Otherwise}-flavored {@link When} function
+ */
+export function rearrange<B extends BinaryNode, R extends TreeNode | void>(
+  ctor: Constructor<B>,
+  getFn: () => BinaryFn<B, R>,
+): When<Context.Otherwise> {
+  return otherwise((l, r) => {
+    const inputs = [
+      ...coalesce(ctor, l),
+      ...coalesce(ctor, r),
+    ];
+    let outputs: TreeNode[] = [];
+    if (inputs.length === 2) {
+      return [new ctor(l, r), Action.Creation];
+    }
+    const fn = getFn();
+
+    while (inputs.length > 0) {
+      let first = inputs.shift();
+      if (!first) throw new RangeError("got nothing from non-empty array");
+      for (let i = 0; i < inputs.length; i++) {
+        const n = inputs[i];
+        const combine: TreeNode = fn(first, n);
+        if (
+          !is(ctor)(combine) ||
+          (combine.left !== first && combine.right !== n)
+        ) {
+          inputs.splice(i, 1);
+          inputs.push(...outputs, combine);
+          outputs = [];
+          first = undefined;
+          break;
+        }
+      }
+      if (first) outputs.push(first);
+    }
+    return [balance(ctor)(...outputs), Action.Creation];
+  });
+}

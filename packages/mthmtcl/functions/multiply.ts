@@ -6,6 +6,7 @@ import {
   type BinaryFn,
   type PartialBinaryFn,
   partialLeft,
+  rearrange,
   when,
 } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
@@ -17,6 +18,8 @@ import {
   isReal,
 } from "./complex.ts";
 import { real } from "./real.ts";
+import { deepEquals } from "../utility/deepEquals.ts";
+import { square } from "./raise.ts";
 
 /**
  * Creates {@link Multiplication} AST nodes.
@@ -84,6 +87,11 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
     [is(Real), is(Real)],
     (l, r) => [real(l.raw * r.raw), Action.Application],
   ),
+  when(
+    deepEquals,
+    (l, _r) => [square(l), Action.Idempotency],
+  ),
+  rearrange(Multiplication, () => multiply),
 );
 
 /**
