@@ -2,7 +2,7 @@ import {
   type BinaryNode,
   Boolean,
   Complex,
-  type Numeric,
+  Numeric,
   Real,
   type TreeNode,
 } from "../tree/mod.ts";
@@ -68,15 +68,15 @@ export type Guards<Left, Right> =
  * Describes a function which takes two inputs and maps them
  * to a {@link Rewrite} pair.
  */
-export type RewriteFn<Left, Right, Output = Left | Right> = (
+export type RewriteFn<Left, Right> = (
   left: Left,
   right: Right,
-) => Rewrite<Output>;
+) => Rewrite<TreeNode>;
 
-const unwrap = <Left, Right, Output = Left | Right>(
-  rewrite: Rewrite<Output> | RewriteFn<Left, Right, Output>,
+const unwrap = <Left, Right>(
+  rewrite: Rewrite<TreeNode> | RewriteFn<Left, Right>,
 ) =>
-(left: Left, right: Right): Output =>
+(left: Left, right: Right): TreeNode =>
   (typeof rewrite === "function" ? rewrite(left, right) : rewrite)[0];
 
 function coerce<T extends BinaryNode, R extends TreeNode | void>(
@@ -111,10 +111,9 @@ const identity = <I>(i: I) => i;
 export function when<
   Left extends TreeNode,
   Right extends TreeNode,
-  Output = Left | Right,
 >(
   predicate: Guards<Left, Right>,
-  rewrite: Rewrite<Output> | RewriteFn<Left, Right, Output>,
+  rewrite: Rewrite<TreeNode> | RewriteFn<Left, Right>,
 ): When<
   Context.Algebraic
 > {
@@ -142,7 +141,7 @@ export function otherwise<
   Right extends TreeNode,
   Output = Left | Right,
 >(
-  rewrite: RewriteFn<Left, Right, Output>,
+  rewrite: RewriteFn<Left, Right>,
 ): When<
   Context.Otherwise
 > {
@@ -405,6 +404,8 @@ export function balance<B extends BinaryNode>(
   };
 }
 
+export type TreeComparatorFn = (left: TreeNode, right: TreeNode) => number;
+
 /**
  * Generates an otherwise function for a {@link BinaryFn}
  * which attempts to combine the collective inputs of
@@ -430,16 +431,18 @@ export function balance<B extends BinaryNode>(
  * ```ts
  * const add = binary(Addition)(
  *   // ...
- *   rearrange(Addition, () => add)
+ *   rearrange(Addition, () => add, gravlex)
  * )
  * ```
  * @param ctor a constructor function associated with B
  * @param getFn a function which returns a binary function associated with B
+ * @param comparator a function used to derive operand orderedness
  * @returns a {@link Context.Otherwise}-flavored {@link When} function
  */
 export function rearrange<B extends BinaryNode, R extends TreeNode | void>(
   ctor: Constructor<B>,
   getFn: () => BinaryFn<B, R>,
+  comparator: TreeComparatorFn,
 ): When<Context.Otherwise> {
   return otherwise((l, r) => {
     const inputs = [
@@ -459,8 +462,10 @@ export function rearrange<B extends BinaryNode, R extends TreeNode | void>(
         const n = inputs[i];
         const combine: TreeNode = fn(first, n);
         if (
-          !is(ctor)(combine) ||
-          (combine.left !== first && combine.right !== n)
+          !is(ctor)(combine) || (
+            (combine.left !== first && combine.right !== n) &&
+            (combine.left !== n && combine.right !== first)
+          )
         ) {
           inputs.splice(i, 1);
           inputs.push(...outputs, combine);
@@ -471,6 +476,27 @@ export function rearrange<B extends BinaryNode, R extends TreeNode | void>(
       }
       if (first) outputs.push(first);
     }
-    return [balance(ctor)(...outputs), Action.Creation];
+    outputs.sort(comparator);
+
+    // NB: The following is for tree shaping:
+    // it ensures that the root node of a fractal operator
+    // under the associativity/commutativity ruleset always
+    // has the sole numeric node that operator works upon.
+    // This allows the coefficient to be found in the same
+    // place every time, for example.
+    let root: TreeNode | undefined = undefined;
+    if (outputs.length > 2) {
+      if (is(Numeric)(outputs[0])) {
+        const coefficient = outputs.shift();
+        root = new ctor(coefficient, balance(ctor)(...outputs));
+      } else if (is(Numeric)(outputs[-1])) {
+        const constant = outputs.pop();
+        root = new ctor(balance(ctor)(...outputs), constant);
+      }
+    }
+    return [
+      root ? root : outputs.length > 1 ? balance(ctor)(...outputs) : outputs[0],
+      Action.Creation,
+    ];
   });
 }

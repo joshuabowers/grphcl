@@ -6,7 +6,8 @@ import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { add } from "./add.ts";
-import { double } from "./multiply.ts";
+import { double, multiply } from "./multiply.ts";
+import { raise } from "./raise.ts";
 
 describe("add", () => {
   describe("with pairs of numerics", () => {
@@ -40,6 +41,24 @@ describe("add", () => {
     });
   });
 
+  describe("when dealing with the additive identity", () => {
+    it("returns the right operand if the left is zero", () => {
+      expect(
+        add(real(0), variable("x")),
+      ).toEqual(
+        variable("x"),
+      );
+    });
+
+    it("returns the left operand if the right is zero", () => {
+      expect(
+        add(variable("x"), real(0)),
+      ).toEqual(
+        variable("x"),
+      );
+    });
+  });
+
   describe("with nested additions", () => {
     it("coalesces numeric values across the nesting threshold", () => {
       expect(
@@ -47,10 +66,59 @@ describe("add", () => {
       ).toEqual(add(variable("x"), real(15)));
     });
 
+    it("returns a single, non-additon node if fully coalesced", () => {
+      expect(
+        add(add(variable("x"), real(-1)), real(1)),
+      ).toEqual(variable("x"));
+    });
+
     it("coalesces equal unbound sub-trees into a double", () => {
       expect(
         add(variable("x"), add(real(5), variable("x"))),
       ).toEqual(add(real(5), double(variable("x"))));
+    });
+  });
+
+  describe("with non-combinable nodes", () => {
+    it("reorders numberics right-ward", () => {
+      expect(
+        add(real(5), variable("x")),
+      ).toEqual(add(variable("x"), real(5)));
+    });
+
+    it("reorders nodes based on degree", () => {
+      expect(
+        add(variable("x"), raise(variable("x"), real(2))),
+      ).toEqual(add(raise(variable("x"), real(2)), variable("x")));
+    });
+  });
+
+  describe("when given nested multiplications with primitives", () => {
+    // E.g. x + 2 * x <-> 3 * x
+    it("adds 1 to left operand of right-nested-multiply", () => {
+      expect(
+        add(variable("x"), multiply(real(2), variable("x"))),
+      ).toEqual(
+        multiply(real(3), variable("x")),
+      );
+    });
+
+    // E.g. 2 * x + x <-> 3 * x
+    it("adds 1 to left operand of left-nested-multiply", () => {
+      expect(
+        add(multiply(real(2), variable("x")), variable("x")),
+      ).toEqual(
+        multiply(real(3), variable("x")),
+      );
+    });
+
+    // E.g. 2 * x + 3 * x <-> 5 * x
+    it("adds left operands of dual-nested-multiplies", () => {
+      expect(
+        add(multiply(real(2), variable("x")), multiply(real(3), variable("x"))),
+      ).toEqual(
+        multiply(real(5), variable("x")),
+      );
     });
   });
 

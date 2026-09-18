@@ -23,6 +23,7 @@ export enum Action {
   Application,
   /** The creation of a new AST node of the given type */
   Creation,
+  Commutation,
   Complementation,
   Contradiction,
   /** The conversion of one field type to another */
@@ -103,3 +104,9 @@ export const is = <T>(
 ): Predicate<T> =>
 (value: unknown): value is T =>
   value instanceof ctor && (inner?.(value) ?? true);
+
+export const isNot = <T>(
+  ctor: Constructor<T>,
+  inner?: (value: T) => boolean,
+): Predicate<T> =>
+(value: unknown): value is T => !is(ctor, inner)(value);

@@ -46,6 +46,15 @@ describe("multiply", () => {
         multiply(variable("x"), variable("x")),
       ).toEqual(square(variable("x")));
     });
+
+    it("moves numeric values left-ward as coefficients", () => {
+      expect(
+        multiply(variable("x"), real(5)),
+      ).toEqual(multiply(real(5), variable("x")));
+      expect(
+        multiply(variable("x"), complex(0, 1)),
+      ).toEqual(multiply(complex(0, 1), variable("x")));
+    });
   });
 
   describe("with nested multiplications", () => {
@@ -59,6 +68,35 @@ describe("multiply", () => {
       expect(
         multiply(variable("x"), multiply(real(5), variable("x"))),
       ).toEqual(multiply(real(5), square(variable("x"))));
+    });
+
+    it("returns a sorted monomial for uncombinable terms", () => {
+      expect(
+        multiply(variable("z"), multiply(variable("y"), variable("x"))),
+      ).toEqual(
+        new Multiplication(
+          multiply(variable("x"), variable("y")),
+          variable("z"),
+        ),
+        // multiply(variable("x"), multiply(variable("y"), variable("z"))),
+      );
+    });
+
+    it("places a coefficient as left branch of root node", () => {
+      expect(
+        multiply(
+          multiply(variable("z"), variable("x")),
+          multiply(variable("y"), real(5)),
+        ),
+      ).toEqual(
+        new Multiplication(
+          real(5),
+          new Multiplication(
+            multiply(variable("x"), variable("y")),
+            variable("z"),
+          ),
+        ),
+      );
     });
   });
 

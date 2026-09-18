@@ -1,5 +1,11 @@
 import { _ } from "@arrows/multimethod";
-import { Boolean, Complex, Multiplication, Real } from "../tree/mod.ts";
+import {
+  Boolean,
+  Complex,
+  Multiplication,
+  Numeric,
+  Real,
+} from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import {
   binary,
@@ -20,6 +26,7 @@ import {
 import { real } from "./real.ts";
 import { deepEquals } from "../utility/deepEquals.ts";
 import { square } from "./raise.ts";
+import { monolex } from "../utility/monolex.ts";
 
 /**
  * Creates {@link Multiplication} AST nodes.
@@ -88,10 +95,17 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
     (l, r) => [real(l.raw * r.raw), Action.Application],
   ),
   when(
+    [_, is(Numeric)],
+    (l, r) => [
+      multiply(r, l),
+      Action.Commutation,
+    ],
+  ),
+  when(
     deepEquals,
     (l, _r) => [square(l), Action.Idempotency],
   ),
-  rearrange(Multiplication, () => multiply),
+  rearrange(Multiplication, () => multiply, monolex),
 );
 
 /**

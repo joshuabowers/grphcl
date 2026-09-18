@@ -1,11 +1,21 @@
-import { Addition, Boolean, Complex, Real } from "../tree/mod.ts";
+import {
+  Addition,
+  Boolean,
+  Complex,
+  Multiplication,
+  Numeric,
+  Real,
+  type TreeNode,
+} from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { binary, type BinaryFn, rearrange, when } from "../factories/binary.ts";
+import { _ } from "@arrows/multimethod";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
-import { deepEquals } from "../utility/deepEquals.ts";
-import { double } from "./multiply.ts";
+import { double, multiply } from "./multiply.ts";
+import { deepEquals, isValue } from "../utility/deepEquals.ts";
+import { grevlex } from "../utility/grevlex.ts";
 
 /**
  * Creates {@link Addition} AST nodes.
@@ -64,8 +74,51 @@ export const add: BinaryFn<Addition> = binary(Addition)(
     (l, r) => [real(l.raw + r.raw), Action.Application],
   ),
   when(
+    [isValue(real(0)), _],
+    (_l, r) => [r, Action.Tautology],
+  ),
+  when(
+    [_, isValue(real(0))],
+    (l, _r) => [l, Action.Tautology],
+  ),
+  when(
+    (l, r) =>
+      !(l instanceof Addition) &&
+      !(r instanceof Addition) &&
+      grevlex(l, r) > 0,
+    (l, r) => [add(r, l), Action.Commutation],
+  ),
+  when(
     deepEquals,
     (l, _r) => [double(l), Action.Idempotency],
   ),
-  rearrange(Addition, () => add),
+  when<Multiplication, Multiplication>( // E.g. 2 * x + 3 * x <-> 5 * x
+    (l, r) =>
+      is(Multiplication)(l) && is(Numeric)(l.left) &&
+      is(Multiplication)(r) && is(Numeric)(r.left) &&
+      deepEquals(l.right, r.right),
+    (l, r) => [
+      multiply(add(l.left, r.left), l.right),
+      Action.Absorption,
+    ],
+  ),
+  when<Multiplication, TreeNode>( // E.g. 2 * x + x <-> 3 * x
+    (l, r) =>
+      is(Multiplication)(l) && is(Numeric)(l.left) &&
+      deepEquals(l.right, r),
+    (l, r) => [
+      multiply(add(l.left, real(1)), r),
+      Action.Absorption,
+    ],
+  ),
+  when<TreeNode, Multiplication>( // E.g. x + 2 * x <-> 3 * x
+    (l, r) =>
+      is(Multiplication)(r) && is(Numeric)(r.left) &&
+      deepEquals(l, r.right),
+    (l, r) => [
+      multiply(add(r.left, real(1)), l),
+      Action.Absorption,
+    ],
+  ),
+  rearrange(Addition, () => add, grevlex),
 );
