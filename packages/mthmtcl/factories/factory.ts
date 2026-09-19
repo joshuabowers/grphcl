@@ -31,6 +31,7 @@ export enum Action {
   Degeneracy,
   Delegation,
   DeMorgan,
+  Distribution,
   Idempotency,
   Identity,
   Recursion,

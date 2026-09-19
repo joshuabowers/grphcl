@@ -6,8 +6,10 @@ import { complex, ComplexInfinity } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { negate } from "./negate.ts";
+import { raise, square } from "./raise.ts";
+import { cos } from "./trigonometric.ts";
+import { add } from "./add.ts";
 import { double, multiply } from "./multiply.ts";
-import { square } from "./raise.ts";
 
 describe("multiply", () => {
   describe("with pairs of numeric inputs", () => {
@@ -55,6 +57,81 @@ describe("multiply", () => {
         multiply(variable("x"), complex(0, 1)),
       ).toEqual(multiply(complex(0, 1), variable("x")));
     });
+
+    it("sorts terms (binary) by monolex", () => {
+      expect(
+        multiply(variable("y"), variable("x")),
+      ).toEqual(new Multiplication(variable("x"), variable("y")));
+      expect(
+        multiply(cos(variable("x")), variable("x")),
+      ).toEqual(
+        new Multiplication(variable("x"), cos(variable("x"))),
+      );
+    });
+
+    it("returns 0 if it has a 0 coefficient", () => {
+      expect(
+        multiply(variable("x"), real(0)),
+      ).toEqual(real(0));
+      expect(
+        multiply(variable("x"), complex(0, 0)),
+      ).toEqual(complex(0, 0));
+      expect(
+        multiply(variable("x"), boolean(false)),
+      ).toEqual(boolean(false));
+    });
+
+    it("returns the other multiplicand if it has a 1 coefficient", () => {
+      expect(
+        multiply(variable("x"), real(1)),
+      ).toEqual(variable("x"));
+      expect(
+        multiply(variable("x"), complex(1, 0)),
+      ).toEqual(variable("x"));
+      expect(
+        multiply(variable("x"), boolean(true)),
+      ).toEqual(variable("x"));
+    });
+  });
+
+  describe("with similarly based exponentiatons", () => {
+    it("adds to the power when multiplying by the base from the left", () => {
+      expect(
+        multiply(variable("x"), square(variable("x"))),
+      ).toEqual(
+        raise(variable("x"), real(3)),
+      );
+    });
+
+    it("adds to the power when multiplying by the base from the right", () => {
+      expect(
+        multiply(square(variable("x")), variable("x")),
+      ).toEqual(
+        raise(variable("x"), real(3)),
+      );
+    });
+
+    it("combines equivalently-based powers together", () => {
+      expect(
+        multiply(square(variable("x")), raise(variable("x"), real(3))),
+      ).toEqual(
+        raise(variable("x"), real(5)),
+      );
+    });
+
+    it("combines numeric bases", () => {
+      expect(
+        multiply(real(2), raise(real(2), variable("x"))),
+      ).toEqual(
+        raise(real(2), add(variable("x"), real(1))),
+      );
+    });
+
+    it("is 1 for multiplicative inverses", () => {
+      expect(
+        multiply(variable("x"), raise(variable("x"), real(-1))),
+      ).toEqual(real(1));
+    });
   });
 
   describe("with nested multiplications", () => {
@@ -78,7 +155,6 @@ describe("multiply", () => {
           multiply(variable("x"), variable("y")),
           variable("z"),
         ),
-        // multiply(variable("x"), multiply(variable("y"), variable("z"))),
       );
     });
 
@@ -96,6 +172,22 @@ describe("multiply", () => {
             variable("z"),
           ),
         ),
+      );
+    });
+  });
+
+  describe("with exponentiations in a nested context", () => {
+    it("combines exponentiations with similar bases", () => {
+      expect(
+        multiply(
+          square(variable("x")),
+          multiply(
+            variable("y"),
+            raise(variable("x"), real(3)),
+          ),
+        ),
+      ).toEqual(
+        multiply(variable("y"), raise(variable("x"), real(5))),
       );
     });
   });

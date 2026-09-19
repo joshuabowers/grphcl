@@ -77,6 +77,20 @@ describe("add", () => {
         add(variable("x"), add(real(5), variable("x"))),
       ).toEqual(add(real(5), double(variable("x"))));
     });
+
+    it("sorts a numeric as the right child of the root operation", () => {
+      expect(
+        add(
+          add(variable("x"), real(5)),
+          add(variable("y"), real(10)),
+        ),
+      ).toEqual(
+        add(
+          add(variable("x"), variable("y")),
+          real(15),
+        ),
+      );
+    });
   });
 
   describe("with non-combinable nodes", () => {

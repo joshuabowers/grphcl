@@ -2,9 +2,11 @@ import { _ } from "@arrows/multimethod";
 import {
   Boolean,
   Complex,
+  Exponentiation,
   Multiplication,
   Numeric,
   Real,
+  type TreeNode,
 } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import {
@@ -25,7 +27,9 @@ import {
 } from "./complex.ts";
 import { real } from "./real.ts";
 import { deepEquals } from "../utility/deepEquals.ts";
-import { square } from "./raise.ts";
+import { add } from "./add.ts";
+import { raise, square } from "./raise.ts";
+import { isOne, isZero } from "../utility/integers.ts";
 import { monolex } from "../utility/monolex.ts";
 
 /**
@@ -95,15 +99,44 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
     (l, r) => [real(l.raw * r.raw), Action.Application],
   ),
   when(
-    [_, is(Numeric)],
-    (l, r) => [
-      multiply(r, l),
-      Action.Commutation,
-    ],
+    (l, r) => monolex(l, r) > 0,
+    (l, r) => [multiply(r, l), Action.Commutation],
+  ),
+  when(
+    [is(Numeric, isZero), _],
+    (l, _r) => [l, Action.Annihilator],
+  ),
+  when(
+    [is(Numeric, isOne), _],
+    (_l, r) => [r, Action.Identity],
   ),
   when(
     deepEquals,
     (l, _r) => [square(l), Action.Idempotency],
+  ),
+  when<Exponentiation, Exponentiation>(
+    (l, r) =>
+      is(Exponentiation)(l) &&
+      is(Exponentiation)(r) &&
+      deepEquals(l.left, r.left),
+    (l, r) => [
+      raise(l.left, add(l.right, r.right)),
+      Action.Absorption,
+    ],
+  ),
+  when<Exponentiation, TreeNode>(
+    (l, r) => is(Exponentiation)(l) && deepEquals(l.left, r),
+    (l, r) => [
+      raise(r, add(l.right, real(1))),
+      Action.Absorption,
+    ],
+  ),
+  when<TreeNode, Exponentiation>(
+    (l, r) => is(Exponentiation)(r) && deepEquals(l, r.left),
+    (l, r) => [
+      raise(l, add(r.right, real(1))),
+      Action.Absorption,
+    ],
   ),
   rearrange(Multiplication, () => multiply, monolex),
 );

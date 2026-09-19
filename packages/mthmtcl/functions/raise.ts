@@ -1,4 +1,13 @@
-import { Boolean, Complex, Exponentiation, Real } from "../tree/mod.ts";
+import {
+  Boolean,
+  Complex,
+  Exponentiation,
+  Logarithm,
+  Multiplication,
+  Numeric,
+  Real,
+  type TreeNode,
+} from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import {
   binary,
@@ -7,9 +16,14 @@ import {
   partialRight,
   when,
 } from "../factories/binary.ts";
+import { _ } from "@arrows/multimethod";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
+import { isOne, isZero } from "../utility/integers.ts";
+import { preserve } from "./preserve.ts";
+import { deepEquals } from "../utility/deepEquals.ts";
+import { multiply } from "./multiply.ts";
 
 /**
  * Creates {@link Exponentiation} AST nodes.
@@ -69,6 +83,43 @@ export const raise: BinaryFn<Exponentiation> = binary(Exponentiation)(
   when(
     [is(Real), is(Real)],
     (l, r) => [real(l.raw ** r.raw), Action.Application],
+  ),
+  when(
+    [is(Numeric, isZero), _],
+    (l, _r) => [l, Action.Annihilator],
+  ),
+  when(
+    [_, is(Numeric, isZero)],
+    (_l, r) => [
+      preserve(r, real(1)),
+      Action.Annihilator,
+    ],
+  ),
+  when(
+    [is(Numeric, isOne), _],
+    (l, _r) => [l, Action.Identity],
+  ),
+  when(
+    [_, is(Numeric, isOne)],
+    (l, _r) => [l, Action.Idempotency],
+  ),
+  when<TreeNode, Logarithm>(
+    (l, r) => is(Logarithm)(r) && deepEquals(l, r.left),
+    (_l, r) => [r.right, Action.Complementation],
+  ),
+  when(
+    [is(Exponentiation), _],
+    (l, r) => [
+      raise(l.left, multiply(l.right, r)),
+      Action.Distribution,
+    ],
+  ),
+  when(
+    [is(Multiplication), _],
+    (l, r) => [
+      multiply(raise(l.left, r), raise(l.right, r)),
+      Action.Distribution,
+    ],
   ),
 );
 

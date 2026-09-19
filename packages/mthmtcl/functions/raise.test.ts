@@ -5,6 +5,8 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
+import { lb, lg, ln, log } from "./log.ts";
+import { multiply } from "./multiply.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 
 describe("raise", () => {
@@ -21,6 +23,91 @@ describe("raise", () => {
 
     it("returns real for real inputs", () => {
       expect(raise(real(2), real(10))).toEqual(real(1024));
+    });
+  });
+
+  describe("with an indeterminate", () => {
+    it("returns 0 when the base is 0", () => {
+      expect(
+        raise(real(0), variable("x")),
+      ).toEqual(
+        real(0),
+      );
+    });
+
+    it("returns 1 when the exponent is 0", () => {
+      expect(
+        raise(variable("x"), real(0)),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("returns 1 when the base is 1", () => {
+      expect(
+        raise(real(1), variable("x")),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("returns the base whenever the exponent is 1", () => {
+      expect(
+        raise(variable("x"), real(1)),
+      ).toEqual(
+        variable("x"),
+      );
+    });
+
+    it("returns the sub-expression of an lb if base 2", () => {
+      expect(
+        raise(real(2), lb(variable("x"))),
+      ).toEqual(
+        variable("x"),
+      );
+    });
+
+    it("returns the sub-expression of an ln if base e", () => {
+      expect(
+        raise(real(Math.E), ln(variable("x"))),
+      ).toEqual(
+        variable("x"),
+      );
+    });
+
+    it("returns the sub-expression of an lg if base 10", () => {
+      expect(
+        raise(real(10), lg(variable("x"))),
+      ).toEqual(
+        variable("x"),
+      );
+    });
+
+    it("returns the value of a logarithm if raising similar base to it", () => {
+      expect(
+        raise(complex(0, 1), log(complex(0, 1), variable("x"))),
+      ).toEqual(
+        variable("x"),
+      );
+    });
+
+    it("multiplies the exponent of a base exponential against the exponent", () => {
+      expect(
+        raise(raise(variable("x"), variable("y")), variable("z")),
+      ).toEqual(
+        raise(variable("x"), multiply(variable("y"), variable("z"))),
+      );
+    });
+
+    it("converts a base multiplication into a product of exponentiations", () => {
+      expect(
+        raise(multiply(variable("x"), variable("y")), variable("z")),
+      ).toEqual(
+        multiply(
+          raise(variable("x"), variable("z")),
+          raise(variable("y"), variable("z")),
+        ),
+      );
     });
   });
 
