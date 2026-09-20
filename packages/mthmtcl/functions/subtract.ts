@@ -1,9 +1,15 @@
-import { Boolean, Complex, Real, Subtraction } from "../tree/mod.ts";
-import { Action, is } from "../factories/factory.ts";
-import { binary, type BinaryFn, when } from "../factories/binary.ts";
-import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
+import {
+  Addition,
+  Negation,
+  Numeric,
+  Subtraction,
+  type TreeNode,
+} from "../tree/mod.ts";
+import { Action, is, type Rewrite } from "../factories/factory.ts";
+import { binary, type BinaryFn, otherwise } from "../factories/binary.ts";
+import { isBelowThreshold } from "../utility/isBelowThreshold.ts";
+import { add } from "./add.ts";
+import { negate } from "./negate.ts";
 
 /**
  * Creates {@link Subtraction} AST nodes.
@@ -43,22 +49,33 @@ import { real } from "./real.ts";
  * ```
  */
 export const subtract: BinaryFn<Subtraction> = binary(Subtraction)(
-  when(
-    [is(Boolean), is(Boolean)],
-    (l, r) => [
-      boolean((l.raw || r.raw) && !(l.raw && r.raw)),
-      Action.Application,
-    ],
-  ),
-  when(
-    [is(Complex), is(Complex)],
-    (l, r) => [
-      complex(l.raw.a - r.raw.a, l.raw.b - r.raw.b),
-      Action.Application,
-    ],
-  ),
-  when(
-    [is(Real), is(Real)],
-    (l, r) => [real(l.raw - r.raw), Action.Application],
-  ),
+  otherwise((l, r) => {
+    const rewritten = add(l, negate(r));
+    let response: Rewrite<TreeNode> | undefined = undefined;
+    if (is(Addition)(rewritten)) {
+      if (
+        is(Numeric)(rewritten.right) && isBelowThreshold(0)(rewritten.right)
+      ) {
+        response = [
+          new Subtraction(rewritten.left, negate(rewritten.right)),
+          Action.Creation,
+        ];
+      } else if (
+        is(Negation)(rewritten.left) && !is(Negation)(rewritten.right)
+      ) {
+        response = [
+          new Subtraction(rewritten.right, rewritten.left.child),
+          Action.Creation,
+        ];
+      } else if (
+        !is(Negation)(rewritten.left) && is(Negation)(rewritten.right)
+      ) {
+        response = [
+          new Subtraction(rewritten.left, rewritten.right.child),
+          Action.Creation,
+        ];
+      }
+    }
+    return response ?? [rewritten, Action.Delegation];
+  }),
 );

@@ -5,6 +5,9 @@ import { variable } from "../functions/variable.ts";
 import { raise } from "../functions/raise.ts";
 import { cos } from "../functions/trigonometric.ts";
 import { monolex } from "./monolex.ts";
+import { divide } from "../functions/divide.ts";
+import { add } from "../functions/add.ts";
+import { subtract } from "../functions/subtract.ts";
 
 describe("monolex", () => {
   it("is 0 for [numeric, numeric]", () => {
@@ -53,6 +56,30 @@ describe("monolex", () => {
     ).toEqual(-1);
   });
 
+  it("is -1 for [numeric, exponential(addition)]", () => {
+    expect(
+      monolex(real(5), raise(add(variable("x"), real(1)), real(0.5))),
+    ).toEqual(-1);
+  });
+
+  it("is 1 for [exponential(addition), numeric]", () => {
+    expect(
+      monolex(raise(add(variable("x"), real(1)), real(0.5)), real(5)),
+    ).toEqual(1);
+  });
+
+  it("is -1 for [numeric, exponential(subtraction)]", () => {
+    expect(
+      monolex(real(5), raise(subtract(variable("x"), real(1)), real(0.5))),
+    ).toEqual(-1);
+  });
+
+  it("is 1 for [exponential(subtraction), numeric]", () => {
+    expect(
+      monolex(raise(subtract(variable("x"), real(1)), real(0.5)), real(5)),
+    ).toEqual(1);
+  });
+
   it("is [variable, variable] for [exponential(variable), exponential(variable)]", () => {
     expect(
       monolex(raise(variable("x"), real(2)), raise(variable("y"), real(3))),
@@ -68,6 +95,18 @@ describe("monolex", () => {
   it("is 1 for [cos, variable]", () => {
     expect(
       monolex(cos(variable("x")), variable("x")),
+    ).toEqual(1);
+  });
+
+  it("is -1 for [numeric, division]", () => {
+    expect(
+      monolex(real(5), divide(real(1), variable("x"))),
+    ).toEqual(-1);
+  });
+
+  it("is 1 for [division, numeric]", () => {
+    expect(
+      monolex(divide(real(1), variable("x")), real(5)),
     ).toEqual(1);
   });
 

@@ -6,10 +6,11 @@ import { complex, ComplexInfinity } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { negate } from "./negate.ts";
-import { raise, square } from "./raise.ts";
+import { raise, reciprocal, square } from "./raise.ts";
 import { cos } from "./trigonometric.ts";
 import { add } from "./add.ts";
 import { double, multiply } from "./multiply.ts";
+import { divide } from "./divide.ts";
 
 describe("multiply", () => {
   describe("with pairs of numeric inputs", () => {
@@ -189,6 +190,69 @@ describe("multiply", () => {
       ).toEqual(
         multiply(variable("y"), raise(variable("x"), real(5))),
       );
+    });
+  });
+
+  describe("with exponentiations of -1", () => {
+    it("converts from left to a division", () => {
+      expect(
+        multiply(
+          reciprocal(variable("x")),
+          variable("y"),
+        ),
+      ).toEqual(divide(variable("y"), variable("x")));
+    });
+
+    it("converts from right to a division", () => {
+      expect(
+        multiply(
+          variable("y"),
+          reciprocal(variable("x")),
+        ),
+      ).toEqual(divide(variable("y"), variable("x")));
+    });
+
+    it("does not convert for mutually negated powers", () => {
+      expect(
+        multiply(
+          reciprocal(variable("x")),
+          reciprocal(variable("y")),
+        ),
+      ).toEqual(
+        new Multiplication(
+          reciprocal(variable("x")),
+          reciprocal(variable("y")),
+        ),
+      );
+    });
+  });
+
+  describe("with divisions", () => {
+    it("converts a left division to a multiplication", () => {
+      expect(
+        multiply(
+          divide(variable("x"), variable("y")),
+          variable("x"),
+        ),
+      ).toEqual(multiply(square(variable("x")), reciprocal(variable("y"))));
+    });
+
+    it("converts a right division to a multiplication", () => {
+      expect(
+        multiply(
+          variable("x"),
+          divide(variable("x"), variable("y")),
+        ),
+      ).toEqual(multiply(square(variable("x")), reciprocal(variable("y"))));
+    });
+
+    it("converts both divisions to multipications", () => {
+      expect(
+        multiply(
+          divide(variable("x"), variable("y")),
+          divide(variable("y"), variable("x")),
+        ),
+      ).toEqual(real(1));
     });
   });
 

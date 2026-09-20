@@ -1,8 +1,18 @@
-import { Boolean, Complex, Division, Real } from "../tree/mod.ts";
-import { Action, is } from "../factories/factory.ts";
-import { binary, type BinaryFn, when } from "../factories/binary.ts";
-import { complex } from "./complex.ts";
+import {
+  Boolean,
+  Division,
+  Exponentiation,
+  Multiplication,
+  Numeric,
+  type TreeNode,
+} from "../tree/mod.ts";
+import { Action, is, type Rewrite } from "../factories/factory.ts";
+import { binary, type BinaryFn, otherwise, when } from "../factories/binary.ts";
 import { real } from "./real.ts";
+import { isNegativeOne } from "../utility/integers.ts";
+import { reciprocal } from "./raise.ts";
+import { multiply } from "./multiply.ts";
+import { preserve } from "./preserve.ts";
 
 /**
  * Creates {@link Division} AST nodes.
@@ -46,20 +56,33 @@ export const divide: BinaryFn<Division> = binary(Division)(
     [is(Boolean), is(Boolean)],
     (l, _r) => [l, Action.Application],
   ),
-  when(
-    [is(Complex), is(Complex)],
-    (l, r) => {
-      const denominator = r.raw.a ** 2 + r.raw.b ** 2;
-      const a = l.raw.a * r.raw.a + l.raw.b * r.raw.b;
-      const b = l.raw.b * r.raw.a - l.raw.a * r.raw.b;
-      return [
-        complex(a / denominator, b / denominator),
-        Action.Application,
+  otherwise((l, r) => {
+    const rewritten = multiply(l, reciprocal(r));
+    let response: Rewrite<TreeNode> | undefined = undefined;
+    if (is(Exponentiation)(rewritten) && isNegativeOne(rewritten.right)) {
+      response = [
+        new Division(preserve(rewritten.right, real(1)), rewritten.left),
+        Action.Creation,
       ];
-    },
-  ),
-  when(
-    [is(Real), is(Real)],
-    (l, r) => [real(l.raw / r.raw), Action.Application],
-  ),
+    } else if (is(Multiplication)(rewritten)) {
+      if (
+        is(Exponentiation)(rewritten.left) &&
+        is(Numeric, isNegativeOne)(rewritten.left.right)
+      ) {
+        response = [
+          new Division(rewritten.right, rewritten.left.left),
+          Action.Creation,
+        ];
+      } else if (
+        is(Exponentiation)(rewritten.right) &&
+        is(Numeric, isNegativeOne)(rewritten.right.right)
+      ) {
+        response = [
+          new Division(rewritten.left, rewritten.right.left),
+          Action.Creation,
+        ];
+      }
+    }
+    return response ?? [rewritten, Action.Delegation];
+  }),
 );

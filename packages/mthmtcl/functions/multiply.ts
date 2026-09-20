@@ -2,11 +2,12 @@ import { _ } from "@arrows/multimethod";
 import {
   Boolean,
   Complex,
+  Division,
   Exponentiation,
   Multiplication,
   Numeric,
   Real,
-  type TreeNode,
+  TreeNode,
 } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import {
@@ -28,8 +29,8 @@ import {
 import { real } from "./real.ts";
 import { deepEquals } from "../utility/deepEquals.ts";
 import { add } from "./add.ts";
-import { raise, square } from "./raise.ts";
-import { isOne, isZero } from "../utility/integers.ts";
+import { raise, reciprocal, square } from "./raise.ts";
+import { isNegativeOne, isOne, isZero } from "../utility/integers.ts";
 import { monolex } from "../utility/monolex.ts";
 
 /**
@@ -135,6 +136,50 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
     (l, r) => is(Exponentiation)(r) && deepEquals(l, r.left),
     (l, r) => [
       raise(l, add(r.right, real(1))),
+      Action.Absorption,
+    ],
+  ),
+  when(
+    [
+      is(Exponentiation, (e) =>
+        !is(Multiplication)(e.left) &&
+        isNegativeOne(e.right)),
+      is(TreeNode, (e) =>
+        !(e instanceof Exponentiation) &&
+        !(e instanceof Multiplication)),
+    ],
+    (l, r) => [
+      new Division(r, l.left),
+      Action.Conversion,
+    ],
+  ),
+  when(
+    [is(Division), is(Division)],
+    (l, r) => [
+      multiply(
+        multiply(l.left, r.left),
+        reciprocal(multiply(l.right, r.right)),
+      ),
+      Action.Absorption,
+    ],
+  ),
+  when(
+    [is(Division), _],
+    (l, r) => [
+      multiply(
+        multiply(l.left, r),
+        reciprocal(l.right),
+      ),
+      Action.Absorption,
+    ],
+  ),
+  when(
+    [_, is(Division)],
+    (l, r) => [
+      multiply(
+        multiply(l, r.left),
+        reciprocal(r.right),
+      ),
       Action.Absorption,
     ],
   ),

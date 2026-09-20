@@ -1,6 +1,6 @@
 import { method, type Multi, multi } from "@arrows/multimethod";
 import { is } from "../factories/factory.ts";
-import { Boolean, Complex, type Numeric, Real } from "../tree/mod.ts";
+import { Boolean, Complex, Negation, type Numeric, Real } from "../tree/mod.ts";
 
 export interface ConstantPredicate extends Multi {
   (expression: Complex): boolean;
@@ -45,4 +45,12 @@ export const isOne: ConstantPredicate = multi(
   method(is(Boolean), (b: Boolean) => b.raw),
   method(is(Complex), (c: Complex) => c.raw.a === 1 && c.raw.b === 0),
   method(is(Real), (r: Real) => r.raw === 1),
+);
+
+export const isNegativeOne: ConstantPredicate = multi(
+  method(is(Boolean), (b: Boolean) => b.raw),
+  method(is(Complex), (c: Complex) => c.raw.a === -1 && c.raw.b === 0),
+  method(is(Real), (r: Real) => r.raw === -1),
+  method(is(Negation), true),
+  method(false),
 );
