@@ -20,6 +20,7 @@ import {
   Context,
   type EdgeCaseFn,
   is,
+  type MathFn,
   type Predicate,
   type Rewrite,
   type When,
@@ -173,7 +174,7 @@ export function otherwise<
 export interface BinaryFn<
   T extends BinaryNode,
   R extends TreeNode | void = void,
-> extends Multi {
+> extends MathFn<T> {
   (left: Boolean, right: Boolean): Choose<R, Boolean>;
   (left: Boolean, right: Complex): Choose<R, Complex>;
   (left: Boolean, right: Real): Choose<R, Real>;
@@ -184,7 +185,6 @@ export interface BinaryFn<
   (left: Real, right: Complex): Choose<R, Complex>;
   (left: Real, right: Real): Choose<R, Real>;
   (left: Numeric, right: Numeric): Choose<R, Numeric>;
-  (left: TreeNode, right: TreeNode): T;
 }
 
 /**

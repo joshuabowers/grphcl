@@ -1,3 +1,4 @@
+import type { BinaryNode, TreeNode, UnaryNode } from "../tree/mod.ts";
 import type { method, Multi } from "@arrows/multimethod";
 
 /**
@@ -111,3 +112,14 @@ export const isNot = <T>(
   inner?: (value: T) => boolean,
 ): Predicate<T> =>
 (value: unknown): value is T => !is(ctor, inner)(value);
+
+export interface MathFn<
+  T extends TreeNode,
+  Params extends unknown[] = InferParams<T>,
+> extends Multi {
+  (...args: Params): T;
+}
+
+export type InferParams<T extends TreeNode> = T extends UnaryNode ? [TreeNode]
+  : (T extends BinaryNode ? [TreeNode, TreeNode]
+    : never);
