@@ -52,7 +52,6 @@ const round = (value: number, precision: number) => {
 };
 
 export const canonicalize: ExpressionFn = multi(
-  method((e: TreeNode) => e),
   when(is(Real), (e) => new Real(round(e.raw, 15))),
   when(
     is(Exponentiation, (e) => isBelowThreshold(0)(e.right)),
@@ -70,6 +69,7 @@ export const canonicalize: ExpressionFn = multi(
     is(Addition, (e) => is(Negation)(e.right)),
     (e) => new Subtraction(e.left, negate(e.right)),
   ),
+  method((e: TreeNode) => e),
 );
 
 export const canonicalizeFrom = <

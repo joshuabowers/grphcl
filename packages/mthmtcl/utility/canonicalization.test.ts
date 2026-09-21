@@ -38,4 +38,10 @@ describe("canonicalize", () => {
       canonicalize(add(variable("x"), negate(variable("y")))),
     ).toEqual(subtract(variable("x"), variable("y")));
   });
+
+  it("passes through an already canonical TreeNode", () => {
+    expect(
+      canonicalize(add(variable("x"), real(5))),
+    ).toEqual(add(variable("x"), real(5)));
+  });
 });
