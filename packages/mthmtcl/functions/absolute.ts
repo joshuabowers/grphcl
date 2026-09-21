@@ -3,6 +3,23 @@ import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
+
+/**
+ * Internal implementation of {@link abs}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $abs: UnaryFn<Absolute> = unary(Absolute)(
+  when(is(Boolean), (b) => [b, Action.Application]),
+  when(
+    is(Complex),
+    (c) => [
+      complex(Math.hypot(c.raw.a, c.raw.b), 0),
+      Action.Absorption,
+    ],
+  ),
+  when(is(Real), (r) => [real(Math.abs(r.raw)), Action.Application]),
+);
 
 /**
  * Creates {@link Absolute} AST nodes;
@@ -24,14 +41,4 @@ import { real } from "./real.ts";
  * const result = abs(complex(3, 4)) // => new Complex({a: 5, b: 0})
  * ```
  */
-export const abs: UnaryFn<Absolute> = unary(Absolute)(
-  when(is(Boolean), (b) => [b, Action.Application]),
-  when(
-    is(Complex),
-    (c) => [
-      complex(Math.hypot(c.raw.a, c.raw.b), 0),
-      Action.Absorption,
-    ],
-  ),
-  when(is(Real), (r) => [real(Math.abs(r.raw)), Action.Application]),
-);
+export const abs: UnaryFn<Absolute> = canonicalizeFrom($abs);

@@ -14,7 +14,7 @@ import { Action, is } from "../factories/factory.ts";
 import { binary, type BinaryFn, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
 import { not } from "./logical/complement.ts";
-import { abs } from "./absolute.ts";
+import { $abs } from "./absolute.ts";
 
 /**
  * Creates {@link Equality} AST nodes for unbound inputs and returns a
@@ -75,7 +75,7 @@ export const gt: BinaryFn<
     Action.Application,
   ]),
   when([is(Complex), is(Complex)], (l, r) => [
-    boolean(abs(l).raw.a > abs(r).raw.a),
+    boolean($abs(l).raw.a > $abs(r).raw.a),
     Action.Application,
   ]),
   when([is(Real), is(Real)], (l, r) => [
@@ -135,7 +135,7 @@ export const lt: BinaryFn<
     Action.Application,
   ]),
   when([is(Complex), is(Complex)], (l, r) => [
-    boolean(abs(l).raw.a < abs(r).raw.a),
+    boolean($abs(l).raw.a < $abs(r).raw.a),
     Action.Application,
   ]),
   when([is(Real), is(Real)], (l, r) => [

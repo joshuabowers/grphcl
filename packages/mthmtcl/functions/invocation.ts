@@ -64,7 +64,7 @@ import {
 } from "./logical/mod.ts";
 import { nand } from "@bowers/mthmtcl/functions";
 import { combine, permute } from "./combinatorics.ts";
-import { abs } from "./absolute.ts";
+import { $abs } from "./absolute.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
@@ -137,7 +137,7 @@ const evaluate: EvaluateFn = multi(
   when(is(Permutation), binary(permute)),
   when(is(Combination), binary(combine)),
   //
-  when(is(Absolute), unary(abs)),
+  when(is(Absolute), unary($abs)),
   //
   when(is(Trigonometric.Cosine), unary(cos)),
   when(is(Trigonometric.Cotangent), unary(cot)),

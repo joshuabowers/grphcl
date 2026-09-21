@@ -32,7 +32,7 @@ import { multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 import { negate } from "./negate.ts";
-import { abs } from "./absolute.ts";
+import { $abs } from "./absolute.ts";
 import { ln } from "./log.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
@@ -162,7 +162,7 @@ export const differentiate: DifferentiateFn = multi(
     chain((e) =>
       negate(
         reciprocal(multiply(
-          abs(e.child),
+          $abs(e.child),
           sqrt(subtract(square(e.child), real(1))),
         )),
       )
@@ -172,7 +172,7 @@ export const differentiate: DifferentiateFn = multi(
     is(Arcus.Secant),
     chain((e) =>
       reciprocal(multiply(
-        abs(e.child),
+        $abs(e.child),
         sqrt(subtract(square(e.child), real(1))),
       ))
     ),
@@ -231,7 +231,7 @@ export const differentiate: DifferentiateFn = multi(
     is(AreaHyperbolic.Cosecant),
     chain((e) =>
       negate(reciprocal(multiply(
-        abs(e.child),
+        $abs(e.child),
         sqrt(add(real(1), square(e.child))),
       )))
     ),

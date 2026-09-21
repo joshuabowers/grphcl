@@ -12,7 +12,7 @@ import { divide } from "./divide.ts";
 import { negate } from "./negate.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 import { lb, lg, ln } from "./log.ts";
-import { abs } from "./absolute.ts";
+import { $abs } from "./absolute.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
@@ -91,8 +91,8 @@ describe("differentiate", () => {
 
   describe("of absolute values", () => {
     it("returns the chain rule of the derivative of the absolute", () => {
-      expect(differentiate(abs(variable("x")))).toEqual(
-        divide(variable("x"), abs(variable("x"))),
+      expect(differentiate($abs(variable("x")))).toEqual(
+        divide(variable("x"), $abs(variable("x"))),
       );
     });
   });
@@ -186,7 +186,7 @@ describe("differentiate", () => {
     it("returns the chain rule of the derivative of the asec", () => {
       expect(differentiate(asec(variable("x")))).toEqual(
         reciprocal(multiply(
-          abs(variable("x")),
+          $abs(variable("x")),
           sqrt(subtract(square(variable("x")), real(1))),
         )),
       );
@@ -195,7 +195,7 @@ describe("differentiate", () => {
     it("returns the chain rule of the derivative of the acsc", () => {
       expect(differentiate(acsc(variable("x")))).toEqual(
         negate(reciprocal(multiply(
-          abs(variable("x")),
+          $abs(variable("x")),
           sqrt(subtract(square(variable("x")), real(1))),
         ))),
       );
@@ -283,7 +283,7 @@ describe("differentiate", () => {
     it("returns the chain rule of the derivative of the acsch", () => {
       expect(differentiate(acsch(variable("x")))).toEqual(
         negate(reciprocal(multiply(
-          abs(variable("x")),
+          $abs(variable("x")),
           sqrt(add(real(1), square(variable("x")))),
         ))),
       );
