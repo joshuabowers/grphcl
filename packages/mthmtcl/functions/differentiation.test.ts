@@ -5,7 +5,7 @@ import { real } from "./real.ts";
 import { complex } from "./complex.ts";
 import { differentiate } from "./differentiation.ts";
 import { variable } from "./variable.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
@@ -45,7 +45,7 @@ describe("differentiate", () => {
 
   describe("of additions", () => {
     it("is the sum of the derivatives", () => {
-      expect(differentiate(add(variable("x"), real(1)))).toEqual(real(1));
+      expect(differentiate($add(variable("x"), real(1)))).toEqual(real(1));
     });
 
     it("handles subtractions correctly", () => {
@@ -179,7 +179,7 @@ describe("differentiate", () => {
 
     it("returns the chain rule of the derivative of the atan", () => {
       expect(differentiate(atan(variable("x")))).toEqual(
-        reciprocal(add(real(1), square(variable("x")))),
+        reciprocal($add(real(1), square(variable("x")))),
       );
     });
 
@@ -203,7 +203,7 @@ describe("differentiate", () => {
 
     it("returns the chain rule of the derivative of the acot", () => {
       expect(differentiate(acot(variable("x")))).toEqual(
-        negate(reciprocal(add(square(variable("x")), real(1)))),
+        negate(reciprocal($add(square(variable("x")), real(1)))),
       );
     });
   });
@@ -261,7 +261,7 @@ describe("differentiate", () => {
 
     it("returns the chain rule of the derivative of the asinh", () => {
       expect(differentiate(asinh(variable("x")))).toEqual(
-        reciprocal(sqrt(add(real(1), square(variable("x"))))),
+        reciprocal(sqrt($add(real(1), square(variable("x"))))),
       );
     });
 
@@ -284,7 +284,7 @@ describe("differentiate", () => {
       expect(differentiate(acsch(variable("x")))).toEqual(
         negate(reciprocal(multiply(
           $abs(variable("x")),
-          sqrt(add(real(1), square(variable("x")))),
+          sqrt($add(real(1), square(variable("x")))),
         ))),
       );
     });

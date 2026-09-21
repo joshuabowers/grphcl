@@ -45,7 +45,7 @@ import type { UnaryFn } from "../factories/unary.ts";
 import type { BinaryFn } from "../factories/binary.ts";
 import { parameterize } from "../utility/parameterization.ts";
 import { type Scope, scope as createScope } from "./variable.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { multiply } from "./multiply.ts";
 import { subtract } from "./subtract.ts";
 import { divide } from "./divide.ts";
@@ -110,7 +110,7 @@ const evaluate: EvaluateFn = multi(
   //
   when(is(Variable), (scope, v) => scope.get(v.name) ?? v),
   //
-  when(is(Addition), binary(add)),
+  when(is(Addition), binary($add)),
   when(is(Multiplication), binary(multiply)),
   when(is(Subtraction), binary(subtract)),
   when(is(Division), binary(divide)),

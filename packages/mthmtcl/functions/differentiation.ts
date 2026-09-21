@@ -26,7 +26,7 @@ import {
 import { method, type Multi, multi } from "@arrows/multimethod";
 import { real } from "./real.ts";
 import { preserve } from "./preserve.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
@@ -69,7 +69,7 @@ export const differentiate: DifferentiateFn = multi(
   when(is(Numeric), (e) => [preserve(e, real(0)), Action.Application]),
   when(is(Variable), [real(1), Action.Application]),
   when(is(Addition), (e) => [
-    add(differentiate(e.left), differentiate(e.right)),
+    $add(differentiate(e.left), differentiate(e.right)),
     Action.Application,
   ]),
   when(is(Subtraction), (e) => [
@@ -77,7 +77,7 @@ export const differentiate: DifferentiateFn = multi(
     Action.Application,
   ]),
   when(is(Multiplication), (e) => [
-    add(
+    $add(
       multiply(e.left, differentiate(e.right)),
       multiply(differentiate(e.left), e.right),
     ),
@@ -100,7 +100,7 @@ export const differentiate: DifferentiateFn = multi(
   when(is(Exponentiation), (e) => [
     multiply(
       e,
-      add(
+      $add(
         multiply(differentiate(e.left), divide(e.right, e.left)),
         multiply(differentiate(e.right), ln(e.left)),
       ),
@@ -155,7 +155,7 @@ export const differentiate: DifferentiateFn = multi(
   ),
   when(
     is(Arcus.Cotangent),
-    chain((e) => negate(reciprocal(add(square(e.child), real(1))))),
+    chain((e) => negate(reciprocal($add(square(e.child), real(1))))),
   ),
   when(
     is(Arcus.Cosecant),
@@ -183,7 +183,7 @@ export const differentiate: DifferentiateFn = multi(
   ),
   when(
     is(Arcus.Tangent),
-    chain((e) => reciprocal(add(real(1), square(e.child)))),
+    chain((e) => reciprocal($add(real(1), square(e.child)))),
   ),
   when(
     is(Hyperbolic.Cosine),
@@ -232,7 +232,7 @@ export const differentiate: DifferentiateFn = multi(
     chain((e) =>
       negate(reciprocal(multiply(
         $abs(e.child),
-        sqrt(add(real(1), square(e.child))),
+        sqrt($add(real(1), square(e.child))),
       )))
     ),
   ),
@@ -249,7 +249,7 @@ export const differentiate: DifferentiateFn = multi(
   ),
   when(
     is(AreaHyperbolic.Sine),
-    chain((e) => reciprocal(sqrt(add(real(1), square(e.child))))),
+    chain((e) => reciprocal(sqrt($add(real(1), square(e.child))))),
   ),
   when(
     is(AreaHyperbolic.Tangent),

@@ -5,7 +5,7 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { preserve } from "./preserve.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
@@ -219,7 +219,7 @@ export const atan: UnaryFn<Arcus.Tangent> = unary(
   when(is(Complex), (c) => {
     const nHalfI = complex(0, -0.5);
     const inz = subtract(i, c);
-    const ipz = add(i, c);
+    const ipz = $add(i, c);
     const ratio = divide(inz, ipz);
     return [multiply(nHalfI, ln(ratio)), Action.Application];
   }),

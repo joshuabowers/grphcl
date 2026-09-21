@@ -8,7 +8,7 @@ import {
 import { Action, is, type Rewrite } from "../factories/factory.ts";
 import { binary, type BinaryFn, otherwise } from "../factories/binary.ts";
 import { isBelowThreshold } from "../utility/isBelowThreshold.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { negate } from "./negate.ts";
 
 /**
@@ -50,7 +50,7 @@ import { negate } from "./negate.ts";
  */
 export const subtract: BinaryFn<Subtraction> = binary(Subtraction)(
   otherwise((l, r) => {
-    const rewritten = add(l, negate(r));
+    const rewritten = $add(l, negate(r));
     let response: Rewrite<TreeNode> | undefined = undefined;
     if (is(Addition)(rewritten)) {
       if (

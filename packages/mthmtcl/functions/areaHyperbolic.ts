@@ -10,7 +10,7 @@ import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
 import { real } from "./real.ts";
 import { preserve } from "./preserve.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
@@ -46,10 +46,10 @@ export const acosh: UnaryFn<AreaHyperbolic.Cosine> = unary(
 )(
   when(is(Boolean), (b) => [boolean(acosh(real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    ln(add(
+    ln($add(
       c,
       multiply(
-        sqrt(add(c, real(1))),
+        sqrt($add(c, real(1))),
         sqrt(subtract(c, real(1))),
       ),
     )),
@@ -186,8 +186,8 @@ export const asinh: UnaryFn<AreaHyperbolic.Sine> = unary(
 )(
   when(is(Boolean), (b) => [boolean(asinh(real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    ln(add(
-      sqrt(add(square(c), real(1))),
+    ln($add(
+      sqrt($add(square(c), real(1))),
       c,
     )),
     Action.Application,
@@ -227,7 +227,7 @@ export const atanh: UnaryFn<AreaHyperbolic.Tangent> = unary(
     multiply(
       real(0.5),
       ln(divide(
-        add(real(1), c),
+        $add(real(1), c),
         subtract(real(1), c),
       )),
     ),

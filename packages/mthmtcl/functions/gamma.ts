@@ -5,7 +5,7 @@ import { isNegativeInteger, isPositiveInteger } from "../utility/integers.ts";
 import { isBelowThreshold } from "../utility/isBelowThreshold.ts";
 import { boolean } from "./boolean.ts";
 import { real } from "./real.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
@@ -92,14 +92,14 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
       const one = real(1);
       const z = subtract(n, one);
       const x = lanczos.p.reduce(
-        (s, v, i) => add(s, divide(v, add(z, real(i)))),
+        (s, v, i) => $add(s, divide(v, $add(z, real(i)))),
       );
-      const t = subtract(add(z, real(lanczos.p.length - 1)), real(0.5));
+      const t = subtract($add(z, real(lanczos.p.length - 1)), real(0.5));
       return [
         multiply(
           sqrtTwicePi,
           multiply(
-            raise(t, add(z, real(0.5))),
+            raise(t, $add(z, real(0.5))),
             multiply(raise(real(Math.E), negate(t)), x),
           ),
         ),

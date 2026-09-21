@@ -2,7 +2,7 @@ import { describe, it } from "node:test";
 import { expect } from "@std/expect";
 import { real } from "../functions/real.ts";
 import { variable } from "../functions/variable.ts";
-import { add } from "../functions/add.ts";
+import { $add } from "../functions/add.ts";
 import { multiply } from "../functions/multiply.ts";
 import { square } from "../functions/raise.ts";
 import { cos } from "../functions/trigonometric.ts";
@@ -50,7 +50,7 @@ describe("grevlex", () => {
     expect(
       grevlex(
         variable("x"),
-        add(variable("x"), variable("y")),
+        $add(variable("x"), variable("y")),
       ),
     ).toEqual(0);
   });
@@ -58,7 +58,7 @@ describe("grevlex", () => {
   it("is 0 for [addition, _]", () => {
     expect(
       grevlex(
-        add(variable("x"), variable("y")),
+        $add(variable("x"), variable("y")),
         variable("x"),
       ),
     ).toEqual(0);

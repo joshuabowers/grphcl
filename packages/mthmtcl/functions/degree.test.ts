@@ -4,7 +4,7 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { negate } from "./negate.ts";
 import { multiply } from "./multiply.ts";
@@ -80,7 +80,7 @@ describe("degree", () => {
 
   it("is the max of the two sides of an addition", () => {
     expect(
-      degree(add(variable("y"), raise(variable("x"), real(3)))),
+      degree($add(variable("y"), raise(variable("x"), real(3)))),
     ).toEqual(real(3));
   });
 

@@ -8,7 +8,7 @@ import { variable } from "./variable.ts";
 import { negate } from "./negate.ts";
 import { raise, reciprocal, square } from "./raise.ts";
 import { cos } from "./trigonometric.ts";
-import { add } from "./add.ts";
+import { $add } from "./add.ts";
 import { double, multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
 
@@ -124,7 +124,7 @@ describe("multiply", () => {
       expect(
         multiply(real(2), raise(real(2), variable("x"))),
       ).toEqual(
-        raise(real(2), add(variable("x"), real(1))),
+        raise(real(2), $add(variable("x"), real(1))),
       );
     });
 
