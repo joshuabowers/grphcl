@@ -11,9 +11,11 @@ import { method, type Multi, multi } from "@arrows/multimethod";
 import {
   Action,
   is,
+  type MathFn,
   type Predicate,
   type Rewrite,
 } from "../factories/factory.ts";
+import { compose } from "./composition.ts";
 import { isBelowThreshold } from "./isBelowThreshold.ts";
 import { real } from "../functions/real.ts";
 import { negate } from "../functions/negate.ts";
@@ -69,3 +71,8 @@ export const canonicalize: ExpressionFn = multi(
     (e) => new Subtraction(e.left, negate(e.right)),
   ),
 );
+
+export const canonicalizeFrom = <
+  T extends TreeNode,
+  Fn extends MathFn<T>,
+>(fn: Fn): Fn => compose(fn, canonicalize);
