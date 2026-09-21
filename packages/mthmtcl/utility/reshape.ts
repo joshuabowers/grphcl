@@ -1,0 +1,185 @@
+import {
+  Addition,
+  type BinaryNode,
+  Division,
+  Exponentiation,
+  Negation,
+  Real,
+  Subtraction,
+  type TreeNode,
+  type UnaryNode,
+} from "../tree/mod.ts";
+import { method, type Multi, multi } from "@arrows/multimethod";
+import { Action, type Constructor, is } from "../factories/factory.ts";
+import type { BinaryFn } from "../factories/binary.ts";
+import type { UnaryFn } from "../factories/unary.ts";
+import { isNegativeOne } from "./integers.ts";
+import { real } from "../functions/real.ts";
+import { isBelowThreshold } from "./isBelowThreshold.ts";
+import { negate } from "../functions/negate.ts";
+import { add } from "../functions/add.ts";
+
+const round = (value: number, precision: number) => {
+  if (precision === 0) return Math.round(value);
+  const factor = 10 ** precision;
+  return Math.round(value * factor) / factor;
+};
+
+interface ReshapeFn extends Multi {
+  (expression: TreeNode): TreeNode;
+}
+
+// NB: Creates raw tree nodes via the Constructor functions
+//     to avoid triggering evaluation. Sometimes unavoidable.
+export const reshape: ReshapeFn = multi(
+  method(
+    is(Real),
+    (e: Real) => [new Real(round(e.raw, 10)), Action.Conversion][0],
+  ),
+  method(
+    is(Exponentiation, (e) => isNegativeOne(e.right)),
+    (e: Exponentiation) =>
+      [new Division(real(1), e.left), Action.Conversion][0],
+  ),
+  method(
+    is(Addition, (e) => isBelowThreshold(0)(e.right)),
+    (e: Addition) =>
+      [
+        new Subtraction(e.left, negate(e.right)),
+        Action.Conversion,
+      ][0],
+  ),
+  method(
+    is(Addition, (e) => is(Negation)(e.left)),
+    (e: Addition) =>
+      [
+        new Subtraction(e.right, negate(e.left)),
+        Action.Conversion,
+      ][0],
+  ),
+  method(
+    is(Addition, (e) => is(Negation)(e.right)),
+    (e: Addition) =>
+      [
+        new Subtraction(e.left, negate(e.right)),
+        Action.Conversion,
+      ][0],
+  ),
+  method((e: TreeNode) => e),
+);
+
+// Could potentially build a factory by using argument count in
+// dispatch function:
+// multi(
+//   (...args: TreeNode[]) => args.length,
+//   method(1, (u: UnaryNode) => {}),
+//   method(2, (b: BinaryNode) => {})
+// )
+// Overkill? Maybe. Neat? Yes
+
+enum FnType {
+  Unary = 1,
+  Binary,
+}
+
+interface ShaperFactoryFn extends Multi {
+  <U extends UnaryNode>(fn: UnaryFn<U>, type: FnType.Unary): UnaryFn<U>;
+  <B extends BinaryNode>(fn: BinaryFn<B>, type: FnType.Binary): BinaryFn<B>;
+}
+
+export const shaper: ShaperFactoryFn = multi(
+  (_fn: Multi, type: FnType) => type,
+  method(
+    FnType.Unary,
+    <U extends UnaryNode>(
+      fn: UnaryFn<U>,
+      _type: FnType,
+    ): UnaryFn<U> =>
+      multi(
+        method(
+          (expression: TreeNode) => reshape(fn(expression)),
+        ),
+      ),
+  ),
+  method(
+    FnType.Binary,
+    <B extends BinaryNode>(
+      fn: BinaryFn<B>,
+      _type: FnType,
+    ): BinaryFn<B> =>
+      multi(
+        method(
+          (left: TreeNode, right: TreeNode) => reshape(fn(left, right)),
+        ),
+      ),
+  ),
+);
+
+export const binaryShaper = <B extends BinaryNode>(
+  fn: BinaryFn<B>,
+): BinaryFn<B> =>
+  multi(
+    method(
+      (left: TreeNode, right: TreeNode) => reshape(fn(left, right)),
+    ),
+  );
+
+export const unaryShaper = <U extends UnaryNode>(
+  fn: UnaryFn<U>,
+): UnaryFn<U> =>
+  multi(
+    method(
+      (child: TreeNode) => reshape(fn(child)),
+    ),
+  );
+
+interface $Factory<T extends TreeNode, Params extends unknown[]> extends Multi {
+  (...args: Params): T;
+}
+
+type InferParams<T extends TreeNode> = T extends UnaryNode ? [TreeNode]
+  : T extends BinaryNode ? [TreeNode, TreeNode]
+  : never;
+
+interface $BinaryFn<B extends BinaryNode> extends $Factory<B, InferParams<B>> {
+  (left: Real, right: Real): Real;
+}
+interface $UnaryFn<U extends UnaryNode> extends $Factory<U, InferParams<U>> {
+  (expression: Real): Real;
+}
+
+export const shaperate = <T extends TreeNode>(
+  fn: $Factory<T, InferParams<T>>,
+): $Factory<T, InferParams<T>> =>
+  multi(
+    method(
+      (...args: InferParams<T>) => reshape(fn(...args)),
+    ),
+  );
+
+export const $binary = <T extends BinaryNode>(
+  _ctor: Constructor<T>,
+): $BinaryFn<T> =>
+  multi(
+    method((left: TreeNode, right: TreeNode) => add(left, right)),
+  );
+
+export const $unary = <T extends UnaryNode>(
+  _ctor: Constructor<T>,
+): $UnaryFn<T> =>
+  multi(
+    method((expression: TreeNode) => negate(expression)),
+  );
+
+// These would be flipped: add = binaryShaper($add)
+export const $add = binaryShaper(add);
+export const $negate = unaryShaper(negate);
+
+export const $$add = shaper(add, FnType.Binary);
+export const $$negate = shaper(negate, FnType.Unary);
+
+export const _add = $binary(Addition);
+export const _negate = $unary(Negation);
+
+export const $$$add = shaperate(_add);
+export const $$$negate = shaperate(_negate);

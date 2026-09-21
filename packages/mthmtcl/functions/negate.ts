@@ -25,4 +25,5 @@ export const negate: UnaryFn<Negation> = unary(Negation)(
   when(is(Boolean), (b) => [b, Action.Application]),
   when(is(Complex), (c) => [complex(-c.raw.a, -c.raw.b), Action.Application]),
   when(is(Real), (r) => [real(-r.raw), Action.Application]),
+  when(is(Negation), (e) => [e.child, Action.Identity]),
 );

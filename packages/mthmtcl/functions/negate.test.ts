@@ -21,6 +21,10 @@ describe("negate", () => {
     expect(negate(real(5))).toEqual(real(-5));
   });
 
+  it("returns the grandchild of a double negation", () => {
+    expect(negate(negate(variable("x")))).toEqual(variable("x"));
+  });
+
   it("returns a Negation for unbound input", () => {
     expect(negate(variable("x"))).toEqual(new Negation(new Variable("x")));
   });
