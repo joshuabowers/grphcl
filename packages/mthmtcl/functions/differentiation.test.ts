@@ -14,7 +14,7 @@ import { raise, reciprocal, sqrt, square } from "./raise.ts";
 import { lb, lg, ln } from "./log.ts";
 import { $abs } from "./absolute.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
-import { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
+import { $acos, $acot, $acsc, $asec, $asin, $atan } from "./arcus.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
 import { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
 
@@ -166,25 +166,25 @@ describe("differentiate", () => {
 
   describe("of arcus functions", () => {
     it("returns the chain rule of the derivative of the acos", () => {
-      expect(differentiate(acos(variable("x")))).toEqual(
+      expect(differentiate($acos(variable("x")))).toEqual(
         negate(reciprocal(sqrt(subtract(real(1), square(variable("x")))))),
       );
     });
 
     it("returns the chain rule of the derivative of the asin", () => {
-      expect(differentiate(asin(variable("x")))).toEqual(
+      expect(differentiate($asin(variable("x")))).toEqual(
         reciprocal(sqrt(subtract(real(1), square(variable("x"))))),
       );
     });
 
     it("returns the chain rule of the derivative of the atan", () => {
-      expect(differentiate(atan(variable("x")))).toEqual(
+      expect(differentiate($atan(variable("x")))).toEqual(
         reciprocal($add(real(1), square(variable("x")))),
       );
     });
 
     it("returns the chain rule of the derivative of the asec", () => {
-      expect(differentiate(asec(variable("x")))).toEqual(
+      expect(differentiate($asec(variable("x")))).toEqual(
         reciprocal(multiply(
           $abs(variable("x")),
           sqrt(subtract(square(variable("x")), real(1))),
@@ -193,7 +193,7 @@ describe("differentiate", () => {
     });
 
     it("returns the chain rule of the derivative of the acsc", () => {
-      expect(differentiate(acsc(variable("x")))).toEqual(
+      expect(differentiate($acsc(variable("x")))).toEqual(
         negate(reciprocal(multiply(
           $abs(variable("x")),
           sqrt(subtract(square(variable("x")), real(1))),
@@ -202,7 +202,7 @@ describe("differentiate", () => {
     });
 
     it("returns the chain rule of the derivative of the acot", () => {
-      expect(differentiate(acot(variable("x")))).toEqual(
+      expect(differentiate($acot(variable("x")))).toEqual(
         negate(reciprocal($add(square(variable("x")), real(1)))),
       );
     });

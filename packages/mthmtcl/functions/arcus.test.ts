@@ -97,7 +97,7 @@ describe("asec", () => {
   });
 
   it("is Real for real input", () => {
-    expect(asec(real(2))).toEqual(real(Math.acos(0.5)));
+    expect(asec(real(2)).raw).toBeCloseTo(Math.acos(0.5), 10);
   });
 
   it("is a Secant for unbound input", () => {

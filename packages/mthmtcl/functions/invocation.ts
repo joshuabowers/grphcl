@@ -66,7 +66,7 @@ import { nand } from "@bowers/mthmtcl/functions";
 import { combine, permute } from "./combinatorics.ts";
 import { $abs } from "./absolute.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
-import { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
+import { $acos, $acot, $acsc, $asec, $asin, $atan } from "./arcus.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
 import { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
 import { factorial } from "./factorial.ts";
@@ -146,12 +146,12 @@ const evaluate: EvaluateFn = multi(
   when(is(Trigonometric.Sine), unary(sin)),
   when(is(Trigonometric.Tangent), unary(tan)),
   //
-  when(is(Arcus.Cotangent), unary(acot)),
-  when(is(Arcus.Cosecant), unary(acsc)),
-  when(is(Arcus.Cosine), unary(acos)),
-  when(is(Arcus.Secant), unary(asec)),
-  when(is(Arcus.Sine), unary(asin)),
-  when(is(Arcus.Tangent), unary(atan)),
+  when(is(Arcus.Cotangent), unary($acot)),
+  when(is(Arcus.Cosecant), unary($acsc)),
+  when(is(Arcus.Cosine), unary($acos)),
+  when(is(Arcus.Secant), unary($asec)),
+  when(is(Arcus.Sine), unary($asin)),
+  when(is(Arcus.Tangent), unary($atan)),
   //
   when(is(Hyperbolic.Cosine), unary(cosh)),
   when(is(Hyperbolic.Cotangent), unary(coth)),
