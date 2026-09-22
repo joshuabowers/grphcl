@@ -6,7 +6,7 @@ import { multiply } from "./multiply.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 /**
- * Internal implementation of {@link add}, which does not
+ * Internal implementation of {@link divide}, which does not
  * perform normalization from {@link canonicalizeFrom}
  */
 export const $divide: BinaryFn<Division> = binary(Division)(

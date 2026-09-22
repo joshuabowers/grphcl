@@ -71,6 +71,7 @@ import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
 import { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
 import { factorial } from "./factorial.ts";
 import { gamma } from "./gamma.ts";
+import { canonicalize } from "../utility/canonicalization.ts";
 
 type RewriteFn<T extends TreeNode> = (
   scope: Scope,
@@ -174,7 +175,7 @@ const evaluate: EvaluateFn = multi(
   when(
     is(Invocation),
     (scope, e) =>
-      invoke(scope)(evaluate(scope, e.expression))(
+      $invoke(scope)(evaluate(scope, e.expression))(
         e.args.map((a) => evaluate(scope, a)),
       ),
   ),
@@ -191,6 +192,23 @@ function* zip(parameters: Set<string>, args: TreeNode[]) {
 export type InvocationFn = (
   scope?: Scope,
 ) => (expression: TreeNode) => (...args: TreeNode[]) => TreeNode;
+
+/**
+ * Internal implementation of {@link invoke}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $invoke: InvocationFn = (scope?: Scope) => {
+  const inner: Scope = createScope(scope);
+  return (expression: TreeNode) => {
+    const parameters = parameterize(expression);
+    return (...args: TreeNode[]): TreeNode => {
+      for (const [name, value] of zip(parameters, args)) {
+        inner.set(name, value);
+      }
+      return evaluate(inner, expression);
+    };
+  };
+};
 
 /**
  * Evaluates an expression in the context of a scope of
@@ -308,14 +326,9 @@ export type InvocationFn = (
  * @returns a function with a bound scope
  */
 export const invoke: InvocationFn = (scope?: Scope) => {
-  const inner: Scope = createScope(scope);
+  const scoped = $invoke(scope);
   return (expression: TreeNode) => {
-    const parameters = parameterize(expression);
-    return (...args: TreeNode[]): TreeNode => {
-      for (const [name, value] of zip(parameters, args)) {
-        inner.set(name, value);
-      }
-      return evaluate(inner, expression);
-    };
+    const parameterized = scoped(expression);
+    return (...args: TreeNode[]) => canonicalize(parameterized(...args));
   };
 };
