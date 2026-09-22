@@ -31,7 +31,7 @@ import { subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
-import { negate } from "./negate.ts";
+import { $negate } from "./negate.ts";
 import { $abs } from "./absolute.ts";
 import { $ln } from "./log.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
@@ -94,7 +94,7 @@ export const differentiate: DifferentiateFn = multi(
     Action.Application,
   ]),
   when(is(Negation), (e) => [
-    negate(differentiate(e.child)),
+    $negate(differentiate(e.child)),
     Action.Application,
   ]),
   when(is(Exponentiation), (e) => [
@@ -117,17 +117,17 @@ export const differentiate: DifferentiateFn = multi(
   when(is(Absolute), chain((e) => $divide(e.child, e))),
   when(
     is(Trigonometric.Cosine),
-    chain((e) => negate(sin(e.child))),
+    chain((e) => $negate(sin(e.child))),
   ),
   when(
     is(Trigonometric.Cotangent),
-    chain((e) => negate(square(csc(e.child)))),
+    chain((e) => $negate(square(csc(e.child)))),
   ),
   when(
     is(Trigonometric.Cosecant),
     chain((e) =>
       $multiply(
-        negate(csc(e.child)),
+        $negate(csc(e.child)),
         cot(e.child),
       )
     ),
@@ -147,7 +147,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(Arcus.Cosine),
     chain((e) =>
-      negate($divide(
+      $negate($divide(
         differentiate(e.child),
         sqrt(subtract(real(1), square(e.child))),
       ))
@@ -155,12 +155,12 @@ export const differentiate: DifferentiateFn = multi(
   ),
   when(
     is(Arcus.Cotangent),
-    chain((e) => negate(reciprocal($add(square(e.child), real(1))))),
+    chain((e) => $negate(reciprocal($add(square(e.child), real(1))))),
   ),
   when(
     is(Arcus.Cosecant),
     chain((e) =>
-      negate(
+      $negate(
         reciprocal($multiply(
           $abs(e.child),
           sqrt(subtract(square(e.child), real(1))),
@@ -191,13 +191,13 @@ export const differentiate: DifferentiateFn = multi(
   ),
   when(
     is(Hyperbolic.Cotangent),
-    chain((e) => negate(square(csch(e.child)))),
+    chain((e) => $negate(square(csch(e.child)))),
   ),
   when(
     is(Hyperbolic.Cosecant),
     chain((e) =>
       $multiply(
-        negate(coth(e.child)),
+        $negate(coth(e.child)),
         csch(e.child),
       )
     ),
@@ -206,7 +206,7 @@ export const differentiate: DifferentiateFn = multi(
     is(Hyperbolic.Secant),
     chain((e) =>
       $multiply(
-        negate(tanh(e.child)),
+        $negate(tanh(e.child)),
         sech(e.child),
       )
     ),
@@ -230,7 +230,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(AreaHyperbolic.Cosecant),
     chain((e) =>
-      negate(reciprocal($multiply(
+      $negate(reciprocal($multiply(
         $abs(e.child),
         sqrt($add(real(1), square(e.child))),
       )))
@@ -239,7 +239,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(AreaHyperbolic.Secant),
     chain((e) =>
-      negate(
+      $negate(
         reciprocal($multiply(
           e.child,
           sqrt(subtract(real(1), square(e.child))),

@@ -15,7 +15,7 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { $double, $multiply } from "./multiply.ts";
-import { negate } from "./negate.ts";
+import { $negate } from "./negate.ts";
 import { deepEquals, isValue } from "../utility/deepEquals.ts";
 import { grevlex } from "../utility/grevlex.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
@@ -93,14 +93,14 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
   when( // NB: decanonicalization
     [is(Subtraction), _],
     (l, r) => [
-      $add($add(l.left, negate(l.right)), r),
+      $add($add(l.left, $negate(l.right)), r),
       Action.Conversion,
     ],
   ),
   when( // NB: decanonicalization
     [_, is(Subtraction)],
     (l, r) => [
-      $add(l, $add(r.left, negate(r.right))),
+      $add(l, $add(r.left, $negate(r.right))),
       Action.Conversion,
     ],
   ),

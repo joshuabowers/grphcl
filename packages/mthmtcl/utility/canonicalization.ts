@@ -1,5 +1,6 @@
 import {
   Addition,
+  Complex,
   Division,
   Exponentiation,
   Multiplication,
@@ -19,9 +20,7 @@ import {
 } from "../factories/factory.ts";
 import { compose } from "./composition.ts";
 import { isBelowThreshold } from "./isBelowThreshold.ts";
-import { isNegativeOne } from "./integers.ts";
-import { real } from "../functions/real.ts";
-import { negate } from "../functions/negate.ts";
+import { type ConstantPredicate, isNegativeOne } from "./integers.ts";
 
 export interface ExpressionFn extends Multi {
   (expression: TreeNode): TreeNode;
@@ -43,7 +42,7 @@ const categorize = <T extends TreeNode>(
   Action.Conversion,
 ];
 
-export const when = <T extends TreeNode>(
+const when = <T extends TreeNode>(
   predicate: Predicate<T>,
   rewrite: TreeNode | ((expression: T) => TreeNode),
 ) => method(predicate, unwrap(categorize(rewrite)));
@@ -54,37 +53,66 @@ const round = (value: number, precision: number) => {
   return Math.round(value * factor) / factor;
 };
 
+export const flip: ConstantPredicate = multi(
+  method(is(Real), (e: Real) => new Real(-e.raw)),
+  method(
+    is(Complex),
+    (e: Complex) => new Complex({ a: -e.raw.a, b: -e.raw.b }),
+  ),
+  method((e: TreeNode) => e),
+);
+
 export const canonicalize: ExpressionFn = multi(
   when(is(Real), (e) => new Real(round(e.raw, 15))),
   when(
     is(Exponentiation, (e) => isNegativeOne(e.right)),
-    (e) => new Division(real(1), canonicalize(e.left)),
+    (e) => new Division(new Real(1), canonicalize(e.left)),
   ),
   when(
     is(Addition, (e) => isBelowThreshold(0)(e.right)),
-    (e) => new Subtraction(canonicalize(e.left), canonicalize(negate(e.right))),
+    (e) =>
+      new Subtraction(
+        canonicalize(e.left),
+        canonicalize(flip(e.right)),
+      ),
   ),
   when(
     is(Addition, (e) => is(Negation)(e.left)),
-    (e) => new Subtraction(canonicalize(e.right), canonicalize(negate(e.left))),
+    (e) =>
+      new Subtraction(
+        canonicalize(e.right),
+        canonicalize((e.left as Negation).child),
+      ),
   ),
   when(
     is(Addition, (e) => is(Negation)(e.right)),
-    (e) => new Subtraction(canonicalize(e.left), canonicalize(negate(e.right))),
+    (e) =>
+      new Subtraction(
+        canonicalize(e.left),
+        canonicalize((e.right as Negation).child),
+      ),
   ),
   when(
     is(Multiplication, (e) =>
       is(Exponentiation)(e.left) &&
       is(Numeric, isNegativeOne)(e.left.right) &&
       !is(Exponentiation, (f) => is(Numeric, isNegativeOne)(f.right))(e.right)),
-    (e) => new Division(e.right, (e.left as Exponentiation).left),
+    (e) =>
+      new Division(
+        canonicalize(e.right),
+        canonicalize((e.left as Exponentiation).left),
+      ),
   ),
   when(
     is(Multiplication, (e) =>
       is(Exponentiation)(e.right) &&
       is(Numeric, isNegativeOne)(e.right.right) &&
       !is(Exponentiation, (f) => is(Numeric, isNegativeOne)(f.right))(e.left)),
-    (e) => new Division(e.left, (e.right as Exponentiation).left),
+    (e) =>
+      new Division(
+        canonicalize(e.left),
+        canonicalize((e.right as Exponentiation).left),
+      ),
   ),
   method((e: TreeNode) => e),
 );

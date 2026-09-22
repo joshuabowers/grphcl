@@ -10,7 +10,7 @@ import { subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { raise } from "./raise.ts";
-import { negate } from "./negate.ts";
+import { $negate } from "./negate.ts";
 import { sqrt } from "./raise.ts";
 import { sin } from "./trigonometric.ts";
 import { factorial } from "./factorial.ts";
@@ -100,7 +100,7 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
           sqrtTwicePi,
           $multiply(
             raise(t, $add(z, real(0.5))),
-            $multiply(raise(real(Math.E), negate(t)), x),
+            $multiply(raise(real(Math.E), $negate(t)), x),
           ),
         ),
         Action.Application,

@@ -6,7 +6,7 @@ import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
-import { negate } from "./negate.ts";
+import { $negate } from "./negate.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { raise } from "./raise.ts";
@@ -68,7 +68,7 @@ describe("degree", () => {
 
   it("is the degree of the child of a negation", () => {
     expect(
-      degree(negate(raise(variable("x"), real(4)))),
+      degree($negate(raise(variable("x"), real(4)))),
     ).toEqual(real(4));
   });
 

@@ -6,7 +6,7 @@ import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
 import { subtract } from "../functions/subtract.ts";
 import { reciprocal } from "../functions/raise.ts";
-import { negate } from "../functions/negate.ts";
+import { $negate } from "../functions/negate.ts";
 import { canonicalize } from "./canonicalization.ts";
 
 describe("canonicalize", () => {
@@ -57,13 +57,13 @@ describe("canonicalize", () => {
 
   it("transforms negated left additions into subtractions", () => {
     expect(
-      canonicalize($add(negate(variable("x")), real(5))),
+      canonicalize($add($negate(variable("x")), real(5))),
     ).toEqual(subtract(real(5), variable("x")));
   });
 
   it("transforms negated right additions into subtractions", () => {
     expect(
-      canonicalize($add(variable("x"), negate(variable("y")))),
+      canonicalize($add(variable("x"), $negate(variable("y")))),
     ).toEqual(subtract(variable("x"), variable("y")));
   });
 

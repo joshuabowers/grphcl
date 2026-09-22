@@ -5,7 +5,7 @@ import { boolean } from "./boolean.ts";
 import { complex, ComplexInfinity } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { negate } from "./negate.ts";
+import { $negate } from "./negate.ts";
 import { raise, reciprocal, square } from "./raise.ts";
 import { cos } from "./trigonometric.ts";
 import { $add } from "./add.ts";
@@ -28,7 +28,7 @@ describe("multiply", () => {
 
     it("handles -complex * -ComplexInfinity", () => {
       expect(
-        multiply(complex(0, -0.5), negate(ComplexInfinity)),
+        multiply(complex(0, -0.5), $negate(ComplexInfinity)),
       ).toEqual(ComplexInfinity);
     });
 
