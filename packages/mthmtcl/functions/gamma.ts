@@ -6,7 +6,7 @@ import { isBelowThreshold } from "../utility/isBelowThreshold.ts";
 import { boolean } from "./boolean.ts";
 import { real } from "./real.ts";
 import { $add } from "./add.ts";
-import { subtract } from "./subtract.ts";
+import { $subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { $raise } from "./raise.ts";
@@ -71,7 +71,7 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
   when(is(Numeric, isNegativeInteger), [ComplexInfinity, Action.Singularity]),
   when(
     is(Numeric, isPositiveInteger),
-    (n) => [factorial(subtract(n, real(1))), Action.Delegation],
+    (n) => [factorial($subtract(n, real(1))), Action.Delegation],
   ),
   when(
     is(Numeric, isBelowThreshold(0.5)),
@@ -80,7 +80,7 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
         pi,
         $multiply(
           sin($multiply(n, pi)),
-          gamma(subtract(real(1), n)),
+          gamma($subtract(real(1), n)),
         ),
       ),
       Action.Reflection,
@@ -90,11 +90,11 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
     is(Numeric),
     (n) => {
       const one = real(1);
-      const z = subtract(n, one);
+      const z = $subtract(n, one);
       const x = lanczos.p.reduce(
         (s, v, i) => $add(s, $divide(v, $add(z, real(i)))),
       );
-      const t = subtract($add(z, real(lanczos.p.length - 1)), real(0.5));
+      const t = $subtract($add(z, real(lanczos.p.length - 1)), real(0.5));
       return [
         $multiply(
           sqrtTwicePi,

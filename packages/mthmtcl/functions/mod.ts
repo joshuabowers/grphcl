@@ -52,3 +52,4 @@ export {
 } from "./logical/mod.ts";
 
 export { invoke } from "./invocation.ts";
+export { differentiate } from "./differentiation.ts";

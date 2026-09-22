@@ -6,7 +6,7 @@ import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { preserve } from "./preserve.ts";
 import { $add } from "./add.ts";
-import { subtract } from "./subtract.ts";
+import { $subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { $reciprocal, $sqrt, $square } from "./raise.ts";
@@ -25,7 +25,7 @@ export const $acos: UnaryFn<Arcus.Cosine> = unary(
 )(
   when(is(Boolean), (b) => [boolean($acos(real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    subtract(halfPi, $asin(c)),
+    $subtract(halfPi, $asin(c)),
     Action.Application,
   ]),
   when(is(Real), (r) => [real(Math.acos(r.raw)), Action.Application]),
@@ -53,7 +53,7 @@ export const $acot: UnaryFn<Arcus.Cotangent> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, subtract(halfPi, $atan(n))), Action.Application],
+    (n) => [preserve(n, $subtract(halfPi, $atan(n))), Action.Application],
   ),
 );
 
@@ -80,9 +80,9 @@ export const $asin: UnaryFn<Arcus.Sine> = unary(
   when(is(Boolean), (b) => [boolean($asin(real(b))), Action.Application]),
   when(is(Complex), (c) => {
     const iz = $multiply(i, c);
-    const distance = $sqrt(subtract(real(1), $square(c)));
+    const distance = $sqrt($subtract(real(1), $square(c)));
     return [
-      $multiply(i, $ln(subtract(distance, iz))),
+      $multiply(i, $ln($subtract(distance, iz))),
       Action.Application,
     ];
   }),
@@ -99,7 +99,7 @@ export const $atan: UnaryFn<Arcus.Tangent> = unary(
   when(is(Boolean), (b) => [boolean($atan(real(b))), Action.Application]),
   when(is(Complex), (c) => {
     const nHalfI = complex(0, -0.5);
-    const inz = subtract(i, c);
+    const inz = $subtract(i, c);
     const ipz = $add(i, c);
     const ratio = $divide(inz, ipz);
     return [$multiply(nHalfI, $ln(ratio)), Action.Application];

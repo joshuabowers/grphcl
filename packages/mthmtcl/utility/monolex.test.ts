@@ -7,7 +7,7 @@ import { cos } from "../functions/trigonometric.ts";
 import { monolex } from "./monolex.ts";
 import { $divide } from "../functions/divide.ts";
 import { $add } from "../functions/add.ts";
-import { subtract } from "../functions/subtract.ts";
+import { $subtract } from "../functions/subtract.ts";
 
 describe("monolex", () => {
   it("is 0 for [numeric, numeric]", () => {
@@ -70,13 +70,13 @@ describe("monolex", () => {
 
   it("is -1 for [numeric, exponential(subtraction)]", () => {
     expect(
-      monolex(real(5), $raise(subtract(variable("x"), real(1)), real(0.5))),
+      monolex(real(5), $raise($subtract(variable("x"), real(1)), real(0.5))),
     ).toEqual(-1);
   });
 
   it("is 1 for [exponential(subtraction), numeric]", () => {
     expect(
-      monolex($raise(subtract(variable("x"), real(1)), real(0.5)), real(5)),
+      monolex($raise($subtract(variable("x"), real(1)), real(0.5)), real(5)),
     ).toEqual(1);
   });
 

@@ -29,7 +29,7 @@ import { method, multi } from "@arrows/multimethod";
 import { real } from "./real.ts";
 import { preserve } from "./preserve.ts";
 import { $add } from "./add.ts";
-import { subtract } from "./subtract.ts";
+import { $subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { $raise, $reciprocal, $sqrt, $square } from "./raise.ts";
@@ -77,7 +77,7 @@ export const $differentiate: DifferentiateFn = multi(
     Action.Application,
   ]),
   when(is(Subtraction), (e) => [
-    subtract($differentiate(e.left), $differentiate(e.right)),
+    $subtract($differentiate(e.left), $differentiate(e.right)),
     Action.Application,
   ]),
   when(is(Multiplication), (e) => [
@@ -89,7 +89,7 @@ export const $differentiate: DifferentiateFn = multi(
   ]),
   when(is(Division), (e) => [
     $divide(
-      subtract(
+      $subtract(
         $multiply($differentiate(e.left), e.right),
         $multiply(e.left, $differentiate(e.right)),
       ),
@@ -153,7 +153,7 @@ export const $differentiate: DifferentiateFn = multi(
     chain((e) =>
       $negate($divide(
         $differentiate(e.child),
-        $sqrt(subtract(real(1), $square(e.child))),
+        $sqrt($subtract(real(1), $square(e.child))),
       ))
     ),
   ),
@@ -167,7 +167,7 @@ export const $differentiate: DifferentiateFn = multi(
       $negate(
         $reciprocal($multiply(
           $abs(e.child),
-          $sqrt(subtract($square(e.child), real(1))),
+          $sqrt($subtract($square(e.child), real(1))),
         )),
       )
     ),
@@ -177,13 +177,13 @@ export const $differentiate: DifferentiateFn = multi(
     chain((e) =>
       $reciprocal($multiply(
         $abs(e.child),
-        $sqrt(subtract($square(e.child), real(1))),
+        $sqrt($subtract($square(e.child), real(1))),
       ))
     ),
   ),
   when(
     is(Arcus.Sine),
-    chain((e) => $reciprocal($sqrt(subtract(real(1), $square(e.child))))),
+    chain((e) => $reciprocal($sqrt($subtract(real(1), $square(e.child))))),
   ),
   when(
     is(Arcus.Tangent),
@@ -225,11 +225,11 @@ export const $differentiate: DifferentiateFn = multi(
   ),
   when(
     is(AreaHyperbolic.Cosine),
-    chain((e) => $reciprocal($sqrt(subtract($square(e.child), real(1))))),
+    chain((e) => $reciprocal($sqrt($subtract($square(e.child), real(1))))),
   ),
   when(
     is(AreaHyperbolic.Cotangent),
-    chain((e) => $reciprocal(subtract(real(1), $square(e.child)))),
+    chain((e) => $reciprocal($subtract(real(1), $square(e.child)))),
   ),
   when(
     is(AreaHyperbolic.Cosecant),
@@ -246,7 +246,7 @@ export const $differentiate: DifferentiateFn = multi(
       $negate(
         $reciprocal($multiply(
           e.child,
-          $sqrt(subtract(real(1), $square(e.child))),
+          $sqrt($subtract(real(1), $square(e.child))),
         )),
       )
     ),
@@ -257,7 +257,7 @@ export const $differentiate: DifferentiateFn = multi(
   ),
   when(
     is(AreaHyperbolic.Tangent),
-    chain((e) => $reciprocal(subtract(real(1), $square(e.child)))),
+    chain((e) => $reciprocal($subtract(real(1), $square(e.child)))),
   ),
 );
 

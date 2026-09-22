@@ -2,7 +2,7 @@ import { Boolean, Combination, Numeric, Permutation } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { binary, type BinaryFn, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
-import { subtract } from "./subtract.ts";
+import { $subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { factorial } from "./factorial.ts";
@@ -20,7 +20,7 @@ export const $combine: BinaryFn<Combination> = binary(Combination)(
   when([is(Numeric), is(Numeric)], (n, r) => [
     $divide(
       factorial(n),
-      $multiply(factorial(r), factorial(subtract(n, r))),
+      $multiply(factorial(r), factorial($subtract(n, r))),
     ),
     Action.Application,
   ]),
@@ -38,7 +38,7 @@ export const $permute: BinaryFn<Permutation> = binary(Permutation)(
   when([is(Numeric), is(Numeric)], (n, r) => [
     $divide(
       factorial(n),
-      factorial(subtract(n, r)),
+      factorial($subtract(n, r)),
     ),
     Action.Application,
   ]),

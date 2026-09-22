@@ -1,5 +1,6 @@
 import {
   Addition,
+  BinaryNode,
   Complex,
   Division,
   Exponentiation,
@@ -9,10 +10,12 @@ import {
   Real,
   Subtraction,
   type TreeNode,
+  UnaryNode,
 } from "../tree/mod.ts";
 import { method, type Multi, multi } from "@arrows/multimethod";
 import {
   Action,
+  type Constructor,
   is,
   type MathFn,
   type Predicate,
@@ -61,6 +64,22 @@ export const flip: ConstantPredicate = multi(
   ),
   method((e: TreeNode) => e),
 );
+
+interface ToParamsFn extends Multi {
+  (expression: TreeNode): TreeNode[];
+}
+
+export const toParams: ToParamsFn = multi(
+  method(is(UnaryNode), (e: UnaryNode) => [e.child]),
+  method(is(BinaryNode), (e: BinaryNode) => [e.left, e.right]),
+);
+
+export const makeCanonical = <
+  T extends TreeNode,
+>(expression: T): T =>
+  new (
+    expression.constructor as Constructor<typeof expression>
+  )(...toParams(expression).map(canonicalize));
 
 export const canonicalize: ExpressionFn = multi(
   when(is(Real), (e) => new Real(round(e.raw, 15))),
@@ -114,7 +133,9 @@ export const canonicalize: ExpressionFn = multi(
         canonicalize((e.right as Exponentiation).left),
       ),
   ),
-  when(is(Negation), (e) => new Negation(canonicalize(e.child))),
+  when(is(Division), makeCanonical),
+  when(is(Exponentiation), makeCanonical),
+  when(is(UnaryNode), makeCanonical),
   method((e: TreeNode) => e),
 );
 

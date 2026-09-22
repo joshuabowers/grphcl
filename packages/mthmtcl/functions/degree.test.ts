@@ -5,7 +5,7 @@ import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { $add } from "./add.ts";
-import { subtract } from "./subtract.ts";
+import { $subtract } from "./subtract.ts";
 import { $negate } from "./negate.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
@@ -86,7 +86,7 @@ describe("degree", () => {
 
   it("is the max of the two sides of a subtraction", () => {
     expect(
-      degree(subtract(variable("y"), $raise(variable("x"), real(3)))),
+      degree($subtract(variable("y"), $raise(variable("x"), real(3)))),
     ).toEqual(real(3));
   });
 
