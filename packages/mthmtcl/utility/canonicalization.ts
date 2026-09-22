@@ -114,6 +114,7 @@ export const canonicalize: ExpressionFn = multi(
         canonicalize((e.right as Exponentiation).left),
       ),
   ),
+  when(is(Negation), (e) => new Negation(canonicalize(e.child))),
   method((e: TreeNode) => e),
 );
 

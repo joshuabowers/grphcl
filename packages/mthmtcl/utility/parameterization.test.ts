@@ -2,7 +2,7 @@ import { describe, it } from "node:test";
 import { expect } from "@std/expect";
 import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
-import { raise } from "../functions/raise.ts";
+import { $raise } from "../functions/raise.ts";
 import { cos } from "../functions/trigonometric.ts";
 import { parameterize } from "./parameterization.ts";
 
@@ -12,7 +12,7 @@ describe("parameterize", () => {
   });
 
   it("returns variables within binaries", () => {
-    expect(parameterize(raise(variable("x"), variable("y")))).toEqual(
+    expect(parameterize($raise(variable("x"), variable("y")))).toEqual(
       new Set(["x", "y"]),
     );
   });

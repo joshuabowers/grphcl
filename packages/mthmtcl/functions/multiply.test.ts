@@ -6,7 +6,7 @@ import { complex, ComplexInfinity } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { $negate } from "./negate.ts";
-import { raise, reciprocal, square } from "./raise.ts";
+import { $reciprocal, raise, reciprocal, square } from "./raise.ts";
 import { cos } from "./trigonometric.ts";
 import { $add } from "./add.ts";
 import { double, multiply } from "./multiply.ts";
@@ -220,8 +220,8 @@ describe("multiply", () => {
         ),
       ).toEqual(
         new Multiplication(
-          reciprocal(variable("x")),
-          reciprocal(variable("y")),
+          $reciprocal(variable("x")),
+          $reciprocal(variable("y")),
         ),
       );
     });

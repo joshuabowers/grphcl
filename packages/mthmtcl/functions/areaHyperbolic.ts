@@ -15,7 +15,7 @@ import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
-import { reciprocal, sqrt, square } from "./raise.ts";
+import { $reciprocal, $sqrt, $square } from "./raise.ts";
 import { $ln } from "./log.ts";
 
 /**
@@ -30,8 +30,8 @@ export const $acosh: UnaryFn<AreaHyperbolic.Cosine> = unary(
     $ln($add(
       c,
       $multiply(
-        sqrt($add(c, real(1))),
-        sqrt(subtract(c, real(1))),
+        $sqrt($add(c, real(1))),
+        $sqrt(subtract(c, real(1))),
       ),
     )),
     Action.Application,
@@ -74,7 +74,7 @@ export const $acsch: UnaryFn<AreaHyperbolic.Cosecant> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, $asinh(reciprocal(n))), Action.Application],
+    (n) => [preserve(n, $asinh($reciprocal(n))), Action.Application],
   ),
 );
 
@@ -113,7 +113,7 @@ export const $acoth: UnaryFn<AreaHyperbolic.Cotangent> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, $atanh(reciprocal(n))), Action.Application],
+    (n) => [preserve(n, $atanh($reciprocal(n))), Action.Application],
   ),
 );
 
@@ -154,7 +154,7 @@ export const $asech: UnaryFn<AreaHyperbolic.Secant> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, $acosh(reciprocal(n))), Action.Application],
+    (n) => [preserve(n, $acosh($reciprocal(n))), Action.Application],
   ),
 );
 
@@ -194,7 +194,7 @@ export const $asinh: UnaryFn<AreaHyperbolic.Sine> = unary(
   when(is(Boolean), (b) => [boolean($asinh(real(b))), Action.Application]),
   when(is(Complex), (c) => [
     $ln($add(
-      sqrt($add(square(c), real(1))),
+      $sqrt($add($square(c), real(1))),
       c,
     )),
     Action.Application,

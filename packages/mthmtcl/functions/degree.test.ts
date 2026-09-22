@@ -9,7 +9,7 @@ import { subtract } from "./subtract.ts";
 import { $negate } from "./negate.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
-import { raise } from "./raise.ts";
+import { $raise } from "./raise.ts";
 import { $ln } from "./log.ts";
 import { degree, subDegree } from "./degree.ts";
 
@@ -52,13 +52,13 @@ describe("degree", () => {
 
   it("is the power of an exponentiation", () => {
     expect(
-      degree(raise(variable("x"), real(3))),
+      degree($raise(variable("x"), real(3))),
     ).toEqual(real(3));
   });
 
   it("is infinity for an exponential function", () => {
     expect(
-      degree(raise(real(2), variable("x"))),
+      degree($raise(real(2), variable("x"))),
     ).toEqual(real(Infinity));
   });
 
@@ -68,25 +68,25 @@ describe("degree", () => {
 
   it("is the degree of the child of a negation", () => {
     expect(
-      degree($negate(raise(variable("x"), real(4)))),
+      degree($negate($raise(variable("x"), real(4)))),
     ).toEqual(real(4));
   });
 
   it("is the sum of powers of all multiplicands", () => {
     expect(
-      degree($multiply(variable("y"), raise(variable("x"), real(4)))),
+      degree($multiply(variable("y"), $raise(variable("x"), real(4)))),
     ).toEqual(real(5));
   });
 
   it("is the max of the two sides of an addition", () => {
     expect(
-      degree($add(variable("y"), raise(variable("x"), real(3)))),
+      degree($add(variable("y"), $raise(variable("x"), real(3)))),
     ).toEqual(real(3));
   });
 
   it("is the max of the two sides of a subtraction", () => {
     expect(
-      degree(subtract(variable("y"), raise(variable("x"), real(3)))),
+      degree(subtract(variable("y"), $raise(variable("x"), real(3)))),
     ).toEqual(real(3));
   });
 
@@ -95,7 +95,7 @@ describe("degree", () => {
       degree($divide(real(1), variable("x"))),
     ).toEqual(real(-1));
     expect(
-      degree($divide(variable("x"), raise(variable("y"), real(2)))),
+      degree($divide(variable("x"), $raise(variable("y"), real(2)))),
     ).toEqual(real(-1));
   });
 });

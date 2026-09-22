@@ -136,10 +136,10 @@ describe("reciprocal", () => {
   });
 
   it("raises unbound input to -1", () => {
-    expect(reciprocal(variable("x"))).toEqual(
+    expect(reciprocal(square(variable("x")))).toEqual(
       new Exponentiation(
         new Variable("x"),
-        new Real(-1),
+        new Real(-2),
       ),
     );
   });

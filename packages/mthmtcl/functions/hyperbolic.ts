@@ -5,7 +5,7 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { preserve } from "./preserve.ts";
-import { reciprocal } from "./raise.ts";
+import { $reciprocal } from "./raise.ts";
 
 /**
  * Creates {@link Hyperbolic.Cosine} AST nodes.
@@ -74,7 +74,7 @@ export const csch: UnaryFn<Hyperbolic.Cosecant> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, reciprocal(sinh(n))), Action.Application],
+    (n) => [preserve(n, $reciprocal(sinh(n))), Action.Application],
   ),
 );
 
@@ -107,7 +107,7 @@ export const coth: UnaryFn<Hyperbolic.Cotangent> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, reciprocal(tanh(n))), Action.Application],
+    (n) => [preserve(n, $reciprocal(tanh(n))), Action.Application],
   ),
 );
 
@@ -140,7 +140,7 @@ export const sech: UnaryFn<Hyperbolic.Secant> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, reciprocal(cosh(n))), Action.Application],
+    (n) => [preserve(n, $reciprocal(cosh(n))), Action.Application],
   ),
 );
 

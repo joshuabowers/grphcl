@@ -9,9 +9,9 @@ import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
-import { raise } from "./raise.ts";
+import { $raise } from "./raise.ts";
 import { $negate } from "./negate.ts";
-import { sqrt } from "./raise.ts";
+import { $sqrt } from "./raise.ts";
 import { sin } from "./trigonometric.ts";
 import { factorial } from "./factorial.ts";
 import { ComplexInfinity } from "./complex.ts";
@@ -30,7 +30,7 @@ const lanczos = {
   ].map(real),
 };
 
-const pi = real(Math.PI), sqrtTwicePi = sqrt(real(2 * Math.PI));
+const pi = real(Math.PI), sqrtTwicePi = $sqrt(real(2 * Math.PI));
 
 /**
  * Calculates the gamma function, `Γ(x)` for most inputs.
@@ -99,8 +99,8 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
         $multiply(
           sqrtTwicePi,
           $multiply(
-            raise(t, $add(z, real(0.5))),
-            $multiply(raise(real(Math.E), $negate(t)), x),
+            $raise(t, $add(z, real(0.5))),
+            $multiply($raise(real(Math.E), $negate(t)), x),
           ),
         ),
         Action.Application,

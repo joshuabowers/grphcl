@@ -49,7 +49,7 @@ import { $add } from "./add.ts";
 import { $multiply } from "./multiply.ts";
 import { subtract } from "./subtract.ts";
 import { $divide } from "./divide.ts";
-import { raise } from "./raise.ts";
+import { $raise } from "./raise.ts";
 import { $log } from "./log.ts";
 import { equals, gt, gte, lt, lte, nequals } from "./relational.ts";
 import {
@@ -122,7 +122,7 @@ const evaluate: EvaluateFn = multi(
   when(is(Multiplication), binary($multiply)),
   when(is(Subtraction), binary(subtract)),
   when(is(Division), binary($divide)),
-  when(is(Exponentiation), binary(raise)),
+  when(is(Exponentiation), binary($raise)),
   when(is(Logarithm), binary($log)),
   //
   when(is(Equality), binary(equals)),

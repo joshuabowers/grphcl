@@ -9,7 +9,7 @@ import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
-import { reciprocal, sqrt, square } from "./raise.ts";
+import { $reciprocal, $sqrt, $square } from "./raise.ts";
 import { $ln } from "./log.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
@@ -40,7 +40,7 @@ export const $acsc: UnaryFn<Arcus.Cosecant> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, $asin(reciprocal(n))), Action.Application],
+    (n) => [preserve(n, $asin($reciprocal(n))), Action.Application],
   ),
 );
 
@@ -66,7 +66,7 @@ export const $asec: UnaryFn<Arcus.Secant> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, $acos(reciprocal(n))), Action.Application],
+    (n) => [preserve(n, $acos($reciprocal(n))), Action.Application],
   ),
 );
 
@@ -80,7 +80,7 @@ export const $asin: UnaryFn<Arcus.Sine> = unary(
   when(is(Boolean), (b) => [boolean($asin(real(b))), Action.Application]),
   when(is(Complex), (c) => {
     const iz = $multiply(i, c);
-    const distance = sqrt(subtract(real(1), square(c)));
+    const distance = $sqrt(subtract(real(1), $square(c)));
     return [
       $multiply(i, $ln(subtract(distance, iz))),
       Action.Application,

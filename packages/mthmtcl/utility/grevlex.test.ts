@@ -4,7 +4,7 @@ import { real } from "../functions/real.ts";
 import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
 import { $multiply } from "../functions/multiply.ts";
-import { square } from "../functions/raise.ts";
+import { $square } from "../functions/raise.ts";
 import { cos } from "../functions/trigonometric.ts";
 import { grevlex } from "./grevlex.ts";
 
@@ -15,7 +15,7 @@ describe("grevlex", () => {
 
   it("sorts by total order leftward when non-equal", () => {
     expect(
-      grevlex(variable("x"), square(variable("y"))),
+      grevlex(variable("x"), $square(variable("y"))),
     ).toEqual(1);
   });
 
@@ -23,7 +23,7 @@ describe("grevlex", () => {
     expect(
       grevlex(
         $multiply(variable("x"), variable("y")),
-        square(variable("x")),
+        $square(variable("x")),
       ),
     ).toEqual(1);
   });
@@ -32,7 +32,7 @@ describe("grevlex", () => {
     expect(
       grevlex(
         $multiply(variable("x"), variable("y")),
-        square(variable("y")),
+        $square(variable("y")),
       ),
     ).toEqual(-1);
   });
@@ -40,8 +40,8 @@ describe("grevlex", () => {
   it("is 1 for [z ** 2, x ** 2]", () => {
     expect(
       grevlex(
-        square(variable("z")),
-        square(variable("x")),
+        $square(variable("z")),
+        $square(variable("x")),
       ),
     ).toEqual(1);
   });
@@ -90,19 +90,19 @@ describe("grevlex", () => {
 
   it("is usable for sorting an array of nodes", () => {
     expect([
-      square(variable("y")),
-      square(variable("z")),
-      square(variable("x")),
+      $square(variable("y")),
+      $square(variable("z")),
+      $square(variable("x")),
       $multiply(variable("x"), variable("z")),
       $multiply(variable("x"), variable("y")),
       $multiply(variable("y"), variable("z")),
     ].sort(grevlex)).toEqual([
-      square(variable("x")),
+      $square(variable("x")),
       $multiply(variable("x"), variable("y")),
-      square(variable("y")),
+      $square(variable("y")),
       $multiply(variable("x"), variable("z")),
       $multiply(variable("y"), variable("z")),
-      square(variable("z")),
+      $square(variable("z")),
     ]);
   });
 });

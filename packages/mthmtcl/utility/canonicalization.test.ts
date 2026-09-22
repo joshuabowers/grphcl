@@ -5,7 +5,7 @@ import { real } from "../functions/real.ts";
 import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
 import { subtract } from "../functions/subtract.ts";
-import { reciprocal } from "../functions/raise.ts";
+import { $reciprocal } from "../functions/raise.ts";
 import { $negate } from "../functions/negate.ts";
 import { canonicalize } from "./canonicalization.ts";
 
@@ -16,14 +16,14 @@ describe("canonicalize", () => {
 
   it("transforms reciprocals into divisions", () => {
     expect(
-      canonicalize(reciprocal(variable("x"))),
+      canonicalize($reciprocal(variable("x"))),
     ).toEqual(new Division(real(1), variable("x")));
   });
 
   it("transforms multiplications of a left reciprocal to divisions", () => {
     expect(
       canonicalize(
-        new Multiplication(reciprocal(variable("x")), variable("y")),
+        new Multiplication($reciprocal(variable("x")), variable("y")),
       ),
     ).toEqual(new Division(variable("y"), variable("x")));
   });
@@ -31,7 +31,7 @@ describe("canonicalize", () => {
   it("transforms multiplications of a right reciprocal to divisions", () => {
     expect(
       canonicalize(
-        new Multiplication(variable("x"), reciprocal(variable("y"))),
+        new Multiplication(variable("x"), $reciprocal(variable("y"))),
       ),
     ).toEqual(new Division(variable("x"), variable("y")));
   });
@@ -40,12 +40,15 @@ describe("canonicalize", () => {
     expect(
       canonicalize(
         new Multiplication(
-          reciprocal(variable("x")),
-          reciprocal(variable("y")),
+          $reciprocal(variable("x")),
+          $reciprocal(variable("y")),
         ),
       ),
     ).toEqual(
-      new Multiplication(reciprocal(variable("x")), reciprocal(variable("y"))),
+      new Multiplication(
+        $reciprocal(variable("x")),
+        $reciprocal(variable("y")),
+      ),
     );
   });
 

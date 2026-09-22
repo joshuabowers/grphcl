@@ -5,7 +5,7 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { preserve } from "./preserve.ts";
-import { reciprocal } from "./raise.ts";
+import { $reciprocal } from "./raise.ts";
 
 /**
  * Creates {@link Trigonometric.Cosine} AST nodes.
@@ -74,7 +74,7 @@ export const csc: UnaryFn<Trigonometric.Cosecant> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, reciprocal(sin(n))), Action.Application],
+    (n) => [preserve(n, $reciprocal(sin(n))), Action.Application],
   ),
 );
 
@@ -107,7 +107,7 @@ export const cot: UnaryFn<Trigonometric.Cotangent> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, reciprocal(tan(n))), Action.Application],
+    (n) => [preserve(n, $reciprocal(tan(n))), Action.Application],
   ),
 );
 
@@ -140,7 +140,7 @@ export const sec: UnaryFn<Trigonometric.Secant> = unary(
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, reciprocal(cos(n))), Action.Application],
+    (n) => [preserve(n, $reciprocal(cos(n))), Action.Application],
   ),
 );
 
