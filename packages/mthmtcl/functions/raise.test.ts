@@ -5,7 +5,7 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { lb, lg, ln, log } from "./log.ts";
+import { $lb, $lg, $ln, $log } from "./log.ts";
 import { multiply } from "./multiply.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 
@@ -61,7 +61,7 @@ describe("raise", () => {
 
     it("returns the sub-expression of an lb if base 2", () => {
       expect(
-        raise(real(2), lb(variable("x"))),
+        raise(real(2), $lb(variable("x"))),
       ).toEqual(
         variable("x"),
       );
@@ -69,7 +69,7 @@ describe("raise", () => {
 
     it("returns the sub-expression of an ln if base e", () => {
       expect(
-        raise(real(Math.E), ln(variable("x"))),
+        raise(real(Math.E), $ln(variable("x"))),
       ).toEqual(
         variable("x"),
       );
@@ -77,7 +77,7 @@ describe("raise", () => {
 
     it("returns the sub-expression of an lg if base 10", () => {
       expect(
-        raise(real(10), lg(variable("x"))),
+        raise(real(10), $lg(variable("x"))),
       ).toEqual(
         variable("x"),
       );
@@ -85,7 +85,7 @@ describe("raise", () => {
 
     it("returns the value of a logarithm if raising similar base to it", () => {
       expect(
-        raise(complex(0, 1), log(complex(0, 1), variable("x"))),
+        raise(complex(0, 1), $log(complex(0, 1), variable("x"))),
       ).toEqual(
         variable("x"),
       );

@@ -33,7 +33,7 @@ import { $divide } from "./divide.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 import { negate } from "./negate.ts";
 import { $abs } from "./absolute.ts";
-import { ln } from "./log.ts";
+import { $ln } from "./log.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
 
@@ -102,7 +102,7 @@ export const differentiate: DifferentiateFn = multi(
       e,
       $add(
         multiply(differentiate(e.left), $divide(e.right, e.left)),
-        multiply(differentiate(e.right), ln(e.left)),
+        multiply(differentiate(e.right), $ln(e.left)),
       ),
     ),
     Action.Application,
@@ -110,7 +110,7 @@ export const differentiate: DifferentiateFn = multi(
   when(is(Logarithm), (e) => [
     $divide(
       differentiate(e.right),
-      multiply(e.right, ln(e.left)),
+      multiply(e.right, $ln(e.left)),
     ),
     Action.Application,
   ]),

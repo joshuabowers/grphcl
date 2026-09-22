@@ -10,7 +10,7 @@ import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { reciprocal, sqrt, square } from "./raise.ts";
-import { ln } from "./log.ts";
+import { $ln } from "./log.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 const i = complex(0, 1);
@@ -82,7 +82,7 @@ export const $asin: UnaryFn<Arcus.Sine> = unary(
     const iz = multiply(i, c);
     const distance = sqrt(subtract(real(1), square(c)));
     return [
-      multiply(i, ln(subtract(distance, iz))),
+      multiply(i, $ln(subtract(distance, iz))),
       Action.Application,
     ];
   }),
@@ -102,7 +102,7 @@ export const $atan: UnaryFn<Arcus.Tangent> = unary(
     const inz = subtract(i, c);
     const ipz = $add(i, c);
     const ratio = $divide(inz, ipz);
-    return [multiply(nHalfI, ln(ratio)), Action.Application];
+    return [multiply(nHalfI, $ln(ratio)), Action.Application];
   }),
   when(is(Real), (r) => [real(Math.atan(r.raw)), Action.Application]),
 );

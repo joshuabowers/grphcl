@@ -11,7 +11,7 @@ import { multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { negate } from "./negate.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
-import { lb, lg, ln } from "./log.ts";
+import { $lb, $lg, $ln } from "./log.ts";
 import { $abs } from "./absolute.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { $acos, $acot, $acsc, $asec, $asin, $atan } from "./arcus.ts";
@@ -83,7 +83,7 @@ describe("differentiate", () => {
       expect(differentiate(raise(real(2), variable("x")))).toEqual(
         multiply(
           raise(real(2), variable("x")),
-          ln(real(2)),
+          $ln(real(2)),
         ),
       );
     });
@@ -99,16 +99,16 @@ describe("differentiate", () => {
 
   describe("of logarithms", () => {
     it("is a chained derivative of the argument and a binary logarithm", () => {
-      expect(differentiate(lb(variable("x")))).toEqual(
+      expect(differentiate($lb(variable("x")))).toEqual(
         $divide(
           real(1),
-          multiply(variable("x"), ln(real(2))),
+          multiply(variable("x"), $ln(real(2))),
         ),
       );
     });
 
     it("is a chained derivative of the argument and a natural logarithm", () => {
-      expect(differentiate(ln(variable("x")))).toEqual(
+      expect(differentiate($ln(variable("x")))).toEqual(
         $divide(
           real(1),
           variable("x"),
@@ -117,10 +117,10 @@ describe("differentiate", () => {
     });
 
     it("is a chained derivative of the argument and a common logarithm", () => {
-      expect(differentiate(lg(variable("x")))).toEqual(
+      expect(differentiate($lg(variable("x")))).toEqual(
         $divide(
           real(1),
-          multiply(variable("x"), ln(real(10))),
+          multiply(variable("x"), $ln(real(10))),
         ),
       );
     });

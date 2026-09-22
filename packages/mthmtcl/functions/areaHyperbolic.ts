@@ -15,7 +15,7 @@ import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { reciprocal, sqrt, square } from "./raise.ts";
-import { ln } from "./log.ts";
+import { $ln } from "./log.ts";
 
 /**
  * Creates {@link AreaHyperbolic.Cosine} AST nodes.
@@ -46,7 +46,7 @@ export const acosh: UnaryFn<AreaHyperbolic.Cosine> = unary(
 )(
   when(is(Boolean), (b) => [boolean(acosh(real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    ln($add(
+    $ln($add(
       c,
       multiply(
         sqrt($add(c, real(1))),
@@ -186,7 +186,7 @@ export const asinh: UnaryFn<AreaHyperbolic.Sine> = unary(
 )(
   when(is(Boolean), (b) => [boolean(asinh(real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    ln($add(
+    $ln($add(
       sqrt($add(square(c), real(1))),
       c,
     )),
@@ -226,7 +226,7 @@ export const atanh: UnaryFn<AreaHyperbolic.Tangent> = unary(
   when(is(Complex), (c) => [
     multiply(
       real(0.5),
-      ln($divide(
+      $ln($divide(
         $add(real(1), c),
         subtract(real(1), c),
       )),

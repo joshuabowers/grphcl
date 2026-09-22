@@ -10,7 +10,7 @@ import { negate } from "./negate.ts";
 import { multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { raise } from "./raise.ts";
-import { ln } from "./log.ts";
+import { $ln } from "./log.ts";
 import { degree, subDegree } from "./degree.ts";
 
 describe("subdegree", () => {
@@ -63,7 +63,7 @@ describe("degree", () => {
   });
 
   it("is 0 for logarithms", () => {
-    expect(degree(ln(variable("x")))).toEqual(real(0));
+    expect(degree($ln(variable("x")))).toEqual(real(0));
   });
 
   it("is the degree of the child of a negation", () => {

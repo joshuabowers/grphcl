@@ -6,13 +6,7 @@ import {
   Real,
   type TreeNode,
 } from "../tree/mod.ts";
-import {
-  type _,
-  fromMulti,
-  method,
-  type Multi,
-  multi,
-} from "@arrows/multimethod";
+import { type _, fromMulti, method, multi } from "@arrows/multimethod";
 import {
   Action,
   type Choose,
@@ -266,12 +260,11 @@ export function binary<
 export interface PartialBinaryFn<
   T extends BinaryNode,
   Bound extends Numeric,
-> extends Multi {
+> extends MathFn<T> {
   (expression: Boolean): Bound extends Complex | Real ? Bound : Boolean;
   (expression: Complex): Complex;
   (expression: Real): Bound extends Complex ? Complex : Real;
   (expression: Numeric): Numeric;
-  (expression: TreeNode): T;
 }
 
 /**
