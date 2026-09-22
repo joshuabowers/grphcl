@@ -1,12 +1,11 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
-import {} from "../tree/mod.ts";
+import { Division, Multiplication } from "../tree/mod.ts";
 import { real } from "../functions/real.ts";
 import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
 import { subtract } from "../functions/subtract.ts";
 import { reciprocal } from "../functions/raise.ts";
-import { divide } from "../functions/divide.ts";
 import { negate } from "../functions/negate.ts";
 import { canonicalize } from "./canonicalization.ts";
 
@@ -18,7 +17,23 @@ describe("canonicalize", () => {
   it("transforms reciprocals into divisions", () => {
     expect(
       canonicalize(reciprocal(variable("x"))),
-    ).toEqual(divide(real(1), variable("x")));
+    ).toEqual(new Division(real(1), variable("x")));
+  });
+
+  it("transforms multiplications of a left reciprocal to divisions", () => {
+    expect(
+      canonicalize(
+        new Multiplication(reciprocal(variable("x")), variable("y")),
+      ),
+    ).toEqual(new Division(variable("y"), variable("x")));
+  });
+
+  it("transforms multiplications of a right reciprocal to divisions", () => {
+    expect(
+      canonicalize(
+        new Multiplication(variable("x"), reciprocal(variable("y"))),
+      ),
+    ).toEqual(new Division(variable("x"), variable("y")));
   });
 
   it("transforms an addition of a negative number into a subtraction", () => {

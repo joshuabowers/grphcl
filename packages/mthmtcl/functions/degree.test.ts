@@ -8,7 +8,7 @@ import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { negate } from "./negate.ts";
 import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 import { raise } from "./raise.ts";
 import { ln } from "./log.ts";
 import { degree, subDegree } from "./degree.ts";
@@ -92,10 +92,10 @@ describe("degree", () => {
 
   it("is the different of powers of a division", () => {
     expect(
-      degree(divide(real(1), variable("x"))),
+      degree($divide(real(1), variable("x"))),
     ).toEqual(real(-1));
     expect(
-      degree(divide(variable("x"), raise(variable("y"), real(2)))),
+      degree($divide(variable("x"), raise(variable("y"), real(2)))),
     ).toEqual(real(-1));
   });
 });

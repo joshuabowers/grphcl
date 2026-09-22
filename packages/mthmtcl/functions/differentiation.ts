@@ -29,7 +29,7 @@ import { preserve } from "./preserve.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 import { negate } from "./negate.ts";
 import { $abs } from "./absolute.ts";
@@ -84,7 +84,7 @@ export const differentiate: DifferentiateFn = multi(
     Action.Application,
   ]),
   when(is(Division), (e) => [
-    divide(
+    $divide(
       subtract(
         multiply(differentiate(e.left), e.right),
         multiply(e.left, differentiate(e.right)),
@@ -101,20 +101,20 @@ export const differentiate: DifferentiateFn = multi(
     multiply(
       e,
       $add(
-        multiply(differentiate(e.left), divide(e.right, e.left)),
+        multiply(differentiate(e.left), $divide(e.right, e.left)),
         multiply(differentiate(e.right), ln(e.left)),
       ),
     ),
     Action.Application,
   ]),
   when(is(Logarithm), (e) => [
-    divide(
+    $divide(
       differentiate(e.right),
       multiply(e.right, ln(e.left)),
     ),
     Action.Application,
   ]),
-  when(is(Absolute), chain((e) => divide(e.child, e))),
+  when(is(Absolute), chain((e) => $divide(e.child, e))),
   when(
     is(Trigonometric.Cosine),
     chain((e) => negate(sin(e.child))),
@@ -147,7 +147,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(Arcus.Cosine),
     chain((e) =>
-      negate(divide(
+      negate($divide(
         differentiate(e.child),
         sqrt(subtract(real(1), square(e.child))),
       ))

@@ -4,7 +4,7 @@ import { binary, type BinaryFn, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 import { factorial } from "./factorial.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
@@ -18,7 +18,7 @@ export const $combine: BinaryFn<Combination> = binary(Combination)(
     Action.Application,
   ]),
   when([is(Numeric), is(Numeric)], (n, r) => [
-    divide(
+    $divide(
       factorial(n),
       multiply(factorial(r), factorial(subtract(n, r))),
     ),
@@ -36,7 +36,7 @@ export const $permute: BinaryFn<Permutation> = binary(Permutation)(
     Action.Application,
   ]),
   when([is(Numeric), is(Numeric)], (n, r) => [
-    divide(
+    $divide(
       factorial(n),
       factorial(subtract(n, r)),
     ),

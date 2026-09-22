@@ -10,7 +10,7 @@ import {
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 
 const lnComplex = (c: Complex) =>
   complex(
@@ -59,7 +59,7 @@ export const log: BinaryFn<Logarithm> = binary(Logarithm)(
     (_l, r) => [lnComplex(r), Action.Application],
   ),
   when([is(Complex), is(Complex)], (l, r) => [
-    divide(lnComplex(r), lnComplex(l)),
+    $divide(lnComplex(r), lnComplex(l)),
     Action.Application,
   ]),
   when([is(Real), is(Real)], (l, r) => [

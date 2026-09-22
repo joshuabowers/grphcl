@@ -5,7 +5,7 @@ import { variable } from "../functions/variable.ts";
 import { raise } from "../functions/raise.ts";
 import { cos } from "../functions/trigonometric.ts";
 import { monolex } from "./monolex.ts";
-import { divide } from "../functions/divide.ts";
+import { $divide } from "../functions/divide.ts";
 import { $add } from "../functions/add.ts";
 import { subtract } from "../functions/subtract.ts";
 
@@ -100,13 +100,13 @@ describe("monolex", () => {
 
   it("is -1 for [numeric, division]", () => {
     expect(
-      monolex(real(5), divide(real(1), variable("x"))),
+      monolex(real(5), $divide(real(1), variable("x"))),
     ).toEqual(-1);
   });
 
   it("is 1 for [division, numeric]", () => {
     expect(
-      monolex(divide(real(1), variable("x")), real(5)),
+      monolex($divide(real(1), variable("x")), real(5)),
     ).toEqual(1);
   });
 

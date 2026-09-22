@@ -8,7 +8,7 @@ import { preserve } from "./preserve.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 import { reciprocal, sqrt, square } from "./raise.ts";
 import { ln } from "./log.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
@@ -101,7 +101,7 @@ export const $atan: UnaryFn<Arcus.Tangent> = unary(
     const nHalfI = complex(0, -0.5);
     const inz = subtract(i, c);
     const ipz = $add(i, c);
-    const ratio = divide(inz, ipz);
+    const ratio = $divide(inz, ipz);
     return [multiply(nHalfI, ln(ratio)), Action.Application];
   }),
   when(is(Real), (r) => [real(Math.atan(r.raw)), Action.Application]),

@@ -8,7 +8,7 @@ import { variable } from "./variable.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 import { negate } from "./negate.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 import { lb, lg, ln } from "./log.ts";
@@ -59,8 +59,8 @@ describe("differentiate", () => {
     });
 
     it("handles divisions correctly", () => {
-      expect(differentiate(divide(real(5), variable("x")))).toEqual(
-        divide(
+      expect(differentiate($divide(real(5), variable("x")))).toEqual(
+        $divide(
           real(-5),
           square(variable("x")),
         ),
@@ -92,7 +92,7 @@ describe("differentiate", () => {
   describe("of absolute values", () => {
     it("returns the chain rule of the derivative of the absolute", () => {
       expect(differentiate($abs(variable("x")))).toEqual(
-        divide(variable("x"), $abs(variable("x"))),
+        $divide(variable("x"), $abs(variable("x"))),
       );
     });
   });
@@ -100,7 +100,7 @@ describe("differentiate", () => {
   describe("of logarithms", () => {
     it("is a chained derivative of the argument and a binary logarithm", () => {
       expect(differentiate(lb(variable("x")))).toEqual(
-        divide(
+        $divide(
           real(1),
           multiply(variable("x"), ln(real(2))),
         ),
@@ -109,7 +109,7 @@ describe("differentiate", () => {
 
     it("is a chained derivative of the argument and a natural logarithm", () => {
       expect(differentiate(ln(variable("x")))).toEqual(
-        divide(
+        $divide(
           real(1),
           variable("x"),
         ),
@@ -118,7 +118,7 @@ describe("differentiate", () => {
 
     it("is a chained derivative of the argument and a common logarithm", () => {
       expect(differentiate(lg(variable("x")))).toEqual(
-        divide(
+        $divide(
           real(1),
           multiply(variable("x"), ln(real(10))),
         ),

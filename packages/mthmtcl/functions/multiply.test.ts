@@ -10,7 +10,7 @@ import { raise, reciprocal, square } from "./raise.ts";
 import { cos } from "./trigonometric.ts";
 import { $add } from "./add.ts";
 import { double, multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 
 describe("multiply", () => {
   describe("with pairs of numeric inputs", () => {
@@ -200,7 +200,7 @@ describe("multiply", () => {
           reciprocal(variable("x")),
           variable("y"),
         ),
-      ).toEqual(divide(variable("y"), variable("x")));
+      ).toEqual($divide(variable("y"), variable("x")));
     });
 
     it("converts from right to a division", () => {
@@ -209,7 +209,7 @@ describe("multiply", () => {
           variable("y"),
           reciprocal(variable("x")),
         ),
-      ).toEqual(divide(variable("y"), variable("x")));
+      ).toEqual($divide(variable("y"), variable("x")));
     });
 
     it("does not convert for mutually negated powers", () => {
@@ -231,7 +231,7 @@ describe("multiply", () => {
     it("converts a left division to a multiplication", () => {
       expect(
         multiply(
-          divide(variable("x"), variable("y")),
+          $divide(variable("x"), variable("y")),
           variable("x"),
         ),
       ).toEqual(multiply(square(variable("x")), reciprocal(variable("y"))));
@@ -241,7 +241,7 @@ describe("multiply", () => {
       expect(
         multiply(
           variable("x"),
-          divide(variable("x"), variable("y")),
+          $divide(variable("x"), variable("y")),
         ),
       ).toEqual(multiply(square(variable("x")), reciprocal(variable("y"))));
     });
@@ -249,8 +249,8 @@ describe("multiply", () => {
     it("converts both divisions to multipications", () => {
       expect(
         multiply(
-          divide(variable("x"), variable("y")),
-          divide(variable("y"), variable("x")),
+          $divide(variable("x"), variable("y")),
+          $divide(variable("y"), variable("x")),
         ),
       ).toEqual(real(1));
     });

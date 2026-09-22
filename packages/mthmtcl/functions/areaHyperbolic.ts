@@ -13,7 +13,7 @@ import { preserve } from "./preserve.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 import { reciprocal, sqrt, square } from "./raise.ts";
 import { ln } from "./log.ts";
 
@@ -226,7 +226,7 @@ export const atanh: UnaryFn<AreaHyperbolic.Tangent> = unary(
   when(is(Complex), (c) => [
     multiply(
       real(0.5),
-      ln(divide(
+      ln($divide(
         $add(real(1), c),
         subtract(real(1), c),
       )),

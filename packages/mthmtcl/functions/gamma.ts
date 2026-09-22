@@ -8,7 +8,7 @@ import { real } from "./real.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide } from "./divide.ts";
 import { raise } from "./raise.ts";
 import { negate } from "./negate.ts";
 import { sqrt } from "./raise.ts";
@@ -76,7 +76,7 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
   when(
     is(Numeric, isBelowThreshold(0.5)),
     (n) => [
-      divide(
+      $divide(
         pi,
         multiply(
           sin(multiply(n, pi)),
@@ -92,7 +92,7 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
       const one = real(1);
       const z = subtract(n, one);
       const x = lanczos.p.reduce(
-        (s, v, i) => $add(s, divide(v, $add(z, real(i)))),
+        (s, v, i) => $add(s, $divide(v, $add(z, real(i)))),
       );
       const t = subtract($add(z, real(lanczos.p.length - 1)), real(0.5));
       return [
