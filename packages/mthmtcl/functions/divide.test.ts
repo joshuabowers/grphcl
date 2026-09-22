@@ -7,7 +7,7 @@ import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { raise, square } from "./raise.ts";
 import { divide } from "./divide.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 
 describe("divide", () => {
   describe("with pairs of numeric inputs", () => {
@@ -84,7 +84,7 @@ describe("divide", () => {
     it("converts and delegates to multiply for left", () => {
       expect(
         divide(
-          multiply(variable("x"), variable("y")),
+          $multiply(variable("x"), variable("y")),
           variable("x"),
         ),
       ).toEqual(variable("y"));
@@ -94,7 +94,7 @@ describe("divide", () => {
       expect(
         divide(
           variable("x"),
-          multiply(variable("x"), variable("y")),
+          $multiply(variable("x"), variable("y")),
         ),
       ).toEqual(divide(real(1), variable("y")));
     });
@@ -102,8 +102,8 @@ describe("divide", () => {
     it("converts and delegates to multiply for both", () => {
       expect(
         divide(
-          multiply(variable("x"), variable("y")),
-          multiply(variable("y"), variable("z")),
+          $multiply(variable("x"), variable("y")),
+          $multiply(variable("y"), variable("z")),
         ),
       ).toEqual(divide(variable("x"), variable("z")));
     });

@@ -28,7 +28,7 @@ import { real } from "./real.ts";
 import { preserve } from "./preserve.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 import { negate } from "./negate.ts";
@@ -53,7 +53,7 @@ const chain = <U extends UnaryNode>(
   derivativeFor: (expression: U) => TreeNode,
 ) =>
 (expression: U): Rewrite<TreeNode> => [
-  multiply(
+  $multiply(
     derivativeFor(expression),
     differentiate(expression.child),
   ),
@@ -78,16 +78,16 @@ export const differentiate: DifferentiateFn = multi(
   ]),
   when(is(Multiplication), (e) => [
     $add(
-      multiply(e.left, differentiate(e.right)),
-      multiply(differentiate(e.left), e.right),
+      $multiply(e.left, differentiate(e.right)),
+      $multiply(differentiate(e.left), e.right),
     ),
     Action.Application,
   ]),
   when(is(Division), (e) => [
     $divide(
       subtract(
-        multiply(differentiate(e.left), e.right),
-        multiply(e.left, differentiate(e.right)),
+        $multiply(differentiate(e.left), e.right),
+        $multiply(e.left, differentiate(e.right)),
       ),
       raise(e.right, real(2)),
     ),
@@ -98,11 +98,11 @@ export const differentiate: DifferentiateFn = multi(
     Action.Application,
   ]),
   when(is(Exponentiation), (e) => [
-    multiply(
+    $multiply(
       e,
       $add(
-        multiply(differentiate(e.left), $divide(e.right, e.left)),
-        multiply(differentiate(e.right), $ln(e.left)),
+        $multiply(differentiate(e.left), $divide(e.right, e.left)),
+        $multiply(differentiate(e.right), $ln(e.left)),
       ),
     ),
     Action.Application,
@@ -110,7 +110,7 @@ export const differentiate: DifferentiateFn = multi(
   when(is(Logarithm), (e) => [
     $divide(
       differentiate(e.right),
-      multiply(e.right, $ln(e.left)),
+      $multiply(e.right, $ln(e.left)),
     ),
     Action.Application,
   ]),
@@ -126,7 +126,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(Trigonometric.Cosecant),
     chain((e) =>
-      multiply(
+      $multiply(
         negate(csc(e.child)),
         cot(e.child),
       )
@@ -134,7 +134,7 @@ export const differentiate: DifferentiateFn = multi(
   ),
   when(
     is(Trigonometric.Secant),
-    chain((e) => multiply(sec(e.child), tan(e.child))),
+    chain((e) => $multiply(sec(e.child), tan(e.child))),
   ),
   when(
     is(Trigonometric.Sine),
@@ -161,7 +161,7 @@ export const differentiate: DifferentiateFn = multi(
     is(Arcus.Cosecant),
     chain((e) =>
       negate(
-        reciprocal(multiply(
+        reciprocal($multiply(
           $abs(e.child),
           sqrt(subtract(square(e.child), real(1))),
         )),
@@ -171,7 +171,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(Arcus.Secant),
     chain((e) =>
-      reciprocal(multiply(
+      reciprocal($multiply(
         $abs(e.child),
         sqrt(subtract(square(e.child), real(1))),
       ))
@@ -196,7 +196,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(Hyperbolic.Cosecant),
     chain((e) =>
-      multiply(
+      $multiply(
         negate(coth(e.child)),
         csch(e.child),
       )
@@ -205,7 +205,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(Hyperbolic.Secant),
     chain((e) =>
-      multiply(
+      $multiply(
         negate(tanh(e.child)),
         sech(e.child),
       )
@@ -230,7 +230,7 @@ export const differentiate: DifferentiateFn = multi(
   when(
     is(AreaHyperbolic.Cosecant),
     chain((e) =>
-      negate(reciprocal(multiply(
+      negate(reciprocal($multiply(
         $abs(e.child),
         sqrt($add(real(1), square(e.child))),
       )))
@@ -240,7 +240,7 @@ export const differentiate: DifferentiateFn = multi(
     is(AreaHyperbolic.Secant),
     chain((e) =>
       negate(
-        reciprocal(multiply(
+        reciprocal($multiply(
           e.child,
           sqrt(subtract(real(1), square(e.child))),
         )),

@@ -2,7 +2,7 @@ import { Boolean, Division } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { binary, type BinaryFn, otherwise, when } from "../factories/binary.ts";
 import { reciprocal } from "./raise.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 /**
@@ -14,7 +14,7 @@ export const $divide: BinaryFn<Division> = binary(Division)(
     [is(Boolean), is(Boolean)],
     (l, _r) => [l, Action.Application],
   ),
-  otherwise((l, r) => [multiply(l, reciprocal(r)), Action.Delegation]),
+  otherwise((l, r) => [$multiply(l, reciprocal(r)), Action.Delegation]),
 );
 
 /**

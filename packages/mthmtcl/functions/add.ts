@@ -14,7 +14,7 @@ import { _ } from "@arrows/multimethod";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
-import { double, multiply } from "./multiply.ts";
+import { $double, $multiply } from "./multiply.ts";
 import { negate } from "./negate.ts";
 import { deepEquals, isValue } from "../utility/deepEquals.ts";
 import { grevlex } from "../utility/grevlex.ts";
@@ -60,7 +60,7 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
   ),
   when(
     deepEquals,
-    (l, _r) => [double(l), Action.Idempotency],
+    (l, _r) => [$double(l), Action.Idempotency],
   ),
   when<Multiplication, Multiplication>( // E.g. 2 * x + 3 * x <-> 5 * x
     (l, r) =>
@@ -68,7 +68,7 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
       is(Multiplication)(r) && is(Numeric)(r.left) &&
       deepEquals(l.right, r.right),
     (l, r) => [
-      multiply($add(l.left, r.left), l.right),
+      $multiply($add(l.left, r.left), l.right),
       Action.Absorption,
     ],
   ),
@@ -77,7 +77,7 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
       is(Multiplication)(l) && is(Numeric)(l.left) &&
       deepEquals(l.right, r),
     (l, r) => [
-      multiply($add(l.left, real(1)), r),
+      $multiply($add(l.left, real(1)), r),
       Action.Absorption,
     ],
   ),
@@ -86,7 +86,7 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
       is(Multiplication)(r) && is(Numeric)(r.left) &&
       deepEquals(l, r.right),
     (l, r) => [
-      multiply($add(r.left, real(1)), l),
+      $multiply($add(r.left, real(1)), l),
       Action.Absorption,
     ],
   ),

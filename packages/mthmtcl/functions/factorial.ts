@@ -7,7 +7,7 @@ import { complex, ComplexInfinity } from "./complex.ts";
 import { real } from "./real.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 import { gamma } from "./gamma.ts";
 
 /**
@@ -52,7 +52,7 @@ export const factorial: UnaryFn<Factorial> = unary(Factorial)(
   when(is(Real, (r) => r.raw <= 1), [real(1), Action.Degeneracy]),
   when(is(Boolean), [boolean(true), Action.Application]),
   when(is(Numeric), (n) => [
-    multiply(n, factorial(subtract(n, real(1)))),
+    $multiply(n, factorial(subtract(n, real(1)))),
     Action.Recursion,
   ]),
 );

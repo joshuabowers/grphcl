@@ -6,7 +6,7 @@ import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { $lb, $lg, $ln, $log } from "./log.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 
 describe("raise", () => {
@@ -95,15 +95,15 @@ describe("raise", () => {
       expect(
         raise(raise(variable("x"), variable("y")), variable("z")),
       ).toEqual(
-        raise(variable("x"), multiply(variable("y"), variable("z"))),
+        raise(variable("x"), $multiply(variable("y"), variable("z"))),
       );
     });
 
     it("converts a base multiplication into a product of exponentiations", () => {
       expect(
-        raise(multiply(variable("x"), variable("y")), variable("z")),
+        raise($multiply(variable("x"), variable("y")), variable("z")),
       ).toEqual(
-        multiply(
+        $multiply(
           raise(variable("x"), variable("z")),
           raise(variable("y"), variable("z")),
         ),

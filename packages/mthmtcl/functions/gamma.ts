@@ -7,7 +7,7 @@ import { boolean } from "./boolean.ts";
 import { real } from "./real.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { raise } from "./raise.ts";
 import { negate } from "./negate.ts";
@@ -78,8 +78,8 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
     (n) => [
       $divide(
         pi,
-        multiply(
-          sin(multiply(n, pi)),
+        $multiply(
+          sin($multiply(n, pi)),
           gamma(subtract(real(1), n)),
         ),
       ),
@@ -96,11 +96,11 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
       );
       const t = subtract($add(z, real(lanczos.p.length - 1)), real(0.5));
       return [
-        multiply(
+        $multiply(
           sqrtTwicePi,
-          multiply(
+          $multiply(
             raise(t, $add(z, real(0.5))),
-            multiply(raise(real(Math.E), negate(t)), x),
+            $multiply(raise(real(Math.E), negate(t)), x),
           ),
         ),
         Action.Application,

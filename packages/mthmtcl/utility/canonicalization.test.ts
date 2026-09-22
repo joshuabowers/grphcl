@@ -36,6 +36,19 @@ describe("canonicalize", () => {
     ).toEqual(new Division(variable("x"), variable("y")));
   });
 
+  it("avoids mutually reciprocal multiplications", () => {
+    expect(
+      canonicalize(
+        new Multiplication(
+          reciprocal(variable("x")),
+          reciprocal(variable("y")),
+        ),
+      ),
+    ).toEqual(
+      new Multiplication(reciprocal(variable("x")), reciprocal(variable("y"))),
+    );
+  });
+
   it("transforms an addition of a negative number into a subtraction", () => {
     expect(
       canonicalize($add(variable("x"), real(-5))),

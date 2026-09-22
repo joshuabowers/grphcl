@@ -75,13 +75,15 @@ export const canonicalize: ExpressionFn = multi(
   when(
     is(Multiplication, (e) =>
       is(Exponentiation)(e.left) &&
-      is(Numeric, isNegativeOne)(e.left.right)),
+      is(Numeric, isNegativeOne)(e.left.right) &&
+      !is(Exponentiation, (f) => is(Numeric, isNegativeOne)(f.right))(e.right)),
     (e) => new Division(e.right, (e.left as Exponentiation).left),
   ),
   when(
     is(Multiplication, (e) =>
       is(Exponentiation)(e.right) &&
-      is(Numeric, isNegativeOne)(e.right.right)),
+      is(Numeric, isNegativeOne)(e.right.right) &&
+      !is(Exponentiation, (f) => is(Numeric, isNegativeOne)(f.right))(e.left)),
     (e) => new Division(e.left, (e.right as Exponentiation).left),
   ),
   method((e: TreeNode) => e),

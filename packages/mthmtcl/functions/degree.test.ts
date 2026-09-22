@@ -7,7 +7,7 @@ import { variable } from "./variable.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
 import { negate } from "./negate.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { raise } from "./raise.ts";
 import { $ln } from "./log.ts";
@@ -74,7 +74,7 @@ describe("degree", () => {
 
   it("is the sum of powers of all multiplicands", () => {
     expect(
-      degree(multiply(variable("y"), raise(variable("x"), real(4)))),
+      degree($multiply(variable("y"), raise(variable("x"), real(4)))),
     ).toEqual(real(5));
   });
 

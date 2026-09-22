@@ -5,7 +5,7 @@ import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { scope, variable } from "./variable.ts";
 import { $add } from "./add.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 import { cos } from "./trigonometric.ts";
 import { invoke } from "./invocation.ts";
 
@@ -55,7 +55,7 @@ describe("invoke", () => {
   describe("when given an expression with multiple instances of a variable", () => {
     it("substitutes a newly bound value for each variable instance", () => {
       expect(
-        invoke()(multiply(variable("x"), $add(variable("x"), real(5))))(
+        invoke()($multiply(variable("x"), $add(variable("x"), real(5))))(
           real(4),
         ),
       ).toEqual(
@@ -132,7 +132,7 @@ describe("invoke", () => {
 
     it("evaluates right child variables of binaries", () => {
       expect(
-        invoke()(multiply(real(5), variable("x")))(real(10)),
+        invoke()($multiply(real(5), variable("x")))(real(10)),
       ).toEqual(
         real(50),
       );

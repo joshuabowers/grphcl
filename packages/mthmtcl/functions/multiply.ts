@@ -32,45 +32,13 @@ import { $add } from "./add.ts";
 import { raise, reciprocal, square } from "./raise.ts";
 import { isNegativeOne, isOne, isZero } from "../utility/integers.ts";
 import { monolex } from "../utility/monolex.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 /**
- * Creates {@link Multiplication} AST nodes.
- *
- * Derived from {@link binary}: takes two {@link TreeNode}
- * inputs, returning some flavor of {@link TreeNode} output.
- *
- * This function performs numerous numerical and algebraic
- * analyses, yielding different types of TreeNode for
- * different edge casees. Some of these are documented by
- * the examples.
- *
- * Note that, like all {@link binary}-derived functions,
- * multiply will coerce mixed types (@see {@link BinaryFn}).
- *
- * @example Default algebraic analysis
- * ```ts
- * const multiplied = multiply(variable('x'), variable('y'));
- * // => new Multiplication(new Variable('x'), new Variable('y'))
- * ```
- *
- * @example Real multiplication
- * ```ts
- * const result = multiply(real(5), real(10)) // => real(50)
- * ```
- *
- * @example Complex multiplication
- * ```ts
- * const result = multipy(complex(2, 3), complex(3, 4))
- * // => complex(-6, 17)
- * ```
- *
- * @example Complex-coercion
- * ```ts
- * const result = multiply(real(5), complex(1, 2))
- * // => complex(5, 10)
- * ```
+ * Internal implementation of {@link multiply}, which does not
+ * perform normalization from {@link canonicalizeFrom}
  */
-export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
+export const $multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   when(
     [is(Boolean), is(Boolean)],
     (l, r) => [boolean(l.raw && r.raw), Action.Application],
@@ -101,7 +69,7 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   ),
   when(
     (l, r) => monolex(l, r) > 0,
-    (l, r) => [multiply(r, l), Action.Commutation],
+    (l, r) => [$multiply(r, l), Action.Commutation],
   ),
   when(
     [is(Numeric, isZero), _],
@@ -156,9 +124,9 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   when(
     [is(Division), is(Division)],
     (l, r) => [
-      multiply(
-        multiply(l.left, r.left),
-        reciprocal(multiply(l.right, r.right)),
+      $multiply(
+        $multiply(l.left, r.left),
+        reciprocal($multiply(l.right, r.right)),
       ),
       Action.Absorption,
     ],
@@ -166,8 +134,8 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   when(
     [is(Division), _],
     (l, r) => [
-      multiply(
-        multiply(l.left, r),
+      $multiply(
+        $multiply(l.left, r),
         reciprocal(l.right),
       ),
       Action.Absorption,
@@ -176,20 +144,68 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   when(
     [_, is(Division)],
     (l, r) => [
-      multiply(
-        multiply(l, r.left),
+      $multiply(
+        $multiply(l, r.left),
         reciprocal(r.right),
       ),
       Action.Absorption,
     ],
   ),
-  rearrange(Multiplication, () => multiply, monolex),
+  rearrange(Multiplication, () => $multiply, monolex),
 );
 
 /**
  * Creates {@link Multiplication} AST nodes.
  *
- * This function is derived from {@link multiply}, partially
+ * Derived from {@link binary}: takes two {@link TreeNode}
+ * inputs, returning some flavor of {@link TreeNode} output.
+ *
+ * This function performs numerous numerical and algebraic
+ * analyses, yielding different types of TreeNode for
+ * different edge casees. Some of these are documented by
+ * the examples.
+ *
+ * Note that, like all {@link binary}-derived functions,
+ * multiply will coerce mixed types (@see {@link BinaryFn}).
+ *
+ * @example Default algebraic analysis
+ * ```ts
+ * const multiplied = multiply(variable('x'), variable('y'));
+ * // => new Multiplication(new Variable('x'), new Variable('y'))
+ * ```
+ *
+ * @example Real multiplication
+ * ```ts
+ * const result = multiply(real(5), real(10)) // => real(50)
+ * ```
+ *
+ * @example Complex multiplication
+ * ```ts
+ * const result = multipy(complex(2, 3), complex(3, 4))
+ * // => complex(-6, 17)
+ * ```
+ *
+ * @example Complex-coercion
+ * ```ts
+ * const result = multiply(real(5), complex(1, 2))
+ * // => complex(5, 10)
+ * ```
+ */
+export const multiply: BinaryFn<Multiplication> = canonicalizeFrom($multiply);
+
+/**
+ * Internal implementation of {@link double}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $double: PartialBinaryFn<
+  Multiplication,
+  Real
+> = partialLeft($multiply, real(2));
+
+/**
+ * Creates {@link Multiplication} AST nodes.
+ *
+ * This function is derived from {@link $multiply}, partially
  * evaluating the latter by binding its left-input to `real(2)`.
  *
  * This function will behave mostly analogously to a unary
@@ -200,4 +216,4 @@ export const multiply: BinaryFn<Multiplication> = binary(Multiplication)(
 export const double: PartialBinaryFn<
   Multiplication,
   Real
-> = partialLeft(multiply, real(2));
+> = canonicalizeFrom($double);

@@ -23,7 +23,7 @@ import { real } from "./real.ts";
 import { isOne, isZero } from "../utility/integers.ts";
 import { preserve } from "./preserve.ts";
 import { deepEquals } from "../utility/deepEquals.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 
 /**
  * Creates {@link Exponentiation} AST nodes.
@@ -110,14 +110,14 @@ export const raise: BinaryFn<Exponentiation> = binary(Exponentiation)(
   when(
     [is(Exponentiation), _],
     (l, r) => [
-      raise(l.left, multiply(l.right, r)),
+      raise(l.left, $multiply(l.right, r)),
       Action.Distribution,
     ],
   ),
   when(
     [is(Multiplication), _],
     (l, r) => [
-      multiply(raise(l.left, r), raise(l.right, r)),
+      $multiply(raise(l.left, r), raise(l.right, r)),
       Action.Distribution,
     ],
   ),

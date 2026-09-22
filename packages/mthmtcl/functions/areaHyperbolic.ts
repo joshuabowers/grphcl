@@ -13,7 +13,7 @@ import { preserve } from "./preserve.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 import { $add } from "./add.ts";
 import { subtract } from "./subtract.ts";
-import { multiply } from "./multiply.ts";
+import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
 import { reciprocal, sqrt, square } from "./raise.ts";
 import { $ln } from "./log.ts";
@@ -29,7 +29,7 @@ export const $acosh: UnaryFn<AreaHyperbolic.Cosine> = unary(
   when(is(Complex), (c) => [
     $ln($add(
       c,
-      multiply(
+      $multiply(
         sqrt($add(c, real(1))),
         sqrt(subtract(c, real(1))),
       ),
@@ -237,7 +237,7 @@ export const $atanh: UnaryFn<AreaHyperbolic.Tangent> = unary(
 )(
   when(is(Boolean), (b) => [boolean($atanh(real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    multiply(
+    $multiply(
       real(0.5),
       $ln($divide(
         $add(real(1), c),

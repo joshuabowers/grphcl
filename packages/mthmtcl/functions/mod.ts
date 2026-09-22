@@ -32,7 +32,7 @@ export { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
 
 export { add } from "./add.ts";
 export { subtract } from "./subtract.ts";
-export { multiply } from "./multiply.ts";
+export { double, multiply } from "./multiply.ts";
 export { divide } from "./divide.ts";
 export { raise, reciprocal, sqrt, square } from "./raise.ts";
 export { lb, lg, ln, log } from "./log.ts";
