@@ -68,7 +68,14 @@ import { $abs } from "./absolute.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { $acos, $acot, $acsc, $asec, $asin, $atan } from "./arcus.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
-import { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
+import {
+  $acosh,
+  $acoth,
+  $acsch,
+  $asech,
+  $asinh,
+  $atanh,
+} from "./areaHyperbolic.ts";
 import { factorial } from "./factorial.ts";
 import { gamma } from "./gamma.ts";
 import { canonicalize } from "../utility/canonicalization.ts";
@@ -161,12 +168,12 @@ const evaluate: EvaluateFn = multi(
   when(is(Hyperbolic.Sine), unary(sinh)),
   when(is(Hyperbolic.Tangent), unary(tanh)),
   //
-  when(is(AreaHyperbolic.Cosine), unary(acosh)),
-  when(is(AreaHyperbolic.Cotangent), unary(acoth)),
-  when(is(AreaHyperbolic.Cosecant), unary(acsch)),
-  when(is(AreaHyperbolic.Secant), unary(asech)),
-  when(is(AreaHyperbolic.Sine), unary(asinh)),
-  when(is(AreaHyperbolic.Tangent), unary(atanh)),
+  when(is(AreaHyperbolic.Cotangent), unary($acoth)),
+  when(is(AreaHyperbolic.Cosecant), unary($acsch)),
+  when(is(AreaHyperbolic.Secant), unary($asech)),
+  when(is(AreaHyperbolic.Cosine), unary($acosh)),
+  when(is(AreaHyperbolic.Sine), unary($asinh)),
+  when(is(AreaHyperbolic.Tangent), unary($atanh)),
   //
   when(is(Factorial), unary(factorial)),
   when(is(Gamma), unary(gamma)),
