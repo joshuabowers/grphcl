@@ -1,9 +1,17 @@
 import { Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { field, type FieldFn, when } from "../factories/field.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 export const isReal = (c: Complex) => c.raw.b === 0;
 export const isImaginary = (c: Complex) => c.raw.a === 0;
+
+export interface ComplexFn extends
+  FieldFn<
+    Complex,
+    { a: number; b: number },
+    [number, number]
+  > {}
 
 /**
  * Creates instances of {@link Complex} field types.
@@ -26,11 +34,7 @@ export const isImaginary = (c: Complex) => c.raw.a === 0;
  * const z = complex(real(5.5)) // => new Complex({a: 5.5, b: 0})
  * ```
  */
-export const complex: FieldFn<
-  Complex,
-  { a: number; b: number },
-  [number, number]
-> = field(
+export const $complex: ComplexFn = field(
   Complex,
   ([a, b]: [number, number]) => ({ a, b }),
 )(
@@ -39,13 +43,22 @@ export const complex: FieldFn<
   when(is(Real), (r) => [[r.raw, 0], Action.Conversion]),
 );
 
+export const complex: ComplexFn = canonicalizeFrom($complex);
+
+export const imaginary: ComplexFn = field(
+  Complex,
+  ([a, b]: [number, number]) => ({ a, b }),
+)(
+  when(is(Complex), (c) => [[0, c.raw.b], Action.Identity]),
+);
+
 /**
  * Represents the value of complex infinity.
  *
  * Complex infinity is defined as having an unknown or
  * undefined imaginary part, and an infinite real part.
  */
-export const ComplexInfinity = complex(Infinity, NaN);
+export const ComplexInfinity = $complex(Infinity, NaN);
 
 export const isComplexInfinity = (value: unknown): value is Complex =>
   is(

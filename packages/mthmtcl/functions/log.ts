@@ -8,13 +8,13 @@ import {
   when,
 } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
+import { $complex } from "./complex.ts";
+import { $real } from "./real.ts";
 import { $divide } from "./divide.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 const lnComplex = (c: Complex) =>
-  complex(
+  $complex(
     Math.log(Math.hypot(c.raw.a, c.raw.b)),
     Math.atan2(c.raw.b, c.raw.a),
   );
@@ -29,7 +29,7 @@ const isComplexNaturalLog = (value: unknown): value is Complex =>
 export const $log: BinaryFn<Logarithm> = binary(Logarithm)(
   // This implementation for booleans is hacky.
   when([is(Boolean), is(Boolean)], (l, r) => [
-    boolean($log(real(l), real(r))),
+    boolean($log($real(l), $real(r))),
     Action.Application,
   ]),
   when(
@@ -41,7 +41,7 @@ export const $log: BinaryFn<Logarithm> = binary(Logarithm)(
     Action.Application,
   ]),
   when([is(Real), is(Real)], (l, r) => [
-    real(Math.log(r.raw) / Math.log(l.raw)),
+    $real(Math.log(r.raw) / Math.log(l.raw)),
     Action.Application,
   ]),
 );
@@ -82,7 +82,7 @@ export const log: BinaryFn<Logarithm> = canonicalizeFrom($log);
 export const $lb: PartialBinaryFn<
   Logarithm,
   Real
-> = partialLeft($log, real(2));
+> = partialLeft($log, $real(2));
 
 /**
  * Internal implementation of {@link lg}, which does not
@@ -91,7 +91,7 @@ export const $lb: PartialBinaryFn<
 export const $lg: PartialBinaryFn<
   Logarithm,
   Real
-> = partialLeft($log, real(10));
+> = partialLeft($log, $real(10));
 
 /**
  * Internal implementation of {@link ln}, which does not
@@ -100,7 +100,7 @@ export const $lg: PartialBinaryFn<
 export const $ln: PartialBinaryFn<
   Logarithm,
   Real
-> = partialLeft($log, real(Math.E));
+> = partialLeft($log, $real(Math.E));
 
 /**
  * Creates instances of {@link Logarithm} with a preset

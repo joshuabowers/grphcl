@@ -82,6 +82,14 @@ export const makeCanonical = <
   )(...toParams(expression).map(canonicalize));
 
 export const canonicalize: ExpressionFn = multi(
+  when(
+    is(Complex),
+    (e) =>
+      new Complex({
+        a: round(e.raw.a, 15),
+        b: round(e.raw.b, 15),
+      }),
+  ),
   when(is(Real), (e) => new Real(round(e.raw, 15))),
   when(
     is(Exponentiation, (e) => isNegativeOne(e.right)),
@@ -112,6 +120,24 @@ export const canonicalize: ExpressionFn = multi(
       ),
   ),
   when(
+    is(
+      Multiplication,
+      (e) =>
+        is(Exponentiation, (f) => is(Numeric, isNegativeOne)(f.right))(
+          e.left,
+        ) &&
+        is(Exponentiation, (f) => is(Numeric, isNegativeOne)(f.right))(e.right),
+    ),
+    (e) =>
+      new Division(
+        new Real(1),
+        new Multiplication(
+          canonicalize((e.left as Exponentiation).left),
+          canonicalize((e.right as Exponentiation).left),
+        ),
+      ),
+  ),
+  when(
     is(Multiplication, (e) =>
       is(Exponentiation)(e.left) &&
       is(Numeric, isNegativeOne)(e.left.right) &&
@@ -133,9 +159,8 @@ export const canonicalize: ExpressionFn = multi(
         canonicalize((e.right as Exponentiation).left),
       ),
   ),
-  when(is(Division), makeCanonical),
-  when(is(Exponentiation), makeCanonical),
   when(is(UnaryNode), makeCanonical),
+  when(is(BinaryNode), makeCanonical),
   method((e: TreeNode) => e),
 );
 

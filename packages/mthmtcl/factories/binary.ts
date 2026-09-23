@@ -19,8 +19,8 @@ import {
   type Rewrite,
   type When,
 } from "./factory.ts";
-import { complex } from "../functions/complex.ts";
-import { real } from "../functions/real.ts";
+import { $complex } from "../functions/complex.ts";
+import { $real } from "../functions/real.ts";
 
 export const are = <Left, Right>(
   guardLeft: Predicate<Left>,
@@ -231,12 +231,12 @@ export function binary<
     );
     return fromMulti(
       ...[
-        coerce(fn)(Boolean, Real)(real, identity),
-        coerce(fn)(Boolean, Complex)(complex, identity),
-        coerce(fn)(Complex, Boolean)(identity, complex),
-        coerce(fn)(Complex, Real)(identity, complex),
-        coerce(fn)(Real, Boolean)(identity, real),
-        coerce(fn)(Real, Complex)(complex, identity),
+        coerce(fn)(Boolean, Real)($real, identity),
+        coerce(fn)(Boolean, Complex)($complex, identity),
+        coerce(fn)(Complex, Boolean)(identity, $complex),
+        coerce(fn)(Complex, Real)(identity, $complex),
+        coerce(fn)(Real, Boolean)(identity, $real),
+        coerce(fn)(Real, Complex)($complex, identity),
       ].map((ec) => ec.method),
     )(fn);
   };

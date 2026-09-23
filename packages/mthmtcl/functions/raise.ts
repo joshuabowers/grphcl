@@ -18,8 +18,8 @@ import {
 } from "../factories/binary.ts";
 import { _ } from "@arrows/multimethod";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
+import { $complex } from "./complex.ts";
+import { $real } from "./real.ts";
 import { isOne, isZero } from "../utility/integers.ts";
 import { preserve } from "./preserve.ts";
 import { deepEquals } from "../utility/deepEquals.ts";
@@ -41,7 +41,7 @@ export const $raise: BinaryFn<Exponentiation> = binary(Exponentiation)(
     const dLnP = r.raw.b * Math.log(p), cArg = r.raw.a * arg;
     const multiplicand = (p ** r.raw.a) * Math.exp(-r.raw.b * arg);
     return [
-      complex(
+      $complex(
         multiplicand * Math.cos(dLnP + cArg),
         multiplicand * Math.sin(dLnP + cArg),
       ),
@@ -50,7 +50,7 @@ export const $raise: BinaryFn<Exponentiation> = binary(Exponentiation)(
   }),
   when(
     [is(Real), is(Real)],
-    (l, r) => [real(l.raw ** r.raw), Action.Application],
+    (l, r) => [$real(l.raw ** r.raw), Action.Application],
   ),
   when(
     [is(Numeric, isZero), _],
@@ -59,7 +59,7 @@ export const $raise: BinaryFn<Exponentiation> = binary(Exponentiation)(
   when(
     [_, is(Numeric, isZero)],
     (_l, r) => [
-      preserve(r, real(1)),
+      preserve(r, $real(1)),
       Action.Annihilator,
     ],
   ),
@@ -137,7 +137,7 @@ export const raise: BinaryFn<Exponentiation> = canonicalizeFrom($raise);
 export const $reciprocal: PartialBinaryFn<
   Exponentiation,
   Real
-> = partialRight($raise, real(-1));
+> = partialRight($raise, $real(-1));
 
 /**
  * Creates {@link Exponentiation} AST nodes.
@@ -162,7 +162,7 @@ export const reciprocal: PartialBinaryFn<
 export const $sqrt: PartialBinaryFn<
   Exponentiation,
   Real
-> = partialRight($raise, real(0.5));
+> = partialRight($raise, $real(0.5));
 
 /**
  * Creates {@link Exponentiation} AST nodes.
@@ -187,7 +187,7 @@ export const sqrt: PartialBinaryFn<
 export const $square: PartialBinaryFn<
   Exponentiation,
   Real
-> = partialRight($raise, real(2));
+> = partialRight($raise, $real(2));
 
 /**
  * Creates {@link Exponentiation} AST nodes.

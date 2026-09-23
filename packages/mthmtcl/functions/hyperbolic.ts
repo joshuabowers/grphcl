@@ -2,8 +2,8 @@ import { Boolean, Complex, Hyperbolic, Numeric, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
+import { $complex } from "./complex.ts";
+import { $real } from "./real.ts";
 import { preserve } from "./preserve.ts";
 import { $reciprocal } from "./raise.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
@@ -15,15 +15,15 @@ import { canonicalizeFrom } from "../utility/canonicalization.ts";
 export const $cosh: UnaryFn<Hyperbolic.Cosine> = unary(
   Hyperbolic.Cosine,
 )(
-  when(is(Boolean), (b) => [boolean($cosh(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($cosh($real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    complex(
+    $complex(
       Math.cosh(c.raw.a) * Math.cos(c.raw.b),
       Math.sinh(c.raw.a) * Math.sin(c.raw.b),
     ),
     Action.Application,
   ]),
-  when(is(Real), (r) => [real(Math.cosh(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.cosh(r.raw)), Action.Application]),
 );
 
 /**
@@ -180,15 +180,15 @@ export const sech: UnaryFn<Hyperbolic.Secant> = canonicalizeFrom($sech);
 export const $sinh: UnaryFn<Hyperbolic.Sine> = unary(
   Hyperbolic.Sine,
 )(
-  when(is(Boolean), (b) => [boolean($sinh(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($sinh($real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    complex(
+    $complex(
       Math.sinh(c.raw.a) * Math.cos(c.raw.b),
       Math.cosh(c.raw.a) * Math.sin(c.raw.b),
     ),
     Action.Application,
   ]),
-  when(is(Real), (r) => [real(Math.sinh(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.sinh(r.raw)), Action.Application]),
 );
 
 /**
@@ -224,18 +224,18 @@ export const sinh: UnaryFn<Hyperbolic.Sine> = canonicalizeFrom($sinh);
 export const $tanh: UnaryFn<Hyperbolic.Tangent> = unary(
   Hyperbolic.Tangent,
 )(
-  when(is(Boolean), (b) => [boolean($tanh(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($tanh($real(b))), Action.Application]),
   when(is(Complex), (c) => {
     const divisor = Math.cosh(2 * c.raw.a) + Math.cos(2 * c.raw.b);
     return [
-      complex(
+      $complex(
         Math.sinh(2 * c.raw.a) / divisor,
         Math.sin(2 * c.raw.b) / divisor,
       ),
       Action.Application,
     ];
   }),
-  when(is(Real), (r) => [real(Math.tanh(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.tanh(r.raw)), Action.Application]),
 );
 
 /**

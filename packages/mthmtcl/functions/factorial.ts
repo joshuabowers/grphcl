@@ -3,8 +3,8 @@ import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { isNegativeInteger, isNonInteger } from "../utility/integers.ts";
 import { boolean } from "./boolean.ts";
-import { complex, ComplexInfinity } from "./complex.ts";
-import { real } from "./real.ts";
+import { $complex, ComplexInfinity } from "./complex.ts";
+import { $real } from "./real.ts";
 import { $add } from "./add.ts";
 import { $subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
@@ -20,13 +20,13 @@ export const $factorial: UnaryFn<Factorial> = unary(Factorial)(
   when(is(Numeric, isNegativeInteger), [ComplexInfinity, Action.Singularity]),
   when(
     is(Numeric, isNonInteger),
-    (n) => [$gamma($add(n, real(1))), Action.Delegation],
+    (n) => [$gamma($add(n, $real(1))), Action.Delegation],
   ),
-  when(is(Complex, (c) => c.raw.a <= 1), [complex(1, 0), Action.Degeneracy]),
-  when(is(Real, (r) => r.raw <= 1), [real(1), Action.Degeneracy]),
+  when(is(Complex, (c) => c.raw.a <= 1), [$complex(1, 0), Action.Degeneracy]),
+  when(is(Real, (r) => r.raw <= 1), [$real(1), Action.Degeneracy]),
   when(is(Boolean), [boolean(true), Action.Application]),
   when(is(Numeric), (n) => [
-    $multiply(n, $factorial($subtract(n, real(1)))),
+    $multiply(n, $factorial($subtract(n, $real(1)))),
     Action.Recursion,
   ]),
 );

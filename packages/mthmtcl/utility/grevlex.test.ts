@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
-import { real } from "../functions/real.ts";
+import { $real } from "../functions/real.ts";
 import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
 import { $multiply } from "../functions/multiply.ts";
@@ -65,11 +65,11 @@ describe("grevlex", () => {
   });
 
   it("is 1 for [numeric, variable]", () => {
-    expect(grevlex(real(5), variable("x"))).toEqual(1);
+    expect(grevlex($real(5), variable("x"))).toEqual(1);
   });
 
   it("is -1 for [variable, numeric]", () => {
-    expect(grevlex(variable("x"), real(5))).toEqual(-1);
+    expect(grevlex(variable("x"), $real(5))).toEqual(-1);
   });
 
   it("is 1 for [cos, variable]", () => {
@@ -81,11 +81,11 @@ describe("grevlex", () => {
   });
 
   it("is 1 for [numeric, cos]", () => {
-    expect(grevlex(real(5), $cos(variable("x")))).toEqual(1);
+    expect(grevlex($real(5), $cos(variable("x")))).toEqual(1);
   });
 
   it("is -1 for [cos, numeric]", () => {
-    expect(grevlex($cos(variable("x")), real(5))).toEqual(-1);
+    expect(grevlex($cos(variable("x")), $real(5))).toEqual(-1);
   });
 
   it("is usable for sorting an array of nodes", () => {

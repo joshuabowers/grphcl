@@ -2,7 +2,7 @@ import { describe, it } from "node:test";
 import { expect } from "@std/expect";
 import { Negation, Variable } from "../tree/mod.ts";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
+import { $complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { negate } from "./negate.ts";
@@ -14,7 +14,7 @@ describe("negate", () => {
   });
 
   it("flips the sign of both components of a complex number", () => {
-    expect(negate(complex(3, -4))).toEqual(complex(-3, 4));
+    expect(negate($complex(3, -4))).toEqual($complex(-3, 4));
   });
 
   it("flips the sign of a Real input", () => {

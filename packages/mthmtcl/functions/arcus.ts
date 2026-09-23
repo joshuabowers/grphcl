@@ -2,8 +2,8 @@ import { Arcus, Boolean, Complex, Numeric, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
+import { $complex } from "./complex.ts";
+import { $real } from "./real.ts";
 import { preserve } from "./preserve.ts";
 import { $add } from "./add.ts";
 import { $subtract } from "./subtract.ts";
@@ -13,8 +13,8 @@ import { $reciprocal, $sqrt, $square } from "./raise.ts";
 import { $ln } from "./log.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
-const i = complex(0, 1);
-const halfPi = real(Math.PI / 2);
+const i = $complex(0, 1);
+const halfPi = $real(Math.PI / 2);
 
 /**
  * Internal implementation of {@link acos}, which does not
@@ -23,12 +23,12 @@ const halfPi = real(Math.PI / 2);
 export const $acos: UnaryFn<Arcus.Cosine> = unary(
   Arcus.Cosine,
 )(
-  when(is(Boolean), (b) => [boolean($acos(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($acos($real(b))), Action.Application]),
   when(is(Complex), (c) => [
     $subtract(halfPi, $asin(c)),
     Action.Application,
   ]),
-  when(is(Real), (r) => [real(Math.acos(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.acos(r.raw)), Action.Application]),
 );
 
 /**
@@ -77,16 +77,16 @@ export const $asec: UnaryFn<Arcus.Secant> = unary(
 export const $asin: UnaryFn<Arcus.Sine> = unary(
   Arcus.Sine,
 )(
-  when(is(Boolean), (b) => [boolean($asin(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($asin($real(b))), Action.Application]),
   when(is(Complex), (c) => {
     const iz = $multiply(i, c);
-    const distance = $sqrt($subtract(real(1), $square(c)));
+    const distance = $sqrt($subtract($real(1), $square(c)));
     return [
       $multiply(i, $ln($subtract(distance, iz))),
       Action.Application,
     ];
   }),
-  when(is(Real), (r) => [real(Math.asin(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.asin(r.raw)), Action.Application]),
 );
 
 /**
@@ -96,15 +96,15 @@ export const $asin: UnaryFn<Arcus.Sine> = unary(
 export const $atan: UnaryFn<Arcus.Tangent> = unary(
   Arcus.Tangent,
 )(
-  when(is(Boolean), (b) => [boolean($atan(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($atan($real(b))), Action.Application]),
   when(is(Complex), (c) => {
-    const nHalfI = complex(0, -0.5);
+    const nHalfI = $complex(0, -0.5);
     const inz = $subtract(i, c);
     const ipz = $add(i, c);
     const ratio = $divide(inz, ipz);
     return [$multiply(nHalfI, $ln(ratio)), Action.Application];
   }),
-  when(is(Real), (r) => [real(Math.atan(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.atan(r.raw)), Action.Application]),
 );
 
 /**

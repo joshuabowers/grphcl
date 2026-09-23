@@ -16,7 +16,7 @@ import {
 } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
-import { real } from "./real.ts";
+import { $real } from "./real.ts";
 
 /**
  * Calculates the {@link degree} of an {@link Exponentiation}.
@@ -29,11 +29,11 @@ export const subDegree: UnaryFn<
   Real
 > = unary(Degree, Real)(
   when(is(Complex), (c) => [
-    real(Math.hypot(c.raw.a, c.raw.b)),
+    $real(Math.hypot(c.raw.a, c.raw.b)),
     Action.Identity,
   ]),
-  when(is(Numeric), (n) => [real(n), Action.Identity]),
-  when(is(Variable), [real(Infinity), Action.Absorption]),
+  when(is(Numeric), (n) => [$real(n), Action.Identity]),
+  when(is(Variable), [$real(Infinity), Action.Absorption]),
 );
 
 /**
@@ -91,35 +91,35 @@ export const degree: UnaryFn<
   Degree,
   Real
 > = unary(Degree, Real)(
-  when(is(Boolean, (b) => !b.raw), [real(-Infinity), Action.Annihilator]),
+  when(is(Boolean, (b) => !b.raw), [$real(-Infinity), Action.Annihilator]),
   when(is(Complex, (c) => c.raw.a === 0 && c.raw.b === 0), [
-    real(-Infinity),
+    $real(-Infinity),
     Action.Annihilator,
   ]),
-  when(is(Real, (r) => r.raw === 0), [real(-Infinity), Action.Annihilator]),
-  when(is(Numeric), [real(0), Action.Identity]),
-  when(is(Variable), [real(1), Action.Identity]),
+  when(is(Real, (r) => r.raw === 0), [$real(-Infinity), Action.Annihilator]),
+  when(is(Numeric), [$real(0), Action.Identity]),
+  when(is(Variable), [$real(1), Action.Identity]),
   when(is(Addition), (a) => [
-    real(Math.max(degree(a.left).raw, degree(a.right).raw)),
+    $real(Math.max(degree(a.left).raw, degree(a.right).raw)),
     Action.Recursion,
   ]),
   when(is(Subtraction), (s) => [
-    real(Math.max(degree(s.left).raw, degree(s.right).raw)),
+    $real(Math.max(degree(s.left).raw, degree(s.right).raw)),
     Action.Recursion,
   ]),
   when(is(Negation), (n) => [degree(n.child), Action.Recursion]),
   when(is(Multiplication), (m) => [
-    real(degree(m.left).raw + degree(m.right).raw),
+    $real(degree(m.left).raw + degree(m.right).raw),
     Action.Recursion,
   ]),
   when(is(Division), (d) => [
-    real(degree(d.left).raw - degree(d.right).raw),
+    $real(degree(d.left).raw - degree(d.right).raw),
     Action.Recursion,
   ]),
   when(is(Exponentiation), (e) => [
     subDegree(e.right),
     Action.Delegation,
   ]),
-  when(is(Logarithm), [real(0), Action.Identity]),
-  when(is(UnaryNode), [real(1), Action.Identity]),
+  when(is(Logarithm), [$real(0), Action.Identity]),
+  when(is(UnaryNode), [$real(1), Action.Identity]),
 );

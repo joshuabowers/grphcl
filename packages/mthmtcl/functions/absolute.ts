@@ -1,8 +1,8 @@
 import { Absolute, Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
+import { $complex } from "./complex.ts";
+import { $real } from "./real.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 /**
@@ -14,11 +14,11 @@ export const $abs: UnaryFn<Absolute> = unary(Absolute)(
   when(
     is(Complex),
     (c) => [
-      complex(Math.hypot(c.raw.a, c.raw.b), 0),
+      $complex(Math.hypot(c.raw.a, c.raw.b), 0),
       Action.Absorption,
     ],
   ),
-  when(is(Real), (r) => [real(Math.abs(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.abs(r.raw)), Action.Application]),
 );
 
 /**

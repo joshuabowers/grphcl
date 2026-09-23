@@ -20,13 +20,13 @@ import {
 } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
 import {
-  complex,
+  $complex,
   ComplexInfinity,
   isComplexInfinity,
   isImaginary,
   isReal,
 } from "./complex.ts";
-import { real } from "./real.ts";
+import { $real } from "./real.ts";
 import { deepEquals } from "../utility/deepEquals.ts";
 import { $add } from "./add.ts";
 import { $raise, $reciprocal, $square } from "./raise.ts";
@@ -47,16 +47,16 @@ export const $multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   when([_, isComplexInfinity], [ComplexInfinity, Action.Absorption]),
   when(
     [is(Complex, isReal), is(Complex, isImaginary)],
-    (r, c) => [complex(0, r.raw.a * c.raw.b), Action.Application],
+    (r, c) => [$complex(0, r.raw.a * c.raw.b), Action.Application],
   ),
   when(
     [is(Complex, isImaginary), is(Complex, isReal)],
-    (c, r) => [complex(0, c.raw.b * r.raw.a), Action.Application],
+    (c, r) => [$complex(0, c.raw.b * r.raw.a), Action.Application],
   ),
   when(
     [is(Complex), is(Complex)],
     (l, r) => [
-      complex(
+      $complex(
         (l.raw.a * r.raw.a) - (l.raw.b * r.raw.b),
         (l.raw.a * r.raw.b) + (l.raw.b * r.raw.a),
       ),
@@ -65,7 +65,7 @@ export const $multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   ),
   when(
     [is(Real), is(Real)],
-    (l, r) => [real(l.raw * r.raw), Action.Application],
+    (l, r) => [$real(l.raw * r.raw), Action.Application],
   ),
   when(
     (l, r) => monolex(l, r) > 0,
@@ -96,14 +96,14 @@ export const $multiply: BinaryFn<Multiplication> = binary(Multiplication)(
   when<Exponentiation, TreeNode>(
     (l, r) => is(Exponentiation)(l) && deepEquals(l.left, r),
     (l, r) => [
-      $raise(r, $add(l.right, real(1))),
+      $raise(r, $add(l.right, $real(1))),
       Action.Absorption,
     ],
   ),
   when<TreeNode, Exponentiation>(
     (l, r) => is(Exponentiation)(r) && deepEquals(l, r.left),
     (l, r) => [
-      $raise(l, $add(r.right, real(1))),
+      $raise(l, $add(r.right, $real(1))),
       Action.Absorption,
     ],
   ),
@@ -200,7 +200,7 @@ export const multiply: BinaryFn<Multiplication> = canonicalizeFrom($multiply);
 export const $double: PartialBinaryFn<
   Multiplication,
   Real
-> = partialLeft($multiply, real(2));
+> = partialLeft($multiply, $real(2));
 
 /**
  * Creates {@link Multiplication} AST nodes.

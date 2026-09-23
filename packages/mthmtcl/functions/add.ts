@@ -12,8 +12,8 @@ import { Action, is } from "../factories/factory.ts";
 import { binary, type BinaryFn, rearrange, when } from "../factories/binary.ts";
 import { _ } from "@arrows/multimethod";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
+import { $complex } from "./complex.ts";
+import { $real } from "./real.ts";
 import { $double, $multiply } from "./multiply.ts";
 import { $negate } from "./negate.ts";
 import { deepEquals, isValue } from "../utility/deepEquals.ts";
@@ -35,20 +35,20 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
   when(
     [is(Complex), is(Complex)],
     (l, r) => [
-      complex(l.raw.a + r.raw.a, l.raw.b + r.raw.b),
+      $complex(l.raw.a + r.raw.a, l.raw.b + r.raw.b),
       Action.Application,
     ],
   ),
   when(
     [is(Real), is(Real)],
-    (l, r) => [real(l.raw + r.raw), Action.Application],
+    (l, r) => [$real(l.raw + r.raw), Action.Application],
   ),
   when(
-    [isValue(real(0)), _],
+    [isValue($real(0)), _],
     (_l, r) => [r, Action.Tautology],
   ),
   when(
-    [_, isValue(real(0))],
+    [_, isValue($real(0))],
     (l, _r) => [l, Action.Tautology],
   ),
   when(
@@ -77,7 +77,7 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
       is(Multiplication)(l) && is(Numeric)(l.left) &&
       deepEquals(l.right, r),
     (l, r) => [
-      $multiply($add(l.left, real(1)), r),
+      $multiply($add(l.left, $real(1)), r),
       Action.Absorption,
     ],
   ),
@@ -86,7 +86,7 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
       is(Multiplication)(r) && is(Numeric)(r.left) &&
       deepEquals(l, r.right),
     (l, r) => [
-      $multiply($add(r.left, real(1)), l),
+      $multiply($add(r.left, $real(1)), l),
       Action.Absorption,
     ],
   ),

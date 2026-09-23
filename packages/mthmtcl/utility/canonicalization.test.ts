@@ -35,7 +35,7 @@ describe("canonicalize", () => {
     ).toEqual(new Division(variable("x"), variable("y")));
   });
 
-  it("avoids mutually reciprocal multiplications", () => {
+  it("transforms mutually reciprocal multiplications", () => {
     expect(
       canonicalize(
         new Multiplication(
@@ -44,9 +44,12 @@ describe("canonicalize", () => {
         ),
       ),
     ).toEqual(
-      new Multiplication(
-        $reciprocal(variable("x")),
-        $reciprocal(variable("y")),
+      new Division(
+        real(1),
+        new Multiplication(
+          variable("x"),
+          variable("y"),
+        ),
       ),
     );
   });

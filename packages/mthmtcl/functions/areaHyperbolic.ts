@@ -8,7 +8,7 @@ import {
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
-import { real } from "./real.ts";
+import { $real } from "./real.ts";
 import { preserve } from "./preserve.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 import { $add } from "./add.ts";
@@ -25,18 +25,18 @@ import { $ln } from "./log.ts";
 export const $acosh: UnaryFn<AreaHyperbolic.Cosine> = unary(
   AreaHyperbolic.Cosine,
 )(
-  when(is(Boolean), (b) => [boolean($acosh(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($acosh($real(b))), Action.Application]),
   when(is(Complex), (c) => [
     $ln($add(
       c,
       $multiply(
-        $sqrt($add(c, real(1))),
-        $sqrt($subtract(c, real(1))),
+        $sqrt($add(c, $real(1))),
+        $sqrt($subtract(c, $real(1))),
       ),
     )),
     Action.Application,
   ]),
-  when(is(Real), (r) => [real(Math.acosh(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.acosh(r.raw)), Action.Application]),
 );
 
 /**
@@ -191,15 +191,15 @@ export const asech: UnaryFn<AreaHyperbolic.Secant> = canonicalizeFrom($asech);
 export const $asinh: UnaryFn<AreaHyperbolic.Sine> = unary(
   AreaHyperbolic.Sine,
 )(
-  when(is(Boolean), (b) => [boolean($asinh(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($asinh($real(b))), Action.Application]),
   when(is(Complex), (c) => [
     $ln($add(
-      $sqrt($add($square(c), real(1))),
+      $sqrt($add($square(c), $real(1))),
       c,
     )),
     Action.Application,
   ]),
-  when(is(Real), (r) => [real(Math.asinh(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.asinh(r.raw)), Action.Application]),
 );
 
 /**
@@ -235,18 +235,18 @@ export const asinh: UnaryFn<AreaHyperbolic.Sine> = canonicalizeFrom($asinh);
 export const $atanh: UnaryFn<AreaHyperbolic.Tangent> = unary(
   AreaHyperbolic.Tangent,
 )(
-  when(is(Boolean), (b) => [boolean($atanh(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($atanh($real(b))), Action.Application]),
   when(is(Complex), (c) => [
     $multiply(
-      real(0.5),
+      $real(0.5),
       $ln($divide(
-        $add(real(1), c),
-        $subtract(real(1), c),
+        $add($real(1), c),
+        $subtract($real(1), c),
       )),
     ),
     Action.Application,
   ]),
-  when(is(Real), (r) => [real(Math.atanh(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.atanh(r.raw)), Action.Application]),
 );
 
 /**

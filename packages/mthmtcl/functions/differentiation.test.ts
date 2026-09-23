@@ -83,8 +83,7 @@ describe("differentiate", () => {
       expect(differentiate(raise(real(2), variable("x")))).toEqual(
         multiply(
           raise(real(2), variable("x")),
-          real(0.6931471805599453),
-          // ln(real(2)),
+          ln(real(2)),
         ),
       );
     });
