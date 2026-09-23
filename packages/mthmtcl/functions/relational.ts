@@ -13,7 +13,7 @@ import {
 import { Action, is } from "../factories/factory.ts";
 import { binary, type BinaryFn, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
-import { not } from "./logical/complement.ts";
+import { $not } from "./logical/complement.ts";
 import { $abs } from "./absolute.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
@@ -112,7 +112,7 @@ export const $gte: BinaryFn<
   Boolean
 > = binary(GreaterThanOrEquals, Boolean)(
   when([is(Numeric), is(Numeric)], (l, r) => [
-    not($lt(l, r)),
+    $not($lt(l, r)),
     Action.Delegation,
   ]),
 );
@@ -187,7 +187,7 @@ export const $lte: BinaryFn<
   Boolean
 > = binary(LessThanOrEquals, Boolean)(
   when([is(Numeric), is(Numeric)], (l, r) => [
-    not($gt(l, r)),
+    $not($gt(l, r)),
     Action.Delegation,
   ]),
 );
@@ -222,7 +222,7 @@ export const $nequals: BinaryFn<
   Boolean
 > = binary(Inequality, Boolean)(
   when([is(Numeric), is(Numeric)], (l, r) => [
-    not($equals(l, r)),
+    $not($equals(l, r)),
     Action.Delegation,
   ]),
 );

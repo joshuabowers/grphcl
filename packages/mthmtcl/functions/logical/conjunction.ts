@@ -11,8 +11,13 @@ import { binary, type BinaryFn, when } from "../../factories/binary.ts";
 import { boolean } from "../boolean.ts";
 import { _ } from "@arrows/multimethod";
 import { deepEquals, isValue } from "../../utility/deepEquals.ts";
+import { canonicalizeFrom } from "../../utility/canonicalization.ts";
 
-export const and: BinaryFn<
+/**
+ * Internal implementation of {@link and}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $and: BinaryFn<
   Conjunction,
   Boolean
 > = binary(Conjunction, Boolean)(
@@ -76,3 +81,34 @@ export const and: BinaryFn<
     [boolean(false), Action.Contradiction],
   ),
 );
+
+/**
+ * A {@link Boolean}-valued logical connective operator,
+ * which calculates the conjunction of its operands.
+ *
+ * Non-boolean numeric inputs are coerced to boolean before comparison.
+ *
+ * @example For a pair of boolean values:
+ * ```ts
+ * const result = and(boolean(true), boolean(true))
+ * // => boolean(true)
+ * ```
+ *
+ * @example For two indeterminate subtrees, creates
+ * an {@link Conjunction}:
+ * ```ts
+ * const result = and(variable('x'), variable('y'))
+ * // => new Conjunction(variable('x'), variable('y'))
+ * ```
+ *
+ * @example Like other logical connectives, this will convert to
+ * other values under the right circumstances:
+ * ```ts
+ * const result = and(not(variable('x')), variable('x'))
+ * // => boolean(false)
+ * ```
+ */
+export const and: BinaryFn<
+  Conjunction,
+  Boolean
+> = canonicalizeFrom($and);

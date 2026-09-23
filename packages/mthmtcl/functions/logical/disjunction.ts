@@ -9,12 +9,17 @@ import {
 import { Action, is } from "../../factories/factory.ts";
 import { binary, type BinaryFn, when } from "../../factories/binary.ts";
 import { boolean } from "../boolean.ts";
-import { converse } from "./converseImplication.ts";
-import { implies } from "./implication.ts";
+import { $converse } from "./converseImplication.ts";
+import { $implies } from "./implication.ts";
 import { _ } from "@arrows/multimethod";
 import { deepEquals, isValue } from "../../utility/deepEquals.ts";
+import { canonicalizeFrom } from "../../utility/canonicalization.ts";
 
-export const or: BinaryFn<
+/**
+ * Internal implementation of {@link or}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $or: BinaryFn<
   Disjunction,
   Boolean
 > = binary(Disjunction, Boolean)(
@@ -80,15 +85,46 @@ export const or: BinaryFn<
   when(
     [is(Complement), _],
     (l, r) => [
-      implies(l.child, r),
+      $implies(l.child, r),
       Action.Conversion,
     ],
   ),
   when(
     [_, is(Complement)],
     (l, r) => [
-      converse(l, r.child),
+      $converse(l, r.child),
       Action.Conversion,
     ],
   ),
 );
+
+/**
+ * A {@link Boolean}-valued logical connective operator,
+ * which calculates the disjunction of its operands.
+ *
+ * Non-boolean numeric inputs are coerced to boolean before comparison.
+ *
+ * @example For a pair of boolean values:
+ * ```ts
+ * const result = or(boolean(true), boolean(false))
+ * // => boolean(true)
+ * ```
+ *
+ * @example For two indeterminate subtrees, creates
+ * an {@link Disjunction}:
+ * ```ts
+ * const result = or(variable('x'), variable('y'))
+ * // => new Disjunction(variable('x'), variable('y'))
+ * ```
+ *
+ * @example Like other logical connectives, this will convert to
+ * other connectives under the right circumstances:
+ * ```ts
+ * const result = or(not(variable('x')), variable('y'))
+ * // => implies(variable('x'), variable('y'))
+ * ```
+ */
+export const or: BinaryFn<
+  Disjunction,
+  Boolean
+> = canonicalizeFrom($or);

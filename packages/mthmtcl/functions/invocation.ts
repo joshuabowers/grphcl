@@ -53,16 +53,16 @@ import { $raise } from "./raise.ts";
 import { $log } from "./log.ts";
 import { $equals, $gt, $gte, $lt, $lte, $nequals } from "./relational.ts";
 import {
-  and,
-  converse,
-  implies,
-  nor,
-  not,
-  or,
-  xnor,
-  xor,
+  $and,
+  $converse,
+  $implies,
+  $nand,
+  $nor,
+  $not,
+  $or,
+  $xnor,
+  $xor,
 } from "./logical/mod.ts";
-import { nand } from "@bowers/mthmtcl/functions";
 import { $combine, $permute } from "./combinatorics.ts";
 import { $abs } from "./absolute.ts";
 import { $cos, $cot, $csc, $sec, $sin, $tan } from "./trigonometric.ts";
@@ -132,15 +132,15 @@ const evaluate: EvaluateFn = multi(
   when(is(LessThanOrEquals), binary($lte)),
   when(is(Inequality), binary($nequals)),
   //
-  when(is(Complement), unary(not)),
-  when(is(Conjunction), binary(and)),
-  when(is(Disjunction), binary(or)),
-  when(is(ExclusiveDisjunction), binary(xor)),
-  when(is(Implication), binary(implies)),
-  when(is(AlternativeDenial), binary(nand)),
-  when(is(JointDenial), binary(nor)),
-  when(is(Biconditional), binary(xnor)),
-  when(is(ConverseImplication), binary(converse)),
+  when(is(Complement), unary($not)),
+  when(is(Conjunction), binary($and)),
+  when(is(Disjunction), binary($or)),
+  when(is(ExclusiveDisjunction), binary($xor)),
+  when(is(Implication), binary($implies)),
+  when(is(AlternativeDenial), binary($nand)),
+  when(is(JointDenial), binary($nor)),
+  when(is(Biconditional), binary($xnor)),
+  when(is(ConverseImplication), binary($converse)),
   //
   when(is(Permutation), binary($permute)),
   when(is(Combination), binary($combine)),
