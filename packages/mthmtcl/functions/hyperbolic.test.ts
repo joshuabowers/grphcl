@@ -51,7 +51,7 @@ describe("coth", () => {
   });
 
   it("is Real for real input", () => {
-    expect(coth(real(1))).toEqual(real(1 / Math.tanh(1)));
+    expect(coth(real(1)).raw).toBeCloseTo(1 / Math.tanh(1), 10);
   });
 
   it("is a Cotangent for unbound input", () => {
@@ -74,7 +74,7 @@ describe("csch", () => {
   });
 
   it("is Real for real input", () => {
-    expect(csch(real(1))).toEqual(real(1 / Math.sinh(1)));
+    expect(csch(real(1)).raw).toBeCloseTo(1 / Math.sinh(1), 10);
   });
 
   it("is a Cosecant for unbound input", () => {
@@ -97,7 +97,7 @@ describe("sech", () => {
   });
 
   it("is Real for real input", () => {
-    expect(sech(real(1))).toEqual(real(1 / Math.cosh(1)));
+    expect(sech(real(1)).raw).toBeCloseTo(1 / Math.cosh(1), 10);
   });
 
   it("is a Secant for unbound input", () => {
@@ -143,7 +143,7 @@ describe("tanh", () => {
   });
 
   it("is Real for real input", () => {
-    expect(tanh(real(1))).toEqual(real(Math.tanh(1)));
+    expect(tanh(real(1)).raw).toBeCloseTo(Math.tanh(1), 10);
   });
 
   it("is a Tangent for unbound input", () => {

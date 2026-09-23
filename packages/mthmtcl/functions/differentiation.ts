@@ -37,7 +37,7 @@ import { $negate } from "./negate.ts";
 import { $abs } from "./absolute.ts";
 import { $ln } from "./log.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
-import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
+import { $cosh, $coth, $csch, $sech, $sinh, $tanh } from "./hyperbolic.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 type RewriteRule<T> =
@@ -191,18 +191,18 @@ export const $differentiate: DifferentiateFn = multi(
   ),
   when(
     is(Hyperbolic.Cosine),
-    chain((e) => sinh(e.child)),
+    chain((e) => $sinh(e.child)),
   ),
   when(
     is(Hyperbolic.Cotangent),
-    chain((e) => $negate($square(csch(e.child)))),
+    chain((e) => $negate($square($csch(e.child)))),
   ),
   when(
     is(Hyperbolic.Cosecant),
     chain((e) =>
       $multiply(
-        $negate(coth(e.child)),
-        csch(e.child),
+        $negate($coth(e.child)),
+        $csch(e.child),
       )
     ),
   ),
@@ -210,18 +210,18 @@ export const $differentiate: DifferentiateFn = multi(
     is(Hyperbolic.Secant),
     chain((e) =>
       $multiply(
-        $negate(tanh(e.child)),
-        sech(e.child),
+        $negate($tanh(e.child)),
+        $sech(e.child),
       )
     ),
   ),
   when(
     is(Hyperbolic.Sine),
-    chain((e) => cosh(e.child)),
+    chain((e) => $cosh(e.child)),
   ),
   when(
     is(Hyperbolic.Tangent),
-    chain((e) => $square(sech(e.child))),
+    chain((e) => $square($sech(e.child))),
   ),
   when(
     is(AreaHyperbolic.Cosine),

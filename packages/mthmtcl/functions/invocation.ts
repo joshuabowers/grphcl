@@ -67,7 +67,7 @@ import { $combine, $permute } from "./combinatorics.ts";
 import { $abs } from "./absolute.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { $acos, $acot, $acsc, $asec, $asin, $atan } from "./arcus.ts";
-import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
+import { $cosh, $coth, $csch, $sech, $sinh, $tanh } from "./hyperbolic.ts";
 import {
   $acosh,
   $acoth,
@@ -161,12 +161,12 @@ const evaluate: EvaluateFn = multi(
   when(is(Arcus.Sine), unary($asin)),
   when(is(Arcus.Tangent), unary($atan)),
   //
-  when(is(Hyperbolic.Cosine), unary(cosh)),
-  when(is(Hyperbolic.Cotangent), unary(coth)),
-  when(is(Hyperbolic.Cosecant), unary(csch)),
-  when(is(Hyperbolic.Secant), unary(sech)),
-  when(is(Hyperbolic.Sine), unary(sinh)),
-  when(is(Hyperbolic.Tangent), unary(tanh)),
+  when(is(Hyperbolic.Cosine), unary($cosh)),
+  when(is(Hyperbolic.Cotangent), unary($coth)),
+  when(is(Hyperbolic.Cosecant), unary($csch)),
+  when(is(Hyperbolic.Secant), unary($sech)),
+  when(is(Hyperbolic.Sine), unary($sinh)),
+  when(is(Hyperbolic.Tangent), unary($tanh)),
   //
   when(is(AreaHyperbolic.Cotangent), unary($acoth)),
   when(is(AreaHyperbolic.Cosecant), unary($acsch)),
