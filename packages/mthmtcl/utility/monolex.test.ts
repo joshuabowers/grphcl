@@ -3,7 +3,7 @@ import { expect } from "@std/expect";
 import { real } from "../functions/real.ts";
 import { variable } from "../functions/variable.ts";
 import { $raise } from "../functions/raise.ts";
-import { cos } from "../functions/trigonometric.ts";
+import { $cos } from "../functions/trigonometric.ts";
 import { monolex } from "./monolex.ts";
 import { $divide } from "../functions/divide.ts";
 import { $add } from "../functions/add.ts";
@@ -88,13 +88,13 @@ describe("monolex", () => {
 
   it("is -1 for [variable, cos]", () => {
     expect(
-      monolex(variable("x"), cos(variable("x"))),
+      monolex(variable("x"), $cos(variable("x"))),
     ).toEqual(-1);
   });
 
   it("is 1 for [cos, variable]", () => {
     expect(
-      monolex(cos(variable("x")), variable("x")),
+      monolex($cos(variable("x")), variable("x")),
     ).toEqual(1);
   });
 
@@ -114,7 +114,7 @@ describe("monolex", () => {
     expect([
       $raise(variable("x"), real(2)),
       variable("z"),
-      cos(variable("x")),
+      $cos(variable("x")),
       variable("y"),
       real(5),
     ].sort(monolex)).toEqual([
@@ -122,7 +122,7 @@ describe("monolex", () => {
       $raise(variable("x"), real(2)),
       variable("y"),
       variable("z"),
-      cos(variable("x")),
+      $cos(variable("x")),
     ]);
   });
 });

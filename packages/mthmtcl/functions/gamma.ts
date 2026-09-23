@@ -12,7 +12,7 @@ import { $divide } from "./divide.ts";
 import { $raise } from "./raise.ts";
 import { $negate } from "./negate.ts";
 import { $sqrt } from "./raise.ts";
-import { sin } from "./trigonometric.ts";
+import { $sin } from "./trigonometric.ts";
 import { factorial } from "./factorial.ts";
 import { ComplexInfinity } from "./complex.ts";
 
@@ -79,7 +79,7 @@ export const gamma: UnaryFn<Gamma> = unary(Gamma)(
       $divide(
         pi,
         $multiply(
-          sin($multiply(n, pi)),
+          $sin($multiply(n, pi)),
           gamma($subtract(real(1), n)),
         ),
       ),

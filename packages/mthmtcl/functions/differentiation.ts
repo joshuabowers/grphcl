@@ -36,7 +36,7 @@ import { $raise, $reciprocal, $sqrt, $square } from "./raise.ts";
 import { $negate } from "./negate.ts";
 import { $abs } from "./absolute.ts";
 import { $ln } from "./log.ts";
-import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
+import { $cos, $cot, $csc, $sec, $sin, $tan } from "./trigonometric.ts";
 import { $cosh, $coth, $csch, $sech, $sinh, $tanh } from "./hyperbolic.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
@@ -121,32 +121,32 @@ export const $differentiate: DifferentiateFn = multi(
   when(is(Absolute), chain((e) => $divide(e.child, e))),
   when(
     is(Trigonometric.Cosine),
-    chain((e) => $negate(sin(e.child))),
+    chain((e) => $negate($sin(e.child))),
   ),
   when(
     is(Trigonometric.Cotangent),
-    chain((e) => $negate($square(csc(e.child)))),
+    chain((e) => $negate($square($csc(e.child)))),
   ),
   when(
     is(Trigonometric.Cosecant),
     chain((e) =>
       $multiply(
-        $negate(csc(e.child)),
-        cot(e.child),
+        $negate($csc(e.child)),
+        $cot(e.child),
       )
     ),
   ),
   when(
     is(Trigonometric.Secant),
-    chain((e) => $multiply(sec(e.child), tan(e.child))),
+    chain((e) => $multiply($sec(e.child), $tan(e.child))),
   ),
   when(
     is(Trigonometric.Sine),
-    chain((e) => cos(e.child)),
+    chain((e) => $cos(e.child)),
   ),
   when(
     is(Trigonometric.Tangent),
-    chain((e) => $square(sec(e.child))),
+    chain((e) => $square($sec(e.child))),
   ),
   when(
     is(Arcus.Cosine),

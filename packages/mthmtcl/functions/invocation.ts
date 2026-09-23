@@ -65,7 +65,7 @@ import {
 import { nand } from "@bowers/mthmtcl/functions";
 import { $combine, $permute } from "./combinatorics.ts";
 import { $abs } from "./absolute.ts";
-import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
+import { $cos, $cot, $csc, $sec, $sin, $tan } from "./trigonometric.ts";
 import { $acos, $acot, $acsc, $asec, $asin, $atan } from "./arcus.ts";
 import { $cosh, $coth, $csch, $sech, $sinh, $tanh } from "./hyperbolic.ts";
 import {
@@ -147,12 +147,12 @@ const evaluate: EvaluateFn = multi(
   //
   when(is(Absolute), unary($abs)),
   //
-  when(is(Trigonometric.Cosine), unary(cos)),
-  when(is(Trigonometric.Cotangent), unary(cot)),
-  when(is(Trigonometric.Cosecant), unary(csc)),
-  when(is(Trigonometric.Secant), unary(sec)),
-  when(is(Trigonometric.Sine), unary(sin)),
-  when(is(Trigonometric.Tangent), unary(tan)),
+  when(is(Trigonometric.Cosine), unary($cos)),
+  when(is(Trigonometric.Cotangent), unary($cot)),
+  when(is(Trigonometric.Cosecant), unary($csc)),
+  when(is(Trigonometric.Secant), unary($sec)),
+  when(is(Trigonometric.Sine), unary($sin)),
+  when(is(Trigonometric.Tangent), unary($tan)),
   //
   when(is(Arcus.Cotangent), unary($acot)),
   when(is(Arcus.Cosecant), unary($acsc)),

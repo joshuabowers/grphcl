@@ -5,7 +5,7 @@ import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
 import { $multiply } from "../functions/multiply.ts";
 import { $square } from "../functions/raise.ts";
-import { cos } from "../functions/trigonometric.ts";
+import { $cos } from "../functions/trigonometric.ts";
 import { grevlex } from "./grevlex.ts";
 
 describe("grevlex", () => {
@@ -73,19 +73,19 @@ describe("grevlex", () => {
   });
 
   it("is 1 for [cos, variable]", () => {
-    expect(grevlex(cos(variable("x")), variable("x"))).toEqual(1);
+    expect(grevlex($cos(variable("x")), variable("x"))).toEqual(1);
   });
 
   it("is -1 for [variable, cos]", () => {
-    expect(grevlex(variable("x"), cos(variable("x")))).toEqual(-1);
+    expect(grevlex(variable("x"), $cos(variable("x")))).toEqual(-1);
   });
 
   it("is 1 for [numeric, cos]", () => {
-    expect(grevlex(real(5), cos(variable("x")))).toEqual(1);
+    expect(grevlex(real(5), $cos(variable("x")))).toEqual(1);
   });
 
   it("is -1 for [cos, numeric]", () => {
-    expect(grevlex(cos(variable("x")), real(5))).toEqual(-1);
+    expect(grevlex($cos(variable("x")), real(5))).toEqual(-1);
   });
 
   it("is usable for sorting an array of nodes", () => {
