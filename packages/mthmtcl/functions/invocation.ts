@@ -76,8 +76,8 @@ import {
   $asinh,
   $atanh,
 } from "./areaHyperbolic.ts";
-import { factorial } from "./factorial.ts";
-import { gamma } from "./gamma.ts";
+import { $factorial } from "./factorial.ts";
+import { $gamma } from "./gamma.ts";
 import { canonicalize } from "../utility/canonicalization.ts";
 
 type RewriteFn<T extends TreeNode> = (
@@ -175,8 +175,8 @@ const evaluate: EvaluateFn = multi(
   when(is(AreaHyperbolic.Sine), unary($asinh)),
   when(is(AreaHyperbolic.Tangent), unary($atanh)),
   //
-  when(is(Factorial), unary(factorial)),
-  when(is(Gamma), unary(gamma)),
+  when(is(Factorial), unary($factorial)),
+  when(is(Gamma), unary($gamma)),
   // POLYGAMMA
   //
   when(

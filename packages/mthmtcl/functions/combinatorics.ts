@@ -5,7 +5,7 @@ import { boolean } from "./boolean.ts";
 import { $subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide } from "./divide.ts";
-import { factorial } from "./factorial.ts";
+import { $factorial } from "./factorial.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 /**
@@ -19,8 +19,8 @@ export const $combine: BinaryFn<Combination> = binary(Combination)(
   ]),
   when([is(Numeric), is(Numeric)], (n, r) => [
     $divide(
-      factorial(n),
-      $multiply(factorial(r), factorial($subtract(n, r))),
+      $factorial(n),
+      $multiply($factorial(r), $factorial($subtract(n, r))),
     ),
     Action.Application,
   ]),
@@ -37,8 +37,8 @@ export const $permute: BinaryFn<Permutation> = binary(Permutation)(
   ]),
   when([is(Numeric), is(Numeric)], (n, r) => [
     $divide(
-      factorial(n),
-      factorial($subtract(n, r)),
+      $factorial(n),
+      $factorial($subtract(n, r)),
     ),
     Action.Application,
   ]),
@@ -55,7 +55,7 @@ export const $permute: BinaryFn<Permutation> = binary(Permutation)(
  * `C(n, r)` or `nCr`, `combine` uses `left` and `right`.
  * So map, mentally, `n` to `left` and `r` to `right`.
  *
- * Internally, this function is implemented by {@link factorial};
+ * Internally, this function is implemented by {@link $factorial};
  * it is related to {@link $permute}.
  *
  * This function exhibits the following behavior:
@@ -100,7 +100,7 @@ export const combine: BinaryFn<Combination> = canonicalizeFrom($combine);
  * `P(n, r)` or `nPr`, `permute` uses `left` and `right`.
  * So map, mentally, `n` to `left` and `r` to `right`.
  *
- * Internally, this function is implemented by {@link factorial};
+ * Internally, this function is implemented by {@link $factorial};
  * it is related to {@link $combine}.
  *
  * This function exhibits the following behavior:

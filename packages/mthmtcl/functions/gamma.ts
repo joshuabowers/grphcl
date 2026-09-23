@@ -13,8 +13,9 @@ import { $raise } from "./raise.ts";
 import { $negate } from "./negate.ts";
 import { $sqrt } from "./raise.ts";
 import { $sin } from "./trigonometric.ts";
-import { factorial } from "./factorial.ts";
+import { $factorial } from "./factorial.ts";
 import { ComplexInfinity } from "./complex.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 const lanczos = {
   p: <Numeric[]> [
@@ -33,10 +34,57 @@ const lanczos = {
 const pi = real(Math.PI), sqrtTwicePi = $sqrt(real(2 * Math.PI));
 
 /**
+ * Internal implementation of {@link gamma}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $gamma: UnaryFn<Gamma> = unary(Gamma)(
+  when(is(Boolean), [boolean(true), Action.Application]),
+  when(is(Numeric, isNegativeInteger), [ComplexInfinity, Action.Singularity]),
+  when(
+    is(Numeric, isPositiveInteger),
+    (n) => [$factorial($subtract(n, real(1))), Action.Delegation],
+  ),
+  when(
+    is(Numeric, isBelowThreshold(0.5)),
+    (n) => [
+      $divide(
+        pi,
+        $multiply(
+          $sin($multiply(n, pi)),
+          $gamma($subtract(real(1), n)),
+        ),
+      ),
+      Action.Reflection,
+    ],
+  ),
+  when(
+    is(Numeric),
+    (n) => {
+      const one = real(1);
+      const z = $subtract(n, one);
+      const x = lanczos.p.reduce(
+        (s, v, i) => $add(s, $divide(v, $add(z, real(i)))),
+      );
+      const t = $subtract($add(z, real(lanczos.p.length - 1)), real(0.5));
+      return [
+        $multiply(
+          sqrtTwicePi,
+          $multiply(
+            $raise(t, $add(z, real(0.5))),
+            $multiply($raise(real(Math.E), $negate(t)), x),
+          ),
+        ),
+        Action.Application,
+      ];
+    },
+  ),
+);
+
+/**
  * Calculates the gamma function, `Γ(x)` for most inputs.
  *
  * The gamma function, among other uses, is an extrapolation
- * of {@link factorial} to non-integer inputs. It also
+ * of {@link $factorial} to non-integer inputs. It also
  * approximates the integer values factorial does, when
  * accounting for the relation between them: `Γ(x) === (x - 1)!`
  *
@@ -66,45 +114,4 @@ const pi = real(Math.PI), sqrtTwicePi = $sqrt(real(2 * Math.PI));
  * // => new Gamma(new Variable('x'))
  * ```
  */
-export const gamma: UnaryFn<Gamma> = unary(Gamma)(
-  when(is(Boolean), [boolean(true), Action.Application]),
-  when(is(Numeric, isNegativeInteger), [ComplexInfinity, Action.Singularity]),
-  when(
-    is(Numeric, isPositiveInteger),
-    (n) => [factorial($subtract(n, real(1))), Action.Delegation],
-  ),
-  when(
-    is(Numeric, isBelowThreshold(0.5)),
-    (n) => [
-      $divide(
-        pi,
-        $multiply(
-          $sin($multiply(n, pi)),
-          gamma($subtract(real(1), n)),
-        ),
-      ),
-      Action.Reflection,
-    ],
-  ),
-  when(
-    is(Numeric),
-    (n) => {
-      const one = real(1);
-      const z = $subtract(n, one);
-      const x = lanczos.p.reduce(
-        (s, v, i) => $add(s, $divide(v, $add(z, real(i)))),
-      );
-      const t = $subtract($add(z, real(lanczos.p.length - 1)), real(0.5));
-      return [
-        $multiply(
-          sqrtTwicePi,
-          $multiply(
-            $raise(t, $add(z, real(0.5))),
-            $multiply($raise(real(Math.E), $negate(t)), x),
-          ),
-        ),
-        Action.Application,
-      ];
-    },
-  ),
-);
+export const gamma: UnaryFn<Gamma> = canonicalizeFrom($gamma);
