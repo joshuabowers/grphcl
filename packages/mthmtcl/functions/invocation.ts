@@ -51,7 +51,7 @@ import { $subtract } from "./subtract.ts";
 import { $divide } from "./divide.ts";
 import { $raise } from "./raise.ts";
 import { $log } from "./log.ts";
-import { equals, gt, gte, lt, lte, nequals } from "./relational.ts";
+import { $equals, $gt, $gte, $lt, $lte, $nequals } from "./relational.ts";
 import {
   and,
   converse,
@@ -125,12 +125,12 @@ const evaluate: EvaluateFn = multi(
   when(is(Exponentiation), binary($raise)),
   when(is(Logarithm), binary($log)),
   //
-  when(is(Equality), binary(equals)),
-  when(is(GreaterThan), binary(gt)),
-  when(is(GreaterThanOrEquals), binary(gte)),
-  when(is(LessThan), binary(lt)),
-  when(is(LessThanOrEquals), binary(lte)),
-  when(is(Inequality), binary(nequals)),
+  when(is(Equality), binary($equals)),
+  when(is(GreaterThan), binary($gt)),
+  when(is(GreaterThanOrEquals), binary($gte)),
+  when(is(LessThan), binary($lt)),
+  when(is(LessThanOrEquals), binary($lte)),
+  when(is(Inequality), binary($nequals)),
   //
   when(is(Complement), unary(not)),
   when(is(Conjunction), binary(and)),

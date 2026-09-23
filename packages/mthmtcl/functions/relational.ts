@@ -15,6 +15,29 @@ import { binary, type BinaryFn, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
 import { not } from "./logical/complement.ts";
 import { $abs } from "./absolute.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
+
+/**
+ * Internal implementation of {@link equals}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $equals: BinaryFn<
+  Equality,
+  Boolean
+> = binary(Equality, Boolean)(
+  when([is(Boolean), is(Boolean)], (l, r) => [
+    boolean(l.raw === r.raw),
+    Action.Application,
+  ]),
+  when([is(Complex), is(Complex)], (l, r) => [
+    boolean(l.raw.a === r.raw.a && l.raw.b === r.raw.b),
+    Action.Application,
+  ]),
+  when([is(Real), is(Real)], (l, r) => [
+    boolean(l.raw === r.raw),
+    Action.Application,
+  ]),
+);
 
 /**
  * Creates {@link Equality} AST nodes for unbound inputs and returns a
@@ -35,17 +58,26 @@ import { $abs } from "./absolute.ts";
 export const equals: BinaryFn<
   Equality,
   Boolean
-> = binary(Equality, Boolean)(
+> = canonicalizeFrom($equals);
+
+/**
+ * Internal implementation of {@link gt}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $gt: BinaryFn<
+  GreaterThan,
+  Boolean
+> = binary(GreaterThan, Boolean)(
   when([is(Boolean), is(Boolean)], (l, r) => [
-    boolean(l.raw === r.raw),
+    boolean(l.raw > r.raw),
     Action.Application,
   ]),
   when([is(Complex), is(Complex)], (l, r) => [
-    boolean(l.raw.a === r.raw.a && l.raw.b === r.raw.b),
+    boolean($abs(l).raw.a > $abs(r).raw.a),
     Action.Application,
   ]),
   when([is(Real), is(Real)], (l, r) => [
-    boolean(l.raw === r.raw),
+    boolean(l.raw > r.raw),
     Action.Application,
   ]),
 );
@@ -69,18 +101,19 @@ export const equals: BinaryFn<
 export const gt: BinaryFn<
   GreaterThan,
   Boolean
-> = binary(GreaterThan, Boolean)(
-  when([is(Boolean), is(Boolean)], (l, r) => [
-    boolean(l.raw > r.raw),
-    Action.Application,
-  ]),
-  when([is(Complex), is(Complex)], (l, r) => [
-    boolean($abs(l).raw.a > $abs(r).raw.a),
-    Action.Application,
-  ]),
-  when([is(Real), is(Real)], (l, r) => [
-    boolean(l.raw > r.raw),
-    Action.Application,
+> = canonicalizeFrom($gt);
+
+/**
+ * Internal implementation of {@link gte}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $gte: BinaryFn<
+  GreaterThanOrEquals,
+  Boolean
+> = binary(GreaterThanOrEquals, Boolean)(
+  when([is(Numeric), is(Numeric)], (l, r) => [
+    not($lt(l, r)),
+    Action.Delegation,
   ]),
 );
 
@@ -103,10 +136,27 @@ export const gt: BinaryFn<
 export const gte: BinaryFn<
   GreaterThanOrEquals,
   Boolean
-> = binary(GreaterThanOrEquals, Boolean)(
-  when([is(Numeric), is(Numeric)], (l, r) => [
-    not(lt(l, r)),
-    Action.Delegation,
+> = canonicalizeFrom($gte);
+
+/**
+ * Internal implementation of {@link lt}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $lt: BinaryFn<
+  LessThan,
+  Boolean
+> = binary(LessThan, Boolean)(
+  when([is(Boolean), is(Boolean)], (l, r) => [
+    boolean(l.raw < r.raw),
+    Action.Application,
+  ]),
+  when([is(Complex), is(Complex)], (l, r) => [
+    boolean($abs(l).raw.a < $abs(r).raw.a),
+    Action.Application,
+  ]),
+  when([is(Real), is(Real)], (l, r) => [
+    boolean(l.raw < r.raw),
+    Action.Application,
   ]),
 );
 
@@ -126,21 +176,19 @@ export const gte: BinaryFn<
  * // => new LessThan(new Variable('x'), new Variable('y'))
  * ```
  */
-export const lt: BinaryFn<
-  LessThan,
+export const lt: BinaryFn<LessThan, Boolean> = canonicalizeFrom($lt);
+
+/**
+ * Internal implementation of {@link lte}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $lte: BinaryFn<
+  LessThanOrEquals,
   Boolean
-> = binary(LessThan, Boolean)(
-  when([is(Boolean), is(Boolean)], (l, r) => [
-    boolean(l.raw < r.raw),
-    Action.Application,
-  ]),
-  when([is(Complex), is(Complex)], (l, r) => [
-    boolean($abs(l).raw.a < $abs(r).raw.a),
-    Action.Application,
-  ]),
-  when([is(Real), is(Real)], (l, r) => [
-    boolean(l.raw < r.raw),
-    Action.Application,
+> = binary(LessThanOrEquals, Boolean)(
+  when([is(Numeric), is(Numeric)], (l, r) => [
+    not($gt(l, r)),
+    Action.Delegation,
   ]),
 );
 
@@ -163,9 +211,18 @@ export const lt: BinaryFn<
 export const lte: BinaryFn<
   LessThanOrEquals,
   Boolean
-> = binary(LessThanOrEquals, Boolean)(
+> = canonicalizeFrom($lte);
+
+/**
+ * Internal implementation of {@link nequals}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $nequals: BinaryFn<
+  Inequality,
+  Boolean
+> = binary(Inequality, Boolean)(
   when([is(Numeric), is(Numeric)], (l, r) => [
-    not(gt(l, r)),
+    not($equals(l, r)),
     Action.Delegation,
   ]),
 );
@@ -189,9 +246,4 @@ export const lte: BinaryFn<
 export const nequals: BinaryFn<
   Inequality,
   Boolean
-> = binary(Inequality, Boolean)(
-  when([is(Numeric), is(Numeric)], (l, r) => [
-    not(equals(l, r)),
-    Action.Delegation,
-  ]),
-);
+> = canonicalizeFrom($nequals);
