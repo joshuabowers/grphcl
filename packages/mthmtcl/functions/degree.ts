@@ -39,7 +39,7 @@ export const subDegree: UnaryFn<
 /**
  * Calculates the degree of a passed AST expression.
  *
- * The degree, from algeabraic analysis of polynomial
+ * The degree, from algebraic analysis of polynomial
  * functions, describes the highest contributing monomial
  * of the polynomial; specifically, the value represents
  * the sum of that monomials powers.

@@ -24,6 +24,7 @@ export { abs } from "./absolute.ts";
 export { negate } from "./negate.ts";
 export { factorial } from "./factorial.ts";
 export { gamma } from "./gamma.ts";
+export { degree } from "./degree.ts";
 
 export { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 export { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
