@@ -6,13 +6,7 @@ import {
   Real,
   type TreeNode,
 } from "../tree/mod.ts";
-import {
-  type _,
-  fromMulti,
-  method,
-  type Multi,
-  multi,
-} from "@arrows/multimethod";
+import { type _, fromMulti, method, multi } from "@arrows/multimethod";
 import {
   Action,
   type Choose,
@@ -20,12 +14,13 @@ import {
   Context,
   type EdgeCaseFn,
   is,
+  type MathFn,
   type Predicate,
   type Rewrite,
   type When,
 } from "./factory.ts";
-import { complex } from "../functions/complex.ts";
-import { real } from "../functions/real.ts";
+import { $complex } from "../functions/complex.ts";
+import { $real } from "../functions/real.ts";
 
 export const are = <Left, Right>(
   guardLeft: Predicate<Left>,
@@ -173,7 +168,7 @@ export function otherwise<
 export interface BinaryFn<
   T extends BinaryNode,
   R extends TreeNode | void = void,
-> extends Multi {
+> extends MathFn<T> {
   (left: Boolean, right: Boolean): Choose<R, Boolean>;
   (left: Boolean, right: Complex): Choose<R, Complex>;
   (left: Boolean, right: Real): Choose<R, Real>;
@@ -184,7 +179,6 @@ export interface BinaryFn<
   (left: Real, right: Complex): Choose<R, Complex>;
   (left: Real, right: Real): Choose<R, Real>;
   (left: Numeric, right: Numeric): Choose<R, Numeric>;
-  (left: TreeNode, right: TreeNode): T;
 }
 
 /**
@@ -237,12 +231,12 @@ export function binary<
     );
     return fromMulti(
       ...[
-        coerce(fn)(Boolean, Real)(real, identity),
-        coerce(fn)(Boolean, Complex)(complex, identity),
-        coerce(fn)(Complex, Boolean)(identity, complex),
-        coerce(fn)(Complex, Real)(identity, complex),
-        coerce(fn)(Real, Boolean)(identity, real),
-        coerce(fn)(Real, Complex)(complex, identity),
+        coerce(fn)(Boolean, Real)($real, identity),
+        coerce(fn)(Boolean, Complex)($complex, identity),
+        coerce(fn)(Complex, Boolean)(identity, $complex),
+        coerce(fn)(Complex, Real)(identity, $complex),
+        coerce(fn)(Real, Boolean)(identity, $real),
+        coerce(fn)(Real, Complex)($complex, identity),
       ].map((ec) => ec.method),
     )(fn);
   };
@@ -266,12 +260,11 @@ export function binary<
 export interface PartialBinaryFn<
   T extends BinaryNode,
   Bound extends Numeric,
-> extends Multi {
+> extends MathFn<T> {
   (expression: Boolean): Bound extends Complex | Real ? Bound : Boolean;
   (expression: Complex): Complex;
   (expression: Real): Bound extends Complex ? Complex : Real;
   (expression: Numeric): Numeric;
-  (expression: TreeNode): T;
 }
 
 /**

@@ -5,8 +5,8 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { lb, lg, ln, log } from "./log.ts";
-import { multiply } from "./multiply.ts";
+import { $lb, $lg, $ln, $log } from "./log.ts";
+import { $multiply } from "./multiply.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 
 describe("raise", () => {
@@ -61,7 +61,7 @@ describe("raise", () => {
 
     it("returns the sub-expression of an lb if base 2", () => {
       expect(
-        raise(real(2), lb(variable("x"))),
+        raise(real(2), $lb(variable("x"))),
       ).toEqual(
         variable("x"),
       );
@@ -69,7 +69,7 @@ describe("raise", () => {
 
     it("returns the sub-expression of an ln if base e", () => {
       expect(
-        raise(real(Math.E), ln(variable("x"))),
+        raise(real(Math.E), $ln(variable("x"))),
       ).toEqual(
         variable("x"),
       );
@@ -77,7 +77,7 @@ describe("raise", () => {
 
     it("returns the sub-expression of an lg if base 10", () => {
       expect(
-        raise(real(10), lg(variable("x"))),
+        raise(real(10), $lg(variable("x"))),
       ).toEqual(
         variable("x"),
       );
@@ -85,7 +85,7 @@ describe("raise", () => {
 
     it("returns the value of a logarithm if raising similar base to it", () => {
       expect(
-        raise(complex(0, 1), log(complex(0, 1), variable("x"))),
+        raise(complex(0, 1), $log(complex(0, 1), variable("x"))),
       ).toEqual(
         variable("x"),
       );
@@ -95,15 +95,15 @@ describe("raise", () => {
       expect(
         raise(raise(variable("x"), variable("y")), variable("z")),
       ).toEqual(
-        raise(variable("x"), multiply(variable("y"), variable("z"))),
+        raise(variable("x"), $multiply(variable("y"), variable("z"))),
       );
     });
 
     it("converts a base multiplication into a product of exponentiations", () => {
       expect(
-        raise(multiply(variable("x"), variable("y")), variable("z")),
+        raise($multiply(variable("x"), variable("y")), variable("z")),
       ).toEqual(
-        multiply(
+        $multiply(
           raise(variable("x"), variable("z")),
           raise(variable("y"), variable("z")),
         ),
@@ -136,10 +136,10 @@ describe("reciprocal", () => {
   });
 
   it("raises unbound input to -1", () => {
-    expect(reciprocal(variable("x"))).toEqual(
+    expect(reciprocal(square(variable("x")))).toEqual(
       new Exponentiation(
         new Variable("x"),
-        new Real(-1),
+        new Real(-2),
       ),
     );
   });

@@ -2,10 +2,47 @@ import { Boolean, Combination, Numeric, Permutation } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { binary, type BinaryFn, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
-import { subtract } from "./subtract.ts";
-import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
-import { factorial } from "./factorial.ts";
+import { $subtract } from "./subtract.ts";
+import { $multiply } from "./multiply.ts";
+import { $divide } from "./divide.ts";
+import { $factorial } from "./factorial.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
+
+/**
+ * Internal implementation of {@link combine}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $combine: BinaryFn<Combination> = binary(Combination)(
+  when([is(Boolean), is(Boolean)], (n, r) => [
+    boolean(n.raw || !r.raw),
+    Action.Application,
+  ]),
+  when([is(Numeric), is(Numeric)], (n, r) => [
+    $divide(
+      $factorial(n),
+      $multiply($factorial(r), $factorial($subtract(n, r))),
+    ),
+    Action.Application,
+  ]),
+);
+
+/**
+ * Internal implementation of {@link permute}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $permute: BinaryFn<Permutation> = binary(Permutation)(
+  when([is(Boolean), is(Boolean)], (n, r) => [
+    boolean(n.raw || !r.raw),
+    Action.Application,
+  ]),
+  when([is(Numeric), is(Numeric)], (n, r) => [
+    $divide(
+      $factorial(n),
+      $factorial($subtract(n, r)),
+    ),
+    Action.Application,
+  ]),
+);
 
 /**
  * Calculates the number of unique `right`-combinations of
@@ -18,8 +55,8 @@ import { factorial } from "./factorial.ts";
  * `C(n, r)` or `nCr`, `combine` uses `left` and `right`.
  * So map, mentally, `n` to `left` and `r` to `right`.
  *
- * Internally, this function is implemented by {@link factorial};
- * it is related to {@link permute}.
+ * Internally, this function is implemented by {@link $factorial};
+ * it is related to {@link $permute}.
  *
  * This function exhibits the following behavior:
  *
@@ -50,19 +87,7 @@ import { factorial } from "./factorial.ts";
  * // => new Combination(new Variable('n'), new Variable('r'))
  * ```
  */
-export const combine: BinaryFn<Combination> = binary(Combination)(
-  when([is(Boolean), is(Boolean)], (n, r) => [
-    boolean(n.raw || !r.raw),
-    Action.Application,
-  ]),
-  when([is(Numeric), is(Numeric)], (n, r) => [
-    divide(
-      factorial(n),
-      multiply(factorial(r), factorial(subtract(n, r))),
-    ),
-    Action.Application,
-  ]),
-);
+export const combine: BinaryFn<Combination> = canonicalizeFrom($combine);
 
 /**
  * Calculates the number of unique `right`-permutatons of
@@ -75,8 +100,8 @@ export const combine: BinaryFn<Combination> = binary(Combination)(
  * `P(n, r)` or `nPr`, `permute` uses `left` and `right`.
  * So map, mentally, `n` to `left` and `r` to `right`.
  *
- * Internally, this function is implemented by {@link factorial};
- * it is related to {@link combine}.
+ * Internally, this function is implemented by {@link $factorial};
+ * it is related to {@link $combine}.
  *
  * This function exhibits the following behavior:
  *
@@ -107,16 +132,4 @@ export const combine: BinaryFn<Combination> = binary(Combination)(
  * // => new Permutaton(new Variable('n'), new Variable('r'))
  * ```
  */
-export const permute: BinaryFn<Permutation> = binary(Permutation)(
-  when([is(Boolean), is(Boolean)], (n, r) => [
-    boolean(n.raw || !r.raw),
-    Action.Application,
-  ]),
-  when([is(Numeric), is(Numeric)], (n, r) => [
-    divide(
-      factorial(n),
-      factorial(subtract(n, r)),
-    ),
-    Action.Application,
-  ]),
-);
+export const permute: BinaryFn<Permutation> = canonicalizeFrom($permute);

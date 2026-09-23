@@ -4,8 +4,8 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { scope, variable } from "./variable.ts";
-import { add } from "./add.ts";
-import { multiply } from "./multiply.ts";
+import { $add } from "./add.ts";
+import { $multiply } from "./multiply.ts";
 import { cos } from "./trigonometric.ts";
 import { invoke } from "./invocation.ts";
 
@@ -13,7 +13,7 @@ describe("invoke", () => {
   describe("with no passed scope", () => {
     it("applies its arguments to unbound variables", () => {
       expect(
-        invoke()(add(variable("x"), variable("y")))(real(5), real(10)),
+        invoke()($add(variable("x"), variable("y")))(real(5), real(10)),
       ).toEqual(
         real(15),
       );
@@ -21,9 +21,9 @@ describe("invoke", () => {
 
     it("applies its arguments in alphabetical order", () => {
       expect(
-        invoke()(add(variable("x"), variable("y")))(real(5)),
+        invoke()($add(variable("x"), variable("y")))(real(5)),
       ).toEqual(
-        add(real(5), variable("y")),
+        $add(real(5), variable("y")),
       );
     });
   });
@@ -33,9 +33,9 @@ describe("invoke", () => {
       const s = scope([["x", real(5)]]);
 
       expect(
-        invoke(s)(add(variable("x"), variable("y")))(),
+        invoke(s)($add(variable("x"), variable("y")))(),
       ).toEqual(
-        add(real(5), variable("y")),
+        $add(real(5), variable("y")),
       );
     });
   });
@@ -45,9 +45,9 @@ describe("invoke", () => {
       const s = scope([["x", real(5)]]);
 
       expect(
-        invoke(s)(add(variable("x"), variable("y")))(real(10)),
+        invoke(s)($add(variable("x"), variable("y")))(real(10)),
       ).toEqual(
-        add(real(10), variable("y")),
+        $add(real(10), variable("y")),
       );
     });
   });
@@ -55,7 +55,9 @@ describe("invoke", () => {
   describe("when given an expression with multiple instances of a variable", () => {
     it("substitutes a newly bound value for each variable instance", () => {
       expect(
-        invoke()(multiply(variable("x"), add(variable("x"), real(5))))(real(4)),
+        invoke()($multiply(variable("x"), $add(variable("x"), real(5))))(
+          real(4),
+        ),
       ).toEqual(
         real(36),
       );
@@ -122,7 +124,7 @@ describe("invoke", () => {
 
     it("evaluates left child variables of binaries", () => {
       expect(
-        invoke()(add(variable("x"), real(5)))(real(10)),
+        invoke()($add(variable("x"), real(5)))(real(10)),
       ).toEqual(
         real(15),
       );
@@ -130,7 +132,7 @@ describe("invoke", () => {
 
     it("evaluates right child variables of binaries", () => {
       expect(
-        invoke()(multiply(real(5), variable("x")))(real(10)),
+        invoke()($multiply(real(5), variable("x")))(real(10)),
       ).toEqual(
         real(50),
       );

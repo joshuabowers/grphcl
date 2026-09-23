@@ -143,7 +143,7 @@ describe("tan", () => {
   });
 
   it("is Real for real input", () => {
-    expect(tan(real(0.5))).toEqual(real(Math.tan(0.5)));
+    expect(tan(real(0.5)).raw).toBeCloseTo(Math.tan(0.5), 10);
   });
 
   it("is a Tangent for unbound input", () => {

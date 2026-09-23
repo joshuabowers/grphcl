@@ -24,6 +24,7 @@ export { abs } from "./absolute.ts";
 export { negate } from "./negate.ts";
 export { factorial } from "./factorial.ts";
 export { gamma } from "./gamma.ts";
+export { degree } from "./degree.ts";
 
 export { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 export { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
@@ -32,7 +33,7 @@ export { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
 
 export { add } from "./add.ts";
 export { subtract } from "./subtract.ts";
-export { multiply } from "./multiply.ts";
+export { double, multiply } from "./multiply.ts";
 export { divide } from "./divide.ts";
 export { raise, reciprocal, sqrt, square } from "./raise.ts";
 export { lb, lg, ln, log } from "./log.ts";
@@ -52,3 +53,4 @@ export {
 } from "./logical/mod.ts";
 
 export { invoke } from "./invocation.ts";
+export { differentiate } from "./differentiation.ts";

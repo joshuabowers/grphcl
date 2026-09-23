@@ -45,32 +45,40 @@ import type { UnaryFn } from "../factories/unary.ts";
 import type { BinaryFn } from "../factories/binary.ts";
 import { parameterize } from "../utility/parameterization.ts";
 import { type Scope, scope as createScope } from "./variable.ts";
-import { add } from "./add.ts";
-import { multiply } from "./multiply.ts";
-import { subtract } from "./subtract.ts";
-import { divide } from "./divide.ts";
-import { raise } from "./raise.ts";
-import { log } from "./log.ts";
-import { equals, gt, gte, lt, lte, nequals } from "./relational.ts";
+import { $add } from "./add.ts";
+import { $multiply } from "./multiply.ts";
+import { $subtract } from "./subtract.ts";
+import { $divide } from "./divide.ts";
+import { $raise } from "./raise.ts";
+import { $log } from "./log.ts";
+import { $equals, $gt, $gte, $lt, $lte, $nequals } from "./relational.ts";
 import {
-  and,
-  converse,
-  implies,
-  nor,
-  not,
-  or,
-  xnor,
-  xor,
+  $and,
+  $converse,
+  $implies,
+  $nand,
+  $nor,
+  $not,
+  $or,
+  $xnor,
+  $xor,
 } from "./logical/mod.ts";
-import { nand } from "@bowers/mthmtcl/functions";
-import { combine, permute } from "./combinatorics.ts";
-import { abs } from "./absolute.ts";
-import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
-import { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
-import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
-import { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
-import { factorial } from "./factorial.ts";
-import { gamma } from "./gamma.ts";
+import { $combine, $permute } from "./combinatorics.ts";
+import { $abs } from "./absolute.ts";
+import { $cos, $cot, $csc, $sec, $sin, $tan } from "./trigonometric.ts";
+import { $acos, $acot, $acsc, $asec, $asin, $atan } from "./arcus.ts";
+import { $cosh, $coth, $csch, $sech, $sinh, $tanh } from "./hyperbolic.ts";
+import {
+  $acosh,
+  $acoth,
+  $acsch,
+  $asech,
+  $asinh,
+  $atanh,
+} from "./areaHyperbolic.ts";
+import { $factorial } from "./factorial.ts";
+import { $gamma } from "./gamma.ts";
+import { canonicalize } from "../utility/canonicalization.ts";
 
 type RewriteFn<T extends TreeNode> = (
   scope: Scope,
@@ -110,71 +118,71 @@ const evaluate: EvaluateFn = multi(
   //
   when(is(Variable), (scope, v) => scope.get(v.name) ?? v),
   //
-  when(is(Addition), binary(add)),
-  when(is(Multiplication), binary(multiply)),
-  when(is(Subtraction), binary(subtract)),
-  when(is(Division), binary(divide)),
-  when(is(Exponentiation), binary(raise)),
-  when(is(Logarithm), binary(log)),
+  when(is(Addition), binary($add)),
+  when(is(Multiplication), binary($multiply)),
+  when(is(Subtraction), binary($subtract)),
+  when(is(Division), binary($divide)),
+  when(is(Exponentiation), binary($raise)),
+  when(is(Logarithm), binary($log)),
   //
-  when(is(Equality), binary(equals)),
-  when(is(GreaterThan), binary(gt)),
-  when(is(GreaterThanOrEquals), binary(gte)),
-  when(is(LessThan), binary(lt)),
-  when(is(LessThanOrEquals), binary(lte)),
-  when(is(Inequality), binary(nequals)),
+  when(is(Equality), binary($equals)),
+  when(is(GreaterThan), binary($gt)),
+  when(is(GreaterThanOrEquals), binary($gte)),
+  when(is(LessThan), binary($lt)),
+  when(is(LessThanOrEquals), binary($lte)),
+  when(is(Inequality), binary($nequals)),
   //
-  when(is(Complement), unary(not)),
-  when(is(Conjunction), binary(and)),
-  when(is(Disjunction), binary(or)),
-  when(is(ExclusiveDisjunction), binary(xor)),
-  when(is(Implication), binary(implies)),
-  when(is(AlternativeDenial), binary(nand)),
-  when(is(JointDenial), binary(nor)),
-  when(is(Biconditional), binary(xnor)),
-  when(is(ConverseImplication), binary(converse)),
+  when(is(Complement), unary($not)),
+  when(is(Conjunction), binary($and)),
+  when(is(Disjunction), binary($or)),
+  when(is(ExclusiveDisjunction), binary($xor)),
+  when(is(Implication), binary($implies)),
+  when(is(AlternativeDenial), binary($nand)),
+  when(is(JointDenial), binary($nor)),
+  when(is(Biconditional), binary($xnor)),
+  when(is(ConverseImplication), binary($converse)),
   //
-  when(is(Permutation), binary(permute)),
-  when(is(Combination), binary(combine)),
+  when(is(Permutation), binary($permute)),
+  when(is(Combination), binary($combine)),
   //
-  when(is(Absolute), unary(abs)),
+  when(is(Absolute), unary($abs)),
   //
-  when(is(Trigonometric.Cosine), unary(cos)),
-  when(is(Trigonometric.Cotangent), unary(cot)),
-  when(is(Trigonometric.Cosecant), unary(csc)),
-  when(is(Trigonometric.Secant), unary(sec)),
-  when(is(Trigonometric.Sine), unary(sin)),
-  when(is(Trigonometric.Tangent), unary(tan)),
+  when(is(Trigonometric.Cosine), unary($cos)),
+  when(is(Trigonometric.Cotangent), unary($cot)),
+  when(is(Trigonometric.Cosecant), unary($csc)),
+  when(is(Trigonometric.Secant), unary($sec)),
+  when(is(Trigonometric.Sine), unary($sin)),
+  when(is(Trigonometric.Tangent), unary($tan)),
   //
-  when(is(Arcus.Cotangent), unary(acot)),
-  when(is(Arcus.Cosecant), unary(acsc)),
-  when(is(Arcus.Cosine), unary(acos)),
-  when(is(Arcus.Secant), unary(asec)),
-  when(is(Arcus.Sine), unary(asin)),
-  when(is(Arcus.Tangent), unary(atan)),
+  when(is(Arcus.Cotangent), unary($acot)),
+  when(is(Arcus.Cosecant), unary($acsc)),
+  when(is(Arcus.Cosine), unary($acos)),
+  when(is(Arcus.Secant), unary($asec)),
+  when(is(Arcus.Sine), unary($asin)),
+  when(is(Arcus.Tangent), unary($atan)),
   //
-  when(is(Hyperbolic.Cosine), unary(cosh)),
-  when(is(Hyperbolic.Cotangent), unary(coth)),
-  when(is(Hyperbolic.Cosecant), unary(csch)),
-  when(is(Hyperbolic.Secant), unary(sech)),
-  when(is(Hyperbolic.Sine), unary(sinh)),
-  when(is(Hyperbolic.Tangent), unary(tanh)),
+  when(is(Hyperbolic.Cosine), unary($cosh)),
+  when(is(Hyperbolic.Cotangent), unary($coth)),
+  when(is(Hyperbolic.Cosecant), unary($csch)),
+  when(is(Hyperbolic.Secant), unary($sech)),
+  when(is(Hyperbolic.Sine), unary($sinh)),
+  when(is(Hyperbolic.Tangent), unary($tanh)),
   //
-  when(is(AreaHyperbolic.Cosine), unary(acosh)),
-  when(is(AreaHyperbolic.Cotangent), unary(acoth)),
-  when(is(AreaHyperbolic.Cosecant), unary(acsch)),
-  when(is(AreaHyperbolic.Secant), unary(asech)),
-  when(is(AreaHyperbolic.Sine), unary(asinh)),
-  when(is(AreaHyperbolic.Tangent), unary(atanh)),
+  when(is(AreaHyperbolic.Cotangent), unary($acoth)),
+  when(is(AreaHyperbolic.Cosecant), unary($acsch)),
+  when(is(AreaHyperbolic.Secant), unary($asech)),
+  when(is(AreaHyperbolic.Cosine), unary($acosh)),
+  when(is(AreaHyperbolic.Sine), unary($asinh)),
+  when(is(AreaHyperbolic.Tangent), unary($atanh)),
   //
-  when(is(Factorial), unary(factorial)),
-  when(is(Gamma), unary(gamma)),
+  when(is(Factorial), unary($factorial)),
+  when(is(Gamma), unary($gamma)),
   // POLYGAMMA
   //
   when(
     is(Invocation),
     (scope, e) =>
-      invoke(scope)(evaluate(scope, e.expression))(
+      $invoke(scope)(evaluate(scope, e.expression))(
         e.args.map((a) => evaluate(scope, a)),
       ),
   ),
@@ -191,6 +199,23 @@ function* zip(parameters: Set<string>, args: TreeNode[]) {
 export type InvocationFn = (
   scope?: Scope,
 ) => (expression: TreeNode) => (...args: TreeNode[]) => TreeNode;
+
+/**
+ * Internal implementation of {@link invoke}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $invoke: InvocationFn = (scope?: Scope) => {
+  const inner: Scope = createScope(scope);
+  return (expression: TreeNode) => {
+    const parameters = parameterize(expression);
+    return (...args: TreeNode[]): TreeNode => {
+      for (const [name, value] of zip(parameters, args)) {
+        inner.set(name, value);
+      }
+      return evaluate(inner, expression);
+    };
+  };
+};
 
 /**
  * Evaluates an expression in the context of a scope of
@@ -308,14 +333,9 @@ export type InvocationFn = (
  * @returns a function with a bound scope
  */
 export const invoke: InvocationFn = (scope?: Scope) => {
-  const inner: Scope = createScope(scope);
+  const scoped = $invoke(scope);
   return (expression: TreeNode) => {
-    const parameters = parameterize(expression);
-    return (...args: TreeNode[]): TreeNode => {
-      for (const [name, value] of zip(parameters, args)) {
-        inner.set(name, value);
-      }
-      return evaluate(inner, expression);
-    };
+    const parameterized = scoped(expression);
+    return (...args: TreeNode[]) => canonicalize(parameterized(...args));
   };
 };

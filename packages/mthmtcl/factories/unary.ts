@@ -4,6 +4,7 @@ import {
   type Constructor,
   Context,
   type EdgeCaseFn,
+  type MathFn,
   type Predicate,
   type Rewrite,
   type When,
@@ -16,7 +17,7 @@ import type {
   TreeNode,
   UnaryNode,
 } from "../tree/mod.ts";
-import { method, type Multi, multi } from "@arrows/multimethod";
+import { method, multi } from "@arrows/multimethod";
 
 /**
  * The type signature for a rewrite rule, mapping a T to an R.
@@ -77,13 +78,14 @@ export const otherwise = <T extends TreeNode, R = T>(
  * is provided, it will override the default numeric return
  * types, which otherwise correspond to their input types.
  */
-export interface UnaryFn<U extends UnaryNode, R extends TreeNode | void = void>
-  extends Multi {
+export interface UnaryFn<
+  U extends UnaryNode,
+  R extends TreeNode | void = void,
+> extends MathFn<U> {
   (expression: Boolean): Choose<R, Boolean>;
   (expression: Complex): Choose<R, Complex>;
   (expression: Real): Choose<R, Real>;
   (expression: Numeric): Choose<R, Numeric>;
-  (expression: TreeNode): U;
 }
 
 /**

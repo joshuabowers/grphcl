@@ -2,10 +2,29 @@ import { Boolean, Complex, Numeric, Real, Trigonometric } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
-import { complex } from "./complex.ts";
-import { real } from "./real.ts";
+import { $complex } from "./complex.ts";
+import { $real } from "./real.ts";
 import { preserve } from "./preserve.ts";
-import { reciprocal } from "./raise.ts";
+import { $reciprocal } from "./raise.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
+
+/**
+ * Internal implementation of {@link cos}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $cos: UnaryFn<Trigonometric.Cosine> = unary(
+  Trigonometric.Cosine,
+)(
+  when(is(Boolean), (b) => [boolean($cos($real(b))), Action.Application]),
+  when(is(Complex), (c) => [
+    $complex(
+      Math.cos(c.raw.a) * Math.cosh(c.raw.b),
+      -Math.sin(c.raw.a) * Math.sinh(c.raw.b),
+    ),
+    Action.Application,
+  ]),
+  when(is(Real), (r) => [$real(Math.cos(r.raw)), Action.Application]),
+);
 
 /**
  * Creates {@link Trigonometric.Cosine} AST nodes.
@@ -31,18 +50,19 @@ import { reciprocal } from "./raise.ts";
  * // => new Cosine(new Variable('x'))
  * ```
  */
-export const cos: UnaryFn<Trigonometric.Cosine> = unary(
-  Trigonometric.Cosine,
+export const cos: UnaryFn<Trigonometric.Cosine> = canonicalizeFrom($cos);
+
+/**
+ * Internal implementation of {@link csc}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $csc: UnaryFn<Trigonometric.Cosecant> = unary(
+  Trigonometric.Cosecant,
 )(
-  when(is(Boolean), (b) => [boolean(cos(real(b))), Action.Application]),
-  when(is(Complex), (c) => [
-    complex(
-      Math.cos(c.raw.a) * Math.cosh(c.raw.b),
-      -Math.sin(c.raw.a) * Math.sinh(c.raw.b),
-    ),
-    Action.Application,
-  ]),
-  when(is(Real), (r) => [real(Math.cos(r.raw)), Action.Application]),
+  when(
+    is(Numeric),
+    (n) => [preserve(n, $reciprocal($sin(n))), Action.Application],
+  ),
 );
 
 /**
@@ -69,12 +89,20 @@ export const cos: UnaryFn<Trigonometric.Cosine> = unary(
  * // => new Cosecant(new Variable('x'))
  * ```
  */
-export const csc: UnaryFn<Trigonometric.Cosecant> = unary(
-  Trigonometric.Cosecant,
+export const csc: UnaryFn<
+  Trigonometric.Cosecant
+> = canonicalizeFrom($csc);
+
+/**
+ * Internal implementation of {@link cot}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $cot: UnaryFn<Trigonometric.Cotangent> = unary(
+  Trigonometric.Cotangent,
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, reciprocal(sin(n))), Action.Application],
+    (n) => [preserve(n, $reciprocal($tan(n))), Action.Application],
   ),
 );
 
@@ -102,12 +130,20 @@ export const csc: UnaryFn<Trigonometric.Cosecant> = unary(
  * // => new Cotangent(new Variable('x'))
  * ```
  */
-export const cot: UnaryFn<Trigonometric.Cotangent> = unary(
-  Trigonometric.Cotangent,
+export const cot: UnaryFn<
+  Trigonometric.Cotangent
+> = canonicalizeFrom($cot);
+
+/**
+ * Internal implementation of {@link sec}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $sec: UnaryFn<Trigonometric.Secant> = unary(
+  Trigonometric.Secant,
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, reciprocal(tan(n))), Action.Application],
+    (n) => [preserve(n, $reciprocal($cos(n))), Action.Application],
   ),
 );
 
@@ -135,13 +171,26 @@ export const cot: UnaryFn<Trigonometric.Cotangent> = unary(
  * // => new Secant(new Variable('x'))
  * ```
  */
-export const sec: UnaryFn<Trigonometric.Secant> = unary(
-  Trigonometric.Secant,
+export const sec: UnaryFn<
+  Trigonometric.Secant
+> = canonicalizeFrom($sec);
+
+/**
+ * Internal implementation of {@link sin}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $sin: UnaryFn<Trigonometric.Sine> = unary(
+  Trigonometric.Sine,
 )(
-  when(
-    is(Numeric),
-    (n) => [preserve(n, reciprocal(cos(n))), Action.Application],
-  ),
+  when(is(Boolean), (b) => [boolean($sin($real(b))), Action.Application]),
+  when(is(Complex), (c) => [
+    $complex(
+      Math.sin(c.raw.a) * Math.cosh(c.raw.b),
+      Math.cos(c.raw.a) * Math.sinh(c.raw.b),
+    ),
+    Action.Application,
+  ]),
+  when(is(Real), (r) => [$real(Math.sin(r.raw)), Action.Application]),
 );
 
 /**
@@ -168,18 +217,27 @@ export const sec: UnaryFn<Trigonometric.Secant> = unary(
  * // => new Sine(new Variable('x'))
  * ```
  */
-export const sin: UnaryFn<Trigonometric.Sine> = unary(
-  Trigonometric.Sine,
+export const sin: UnaryFn<Trigonometric.Sine> = canonicalizeFrom($sin);
+
+/**
+ * Internal implementation of {@link tan}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $tan: UnaryFn<Trigonometric.Tangent> = unary(
+  Trigonometric.Tangent,
 )(
-  when(is(Boolean), (b) => [boolean(sin(real(b))), Action.Application]),
-  when(is(Complex), (c) => [
-    complex(
-      Math.sin(c.raw.a) * Math.cosh(c.raw.b),
-      Math.cos(c.raw.a) * Math.sinh(c.raw.b),
-    ),
-    Action.Application,
-  ]),
-  when(is(Real), (r) => [real(Math.sin(r.raw)), Action.Application]),
+  when(is(Boolean), (b) => [boolean($tan($real(b))), Action.Application]),
+  when(is(Complex), (c) => {
+    const divisor = Math.cos(2 * c.raw.a) + Math.cosh(2 * c.raw.b);
+    return [
+      $complex(
+        Math.sin(2 * c.raw.a) / divisor,
+        Math.sinh(2 * c.raw.b) / divisor,
+      ),
+      Action.Application,
+    ];
+  }),
+  when(is(Real), (r) => [$real(Math.tan(r.raw)), Action.Application]),
 );
 
 /**
@@ -206,19 +264,6 @@ export const sin: UnaryFn<Trigonometric.Sine> = unary(
  * // => new Tangent(new Variable('x'))
  * ```
  */
-export const tan: UnaryFn<Trigonometric.Tangent> = unary(
-  Trigonometric.Tangent,
-)(
-  when(is(Boolean), (b) => [boolean(tan(real(b))), Action.Application]),
-  when(is(Complex), (c) => {
-    const divisor = Math.cos(2 * c.raw.a) + Math.cosh(2 * c.raw.b);
-    return [
-      complex(
-        Math.sin(2 * c.raw.a) / divisor,
-        Math.sinh(2 * c.raw.b) / divisor,
-      ),
-      Action.Application,
-    ];
-  }),
-  when(is(Real), (r) => [real(Math.tan(r.raw)), Action.Application]),
-);
+export const tan: UnaryFn<
+  Trigonometric.Tangent
+> = canonicalizeFrom($tan);

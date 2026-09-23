@@ -1,6 +1,7 @@
 import { Boolean, Complex, Real } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { field, type FieldFn, when } from "../factories/field.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 export interface RealFn extends FieldFn<Real, number, [number]> {}
 
@@ -23,7 +24,7 @@ export interface RealFn extends FieldFn<Real, number, [number]> {}
  * const cast = real(complex(3, 4)) // === new Real(3)
  * ```
  */
-export const real: RealFn = field(
+export const $real: RealFn = field(
   Real,
   ([n]: [number]) => n,
 )(
@@ -32,10 +33,12 @@ export const real: RealFn = field(
   when(is(Real), (r) => [[r.raw], Action.Identity]),
 );
 
+export const real: RealFn = canonicalizeFrom($real);
+
 /**
  * The Euler-Mascheroni constant, used in calculating the
  * digamma function.
  *
  * @see {@link https://en.wikipedia.org/wiki/Euler%27s_constant | Euler's Constant}.
  */
-export const EulerMascheroni = real(0.57721566490153286060);
+export const EulerMascheroni = $real(0.57721566490153286060);

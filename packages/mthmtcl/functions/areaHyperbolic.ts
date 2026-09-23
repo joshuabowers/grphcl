@@ -8,14 +8,36 @@ import {
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
-import { real } from "./real.ts";
+import { $real } from "./real.ts";
 import { preserve } from "./preserve.ts";
-import { add } from "./add.ts";
-import { subtract } from "./subtract.ts";
-import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
-import { reciprocal, sqrt, square } from "./raise.ts";
-import { ln } from "./log.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
+import { $add } from "./add.ts";
+import { $subtract } from "./subtract.ts";
+import { $multiply } from "./multiply.ts";
+import { $divide } from "./divide.ts";
+import { $reciprocal, $sqrt, $square } from "./raise.ts";
+import { $ln } from "./log.ts";
+
+/**
+ * Internal implementation of {@link acosh}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $acosh: UnaryFn<AreaHyperbolic.Cosine> = unary(
+  AreaHyperbolic.Cosine,
+)(
+  when(is(Boolean), (b) => [boolean($acosh($real(b))), Action.Application]),
+  when(is(Complex), (c) => [
+    $ln($add(
+      c,
+      $multiply(
+        $sqrt($add(c, $real(1))),
+        $sqrt($subtract(c, $real(1))),
+      ),
+    )),
+    Action.Application,
+  ]),
+  when(is(Real), (r) => [$real(Math.acosh(r.raw)), Action.Application]),
+);
 
 /**
  * Creates {@link AreaHyperbolic.Cosine} AST nodes.
@@ -41,21 +63,19 @@ import { ln } from "./log.ts";
  * // => new AreaHyperbolic.Cosine(new Variable('x'))
  * ```
  */
-export const acosh: UnaryFn<AreaHyperbolic.Cosine> = unary(
-  AreaHyperbolic.Cosine,
+export const acosh: UnaryFn<AreaHyperbolic.Cosine> = canonicalizeFrom($acosh);
+
+/**
+ * Internal implementation of {@link acsch}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $acsch: UnaryFn<AreaHyperbolic.Cosecant> = unary(
+  AreaHyperbolic.Cosecant,
 )(
-  when(is(Boolean), (b) => [boolean(acosh(real(b))), Action.Application]),
-  when(is(Complex), (c) => [
-    ln(add(
-      c,
-      multiply(
-        sqrt(add(c, real(1))),
-        sqrt(subtract(c, real(1))),
-      ),
-    )),
-    Action.Application,
-  ]),
-  when(is(Real), (r) => [real(Math.acosh(r.raw)), Action.Application]),
+  when(
+    is(Numeric),
+    (n) => [preserve(n, $asinh($reciprocal(n))), Action.Application],
+  ),
 );
 
 /**
@@ -82,12 +102,18 @@ export const acosh: UnaryFn<AreaHyperbolic.Cosine> = unary(
  * // => new AreaHyperbolic.Cosecant(new Variable('x'))
  * ```
  */
-export const acsch: UnaryFn<AreaHyperbolic.Cosecant> = unary(
-  AreaHyperbolic.Cosecant,
+export const acsch: UnaryFn<AreaHyperbolic.Cosecant> = canonicalizeFrom($acsch);
+
+/**
+ * Internal implementation of {@link acoth}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $acoth: UnaryFn<AreaHyperbolic.Cotangent> = unary(
+  AreaHyperbolic.Cotangent,
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, asinh(reciprocal(n))), Action.Application],
+    (n) => [preserve(n, $atanh($reciprocal(n))), Action.Application],
   ),
 );
 
@@ -115,12 +141,20 @@ export const acsch: UnaryFn<AreaHyperbolic.Cosecant> = unary(
  * // => new AreaHyperbolic.Cotangent(new Variable('x'))
  * ```
  */
-export const acoth: UnaryFn<AreaHyperbolic.Cotangent> = unary(
-  AreaHyperbolic.Cotangent,
+export const acoth: UnaryFn<AreaHyperbolic.Cotangent> = canonicalizeFrom(
+  $acoth,
+);
+
+/**
+ * Internal implementation of {@link asech}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $asech: UnaryFn<AreaHyperbolic.Secant> = unary(
+  AreaHyperbolic.Secant,
 )(
   when(
     is(Numeric),
-    (n) => [preserve(n, atanh(reciprocal(n))), Action.Application],
+    (n) => [preserve(n, $acosh($reciprocal(n))), Action.Application],
   ),
 );
 
@@ -148,13 +182,24 @@ export const acoth: UnaryFn<AreaHyperbolic.Cotangent> = unary(
  * // => new AreaHyperbolic.Secant(new Variable('x'))
  * ```
  */
-export const asech: UnaryFn<AreaHyperbolic.Secant> = unary(
-  AreaHyperbolic.Secant,
+export const asech: UnaryFn<AreaHyperbolic.Secant> = canonicalizeFrom($asech);
+
+/**
+ * Internal implementation of {@link asinh}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $asinh: UnaryFn<AreaHyperbolic.Sine> = unary(
+  AreaHyperbolic.Sine,
 )(
-  when(
-    is(Numeric),
-    (n) => [preserve(n, acosh(reciprocal(n))), Action.Application],
-  ),
+  when(is(Boolean), (b) => [boolean($asinh($real(b))), Action.Application]),
+  when(is(Complex), (c) => [
+    $ln($add(
+      $sqrt($add($square(c), $real(1))),
+      c,
+    )),
+    Action.Application,
+  ]),
+  when(is(Real), (r) => [$real(Math.asinh(r.raw)), Action.Application]),
 );
 
 /**
@@ -181,18 +226,27 @@ export const asech: UnaryFn<AreaHyperbolic.Secant> = unary(
  * // => new AreaHyperbolic.Sine(new Variable('x'))
  * ```
  */
-export const asinh: UnaryFn<AreaHyperbolic.Sine> = unary(
-  AreaHyperbolic.Sine,
+export const asinh: UnaryFn<AreaHyperbolic.Sine> = canonicalizeFrom($asinh);
+
+/**
+ * Internal implementation of {@link atanh}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $atanh: UnaryFn<AreaHyperbolic.Tangent> = unary(
+  AreaHyperbolic.Tangent,
 )(
-  when(is(Boolean), (b) => [boolean(asinh(real(b))), Action.Application]),
+  when(is(Boolean), (b) => [boolean($atanh($real(b))), Action.Application]),
   when(is(Complex), (c) => [
-    ln(add(
-      sqrt(add(square(c), real(1))),
-      c,
-    )),
+    $multiply(
+      $real(0.5),
+      $ln($divide(
+        $add($real(1), c),
+        $subtract($real(1), c),
+      )),
+    ),
     Action.Application,
   ]),
-  when(is(Real), (r) => [real(Math.asinh(r.raw)), Action.Application]),
+  when(is(Real), (r) => [$real(Math.atanh(r.raw)), Action.Application]),
 );
 
 /**
@@ -219,19 +273,4 @@ export const asinh: UnaryFn<AreaHyperbolic.Sine> = unary(
  * // => new AreaHyperbolic.Tangent(new Variable('x'))
  * ```
  */
-export const atanh: UnaryFn<AreaHyperbolic.Tangent> = unary(
-  AreaHyperbolic.Tangent,
-)(
-  when(is(Boolean), (b) => [boolean(atanh(real(b))), Action.Application]),
-  when(is(Complex), (c) => [
-    multiply(
-      real(0.5),
-      ln(divide(
-        add(real(1), c),
-        subtract(real(1), c),
-      )),
-    ),
-    Action.Application,
-  ]),
-  when(is(Real), (r) => [real(Math.atanh(r.raw)), Action.Application]),
-);
+export const atanh: UnaryFn<AreaHyperbolic.Tangent> = canonicalizeFrom($atanh);

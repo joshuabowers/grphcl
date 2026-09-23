@@ -1,15 +1,17 @@
-import {
-  Addition,
-  Negation,
-  Numeric,
-  Subtraction,
-  type TreeNode,
-} from "../tree/mod.ts";
-import { Action, is, type Rewrite } from "../factories/factory.ts";
+import { Subtraction } from "../tree/mod.ts";
+import { Action } from "../factories/factory.ts";
 import { binary, type BinaryFn, otherwise } from "../factories/binary.ts";
-import { isBelowThreshold } from "../utility/isBelowThreshold.ts";
-import { add } from "./add.ts";
-import { negate } from "./negate.ts";
+import { $add } from "./add.ts";
+import { $negate } from "./negate.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
+
+/**
+ * Internal implementation of {@link subtract}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $subtract: BinaryFn<Subtraction> = binary(Subtraction)(
+  otherwise((l, r) => [$add(l, $negate(r)), Action.Delegation]),
+);
 
 /**
  * Creates {@link Subtraction} AST nodes.
@@ -48,34 +50,4 @@ import { negate } from "./negate.ts";
  * // => complex(4, -2)
  * ```
  */
-export const subtract: BinaryFn<Subtraction> = binary(Subtraction)(
-  otherwise((l, r) => {
-    const rewritten = add(l, negate(r));
-    let response: Rewrite<TreeNode> | undefined = undefined;
-    if (is(Addition)(rewritten)) {
-      if (
-        is(Numeric)(rewritten.right) && isBelowThreshold(0)(rewritten.right)
-      ) {
-        response = [
-          new Subtraction(rewritten.left, negate(rewritten.right)),
-          Action.Creation,
-        ];
-      } else if (
-        is(Negation)(rewritten.left) && !is(Negation)(rewritten.right)
-      ) {
-        response = [
-          new Subtraction(rewritten.right, rewritten.left.child),
-          Action.Creation,
-        ];
-      } else if (
-        !is(Negation)(rewritten.left) && is(Negation)(rewritten.right)
-      ) {
-        response = [
-          new Subtraction(rewritten.left, rewritten.right.child),
-          Action.Creation,
-        ];
-      }
-    }
-    return response ?? [rewritten, Action.Delegation];
-  }),
-);
+export const subtract: BinaryFn<Subtraction> = canonicalizeFrom($subtract);

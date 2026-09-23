@@ -1,6 +1,6 @@
 import type { Boolean, Complex, Field, Numeric, Real } from "../tree/mod.ts";
 import { method, type Multi, multi } from "@arrows/multimethod";
-import type { Action, Constructor, Predicate } from "./factory.ts";
+import type { Action, Constructor, MathFn, Predicate } from "./factory.ts";
 
 /**
  * Describes a function which takes an input and converts it
@@ -63,7 +63,7 @@ export interface FieldFn<
   T extends Field<Raw>,
   Raw,
   Params extends unknown[],
-> extends Multi {
+> extends MathFn<T, Params> {
   /** Creates a {@link T} from raw parameters */
   (...raw: Params): T;
   /** Creates a {@link T} from a {@link Boolean} */

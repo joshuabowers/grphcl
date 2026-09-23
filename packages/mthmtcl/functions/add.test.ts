@@ -5,9 +5,9 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { add } from "./add.ts";
 import { double, multiply } from "./multiply.ts";
 import { raise } from "./raise.ts";
+import { add } from "./add.ts";
 
 describe("add", () => {
   describe("with pairs of numerics", () => {
@@ -129,7 +129,10 @@ describe("add", () => {
     // E.g. 2 * x + 3 * x <-> 5 * x
     it("adds left operands of dual-nested-multiplies", () => {
       expect(
-        add(multiply(real(2), variable("x")), multiply(real(3), variable("x"))),
+        add(
+          multiply(real(2), variable("x")),
+          multiply(real(3), variable("x")),
+        ),
       ).toEqual(
         multiply(real(5), variable("x")),
       );
