@@ -50,7 +50,7 @@ jobs:
 
   publish:
     needs: test
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -59,13 +59,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
       - name: Publish to JSR
-        working-directory: packages/mthmtcl
-        run: npx jsr publish
+        run: deno publish
 
   deploy:
     needs: publish
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: always() && (needs.publish.result == 'success' || needs.publish.result == 'skipped')
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
