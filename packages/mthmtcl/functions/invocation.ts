@@ -12,6 +12,8 @@ import {
   Complex,
   Conjunction,
   ConverseImplication,
+  Degree,
+  Differentiation,
   Disjunction,
   Division,
   Equality,
@@ -30,8 +32,10 @@ import {
   LessThanOrEquals,
   Logarithm,
   Multiplication,
+  Negation,
   type Numeric,
   Permutation,
+  Polygamma,
   Real,
   Subtraction,
   type TreeNode,
@@ -79,6 +83,10 @@ import {
 import { $factorial } from "./factorial.ts";
 import { $gamma } from "./gamma.ts";
 import { canonicalize } from "../utility/canonicalization.ts";
+import { $negate } from "./negate.ts";
+import { $polygamma } from "./polygamma.ts";
+import { degree } from "./degree.ts";
+import { $differentiate } from "./differentiation.ts";
 
 type RewriteFn<T extends TreeNode> = (
   scope: Scope,
@@ -146,6 +154,7 @@ const evaluate: EvaluateFn = multi(
   when(is(Combination), binary($combine)),
   //
   when(is(Absolute), unary($abs)),
+  when(is(Negation), unary($negate)),
   //
   when(is(Trigonometric.Cosine), unary($cos)),
   when(is(Trigonometric.Cotangent), unary($cot)),
@@ -177,7 +186,26 @@ const evaluate: EvaluateFn = multi(
   //
   when(is(Factorial), unary($factorial)),
   when(is(Gamma), unary($gamma)),
-  // POLYGAMMA
+  when( // NB: $polygamma uses $invoke, so needs careful handling
+    is(Polygamma),
+    (scope, e) =>
+      $polygamma(
+        evaluate(scope, e.left),
+        evaluate(scope, e.right),
+      ),
+  ),
+  //
+  when(is(Degree), unary(degree)),
+  //
+  when(
+    is(Differentiation),
+    (scope, e) =>
+      $differentiate(
+        evaluate(scope, e.expression),
+        e.order,
+        e.wrt,
+      ),
+  ),
   //
   when(
     is(Invocation),
@@ -186,6 +214,11 @@ const evaluate: EvaluateFn = multi(
         e.args.map((a) => evaluate(scope, a)),
       ),
   ),
+  method((scope: Scope, e: TreeNode) => {
+    console.log("invoke: unhandled");
+    console.log("=> scope:", scope);
+    console.log("=> expression:", e);
+  }),
 );
 
 function* zip(parameters: Set<string>, args: TreeNode[]) {

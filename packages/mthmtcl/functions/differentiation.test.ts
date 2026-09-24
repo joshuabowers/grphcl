@@ -13,6 +13,9 @@ import { negate } from "./negate.ts";
 import { raise, reciprocal, sqrt, square } from "./raise.ts";
 import { lb, lg, ln } from "./log.ts";
 import { abs } from "./absolute.ts";
+import { factorial } from "./factorial.ts";
+import { gamma } from "./gamma.ts";
+import { digamma, polygamma } from "./polygamma.ts";
 import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
@@ -296,49 +299,56 @@ describe("differentiate", () => {
     });
   });
 
-  //   describe('of factorials', () => {
-  //     it('returns the chain rule of the derivative of the factorial', () => {
-  //       expect(
-  //         differentiate(factorial(variable('x')))
-  //       ).toEqual(
-  //         multiply(factorial(variable('x')), digamma(add(variable('x'), real(1))))
-  //       )
-  //     })
-  //   })
+  describe("of factorials", () => {
+    it("returns the chain rule of the derivative of the factorial", () => {
+      expect(
+        differentiate(factorial(variable("x"))),
+      ).toEqual(
+        multiply(
+          factorial(variable("x")),
+          digamma(add(variable("x"), real(1))),
+        ),
+      );
+    });
+  });
 
-  //   describe('of gamma', () => {
-  //     it('returns the chain rule of the derivative of gamma', () => {
-  //       expect(
-  //         differentiate(gamma(variable('x')))
-  //       ).toEqual(
-  //         multiply(gamma(variable('x')), digamma(variable('x')))
-  //       )
-  //     })
-  //   })
+  describe("of gamma", () => {
+    it("returns the chain rule of the derivative of gamma", () => {
+      expect(
+        differentiate(gamma(variable("x"))),
+      ).toEqual(
+        multiply(gamma(variable("x")), digamma(variable("x"))),
+      );
+    });
+  });
 
-  //   describe('of polygamma', () => {
-  //     it('returns the chain rule of the derivative of the polygamma', () => {
-  //       expect(
-  //         differentiate(polygamma(variable('n'), variable('x')))
-  //       ).toEqual(
-  //         polygamma(add(variable('n'), real(1)), variable('x'))
-  //       )
-  //     })
-  //   })
+  describe("of polygamma", () => {
+    it("returns the chain rule of the derivative of the polygamma", () => {
+      expect(
+        differentiate(polygamma(variable("n"), variable("x"))),
+      ).toEqual(
+        polygamma(add(variable("n"), real(1)), variable("x")),
+      );
+    });
+  });
 
-  //   describe('of derivatives', () => {
-  //     it('returns the second derivative of the nested expression', () => {
-  //       expect(differentiate(differentiate(cos(variable('x'))))).toEqual(
-  //         negate(cos(variable('x')))
-  //       )
-  //     })
-  //   })
+  describe("of derivatives", () => {
+    it("returns the second derivative of the nested expression", () => {
+      expect(
+        differentiate(differentiate(cos(variable("x")))),
+      ).toEqual(
+        negate(cos(variable("x"))),
+      );
+    });
+  });
 
-  //   describe('of orders', () => {
-  //     it('returns the nth derivative of an expression', () => {
-  //       expect(differentiate(real(2), cos(variable('x')))).toEqual(
-  //         negate(cos(variable('x')))
-  //       )
-  //     })
-  //   })
+  describe("of orders", () => {
+    it("returns the nth derivative of an expression", () => {
+      expect(
+        differentiate(cos(variable("x")), real(2), variable("x")),
+      ).toEqual(
+        negate(cos(variable("x"))),
+      );
+    });
+  });
 });

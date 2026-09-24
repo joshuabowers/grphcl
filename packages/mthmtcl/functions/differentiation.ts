@@ -6,14 +6,17 @@ import {
   type Differentiation,
   Division,
   Exponentiation,
+  Factorial,
+  Gamma,
   Hyperbolic,
   Logarithm,
   Multiplication,
   Negation,
   Numeric,
-  type Real,
+  Polygamma,
+  Real,
   Subtraction,
-  type TreeNode,
+  TreeNode,
   Trigonometric,
   type UnaryNode,
   Variable,
@@ -38,6 +41,7 @@ import { $abs } from "./absolute.ts";
 import { $ln } from "./log.ts";
 import { $cos, $cot, $csc, $sec, $sin, $tan } from "./trigonometric.ts";
 import { $cosh, $coth, $csch, $sech, $sinh, $tanh } from "./hyperbolic.ts";
+import { $digamma, $polygamma } from "./polygamma.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 type RewriteRule<T> =
@@ -64,12 +68,21 @@ const chain = <U extends UnaryNode>(
 ];
 
 interface DifferentiateFn
-  extends MathFn<Differentiation, [TreeNode, Real, Variable]> {
+  extends MathFn<Differentiation, [TreeNode, Real, Variable?]> {
   (expression: Variable): Real;
   (expression: TreeNode): TreeNode;
 }
 
 export const $differentiate: DifferentiateFn = multi(
+  method(
+    [is(TreeNode), is(Real), is(Variable)],
+    (expression: TreeNode, order: Real, _wrt: Variable) =>
+      [
+        Array.from({ length: order.raw })
+          .reduce((prev: TreeNode) => differentiate(prev), expression),
+        Action.Recursion,
+      ][0],
+  ),
   when(is(Numeric), (e) => [preserve(e, $real(0)), Action.Application]),
   when(is(Variable), [$real(1), Action.Application]),
   when(is(Addition), (e) => [
@@ -259,6 +272,28 @@ export const $differentiate: DifferentiateFn = multi(
     is(AreaHyperbolic.Tangent),
     chain((e) => $reciprocal($subtract($real(1), $square(e.child)))),
   ),
+  when(
+    is(Factorial),
+    chain((e) => $multiply(e, $digamma($add(e.child, $real(1))))),
+  ),
+  when(
+    is(Gamma),
+    chain((e) => $multiply(e, $digamma(e.child))),
+  ),
+  when(
+    is(Polygamma),
+    (e) => [
+      $multiply(
+        $polygamma($add(e.left, $real(1)), e.right),
+        $differentiate(e.right),
+      ),
+      Action.Application,
+    ],
+  ),
+  method((expression: TreeNode) => {
+    console.log("differentiate: unhandled");
+    console.log("=> expression:", expression);
+  }),
 );
 
 export const differentiate: DifferentiateFn = canonicalizeFrom($differentiate);

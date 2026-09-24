@@ -8,6 +8,7 @@ import { $add } from "./add.ts";
 import { $multiply } from "./multiply.ts";
 import { cos } from "./trigonometric.ts";
 import { invoke } from "./invocation.ts";
+import { negate } from "./negate.ts";
 
 describe("invoke", () => {
   describe("with no passed scope", () => {
@@ -143,6 +144,14 @@ describe("invoke", () => {
         invoke()(cos(variable("x")))(real(Math.PI)),
       ).toEqual(
         real(-1),
+      );
+    });
+
+    it("evaluates negations correctly", () => {
+      expect(
+        invoke()(negate(variable("x")))(real(5)),
+      ).toEqual(
+        real(-5),
       );
     });
   });
