@@ -79,19 +79,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Set up Node
-        uses: actions/setup-node@v5
+      - name: Set up deno
+        uses: denoland/setup-deno@v2
         with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: apps/client/package-lock.json
+          deno-version: v2.x
+          cache: true
 
-      - name: Install client dependencies
-        run: npm ci --prefix apps/client
+      - name: Install dependencies
+        run: deno ci
 
-      - name: Build client artifact
-        run: npm --prefix apps/client run build
-
+      - name: Build
+        run: deno task --cwd ./apps/client -f client build
+        
       - name: Setup Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
 
