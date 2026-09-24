@@ -4,6 +4,16 @@ import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { canonicalizeFrom, flip } from "../utility/canonicalization.ts";
 
 /**
+ * Internal implementation of {@link negate}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $negate: UnaryFn<Negation> = unary(Negation)(
+  when(is(Boolean), (b) => [b, Action.Application]),
+  when(is(Numeric), (n) => [flip(n), Action.Application]),
+  when(is(Negation), (e) => [e.child, Action.Identity]),
+);
+
+/**
  * Creates {@link Negation} AST node instances.
  *
  * This is a derivative of {@link unary}.
@@ -20,10 +30,4 @@ import { canonicalizeFrom, flip } from "../utility/canonicalization.ts";
  * const z = negate(complex(3, 4)) // => complex(-3, -4);
  * ```
  */
-export const $negate: UnaryFn<Negation> = unary(Negation)(
-  when(is(Boolean), (b) => [b, Action.Application]),
-  when(is(Numeric), (n) => [flip(n), Action.Application]),
-  when(is(Negation), (e) => [e.child, Action.Identity]),
-);
-
 export const negate: UnaryFn<Negation> = canonicalizeFrom($negate);

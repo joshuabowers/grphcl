@@ -6,6 +6,19 @@ import { canonicalizeFrom } from "../utility/canonicalization.ts";
 export interface RealFn extends FieldFn<Real, number, [number]> {}
 
 /**
+ * Internal implementation of {@link real}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $real: RealFn = field(
+  Real,
+  ([n]: [number]) => n,
+)(
+  when(is(Boolean), (b) => [[b.raw ? 1 : 0], Action.Conversion]),
+  when(is(Complex), (c) => [[c.raw.a], Action.Conversion]),
+  when(is(Real), (r) => [[r.raw], Action.Identity]),
+);
+
+/**
  * Creates instances of {@link Real} field types.
  *
  * Can take:
@@ -24,15 +37,6 @@ export interface RealFn extends FieldFn<Real, number, [number]> {}
  * const cast = real(complex(3, 4)) // === new Real(3)
  * ```
  */
-export const $real: RealFn = field(
-  Real,
-  ([n]: [number]) => n,
-)(
-  when(is(Boolean), (b) => [[b.raw ? 1 : 0], Action.Conversion]),
-  when(is(Complex), (c) => [[c.raw.a], Action.Conversion]),
-  when(is(Real), (r) => [[r.raw], Action.Identity]),
-);
-
 export const real: RealFn = canonicalizeFrom($real);
 
 /**

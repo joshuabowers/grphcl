@@ -14,6 +14,19 @@ export interface ComplexFn extends
   > {}
 
 /**
+ * Internal implementation of {@link complex}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
+export const $complex: ComplexFn = field(
+  Complex,
+  ([a, b]: [number, number]) => ({ a, b }),
+)(
+  when(is(Boolean), (b) => [[b.raw ? 1 : 0, 0], Action.Conversion]),
+  when(is(Complex), (c) => [[c.raw.a, c.raw.b], Action.Identity]),
+  when(is(Real), (r) => [[r.raw, 0], Action.Conversion]),
+);
+
+/**
  * Creates instances of {@link Complex} field types.
  *
  * Can take:
@@ -34,15 +47,6 @@ export interface ComplexFn extends
  * const z = complex(real(5.5)) // => new Complex({a: 5.5, b: 0})
  * ```
  */
-export const $complex: ComplexFn = field(
-  Complex,
-  ([a, b]: [number, number]) => ({ a, b }),
-)(
-  when(is(Boolean), (b) => [[b.raw ? 1 : 0, 0], Action.Conversion]),
-  when(is(Complex), (c) => [[c.raw.a, c.raw.b], Action.Identity]),
-  when(is(Real), (r) => [[r.raw, 0], Action.Conversion]),
-);
-
 export const complex: ComplexFn = canonicalizeFrom($complex);
 
 export const imaginary: ComplexFn = field(

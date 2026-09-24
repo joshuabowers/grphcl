@@ -73,6 +73,10 @@ interface DifferentiateFn
   (expression: TreeNode): TreeNode;
 }
 
+/**
+ * Internal implementation of {@link differentiate}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
 export const $differentiate: DifferentiateFn = multi(
   method(
     [is(TreeNode), is(Real), is(Variable)],
@@ -296,4 +300,41 @@ export const $differentiate: DifferentiateFn = multi(
   }),
 );
 
+/**
+ * Generates a new expression representing the derivative of
+ * the expression passed to it.
+ *
+ * This process is defined on most {@link TreeNode} types, and
+ * should be (currently) viable for single-variate use cases.
+ *
+ * Derivatives are calculated in a recursive fashion, with
+ * node-specific rules guiding the process. For most functions,
+ * this will result in application of the chain rule: the derivative
+ * is the derivative of the function multiplied by the derivative
+ * of its argument.
+ *
+ * For most functions and operators, the return value of this
+ * function will be a {@link TreeNode} containing, somewhere
+ * within its structure, an indeterminate {@link Variable}.
+ *
+ * @example Differentiation of an indeterminate function
+ * ```ts
+ * const result = differentiate(cos(variable('x')))
+ * // => negate(sin(variable('x')))
+ * ```
+ *
+ * @example Differentiation of a higher order
+ *
+ * It is possible to apply `differentiate` to itself, which is
+ * the same as taking multiple successive derivatives. However,
+ * a second argument to the function allows the specification of
+ * the order of the derivative to find:
+ *
+ * ```ts
+ * const d1 = differentiate(differentiate(raise(variable('x'), real(3))))
+ * // ~=> 6 * x
+ * const d2 = differentiate(raise(variable('x'), real(3)), real(2))
+ * // ~=> 6 * x
+ * ```
+ */
 export const differentiate: DifferentiateFn = canonicalizeFrom($differentiate);
