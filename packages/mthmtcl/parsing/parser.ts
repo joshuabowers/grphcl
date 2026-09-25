@@ -37,12 +37,16 @@ import {
   Trigonometric,
 } from "../tree/mod.ts";
 import type { Constructor } from "../factories/factory.ts";
-import { type Scope, variable } from "../functions/variable.ts";
+import {
+  boolean,
+  complex,
+  real,
+  type Scope,
+  variable,
+} from "../functions/mod.ts";
 import { $fail, type Parser, peg } from "pegase";
 import { Unicode } from "./Unicode.ts";
-import { complex } from "../functions/complex.ts";
-import { boolean } from "../functions/boolean.ts";
-import { EulerMascheroni, real } from "../functions/real.ts";
+import { EulerMascheroni } from "../functions/real.ts";
 
 const letterRange = `_a-zA-Z${Unicode.theta}`;
 const validIdentifier = new RegExp(

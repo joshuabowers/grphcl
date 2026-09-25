@@ -1,6 +1,5 @@
 import type { TreeNode } from "../tree/mod.ts";
-import { invoke } from "../functions/invocation.ts";
-import { type Scope, scope as createScope } from "@bowers/mthmtcl/functions";
+import { invoke, type Scope, scope as createScope } from "../functions/mod.ts";
 import { parser } from "./parser.ts";
 
 export interface Parsing {
