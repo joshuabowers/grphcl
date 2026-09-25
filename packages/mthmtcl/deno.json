@@ -2,7 +2,9 @@
   "name": "@bowers/mthmtcl",
   "version": "0.6.0",
   "exports": {
+    "./factories": "./factories/mod.ts",
     "./functions": "./functions/mod.ts",
+    "./parsing": "./parsing/mod.ts",
     "./tree/trigonometric": "./tree/unary/trigonometric/mod.ts",
     "./tree/arcus": "./tree/unary/arcus/mod.ts",
     "./tree/hyperbolic": "./tree/unary/hyperbolic/mod.ts",

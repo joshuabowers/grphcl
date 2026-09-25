@@ -38,7 +38,7 @@ import {
 } from "../tree/mod.ts";
 import type { Constructor } from "../factories/factory.ts";
 import { type Scope, variable } from "../functions/variable.ts";
-import { $fail, peg } from "pegase";
+import { $fail, type Parser, peg } from "pegase";
 import { Unicode } from "./Unicode.ts";
 import { complex } from "../functions/complex.ts";
 import { boolean } from "../functions/boolean.ts";
@@ -157,7 +157,6 @@ const createInvoke = (
     new Invocation(node, ...tail.a),
     tail.b,
   );
-  //   return createInvoke(invoke($context())(node)(...tail.a), tail.b)
 };
 
 const builtInFunction = (
@@ -183,7 +182,7 @@ const functional = peg([...functions.keys()].map(capture).join("|"));
 // - [ ] Nil
 // - [ ] Variable in-situ replace (delay until invoke?)
 
-export const parser = peg<TreeNode, Scope>`
+export const parser: Parser<TreeNode, Scope> = peg<TreeNode, Scope>`
 expression: <a>assignment
 
 assignment:

@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { add } from "@bowers/mthmtcl";
+import { add, real } from "@bowers/mthmtcl/functions";
 import solidLogo from "./assets/solid.svg";
 import viteLogo from "./assets/vite.svg";
 import heroImg from "./assets/hero.png";
@@ -25,7 +25,8 @@ function App() {
         <button
           type="button"
           class="counter"
-          onClick={() => setCount((count: number) => add(count, 1))}
+          onClick={() =>
+            setCount((count: number) => add(real(count), real(1)).raw)}
         >
           Count is {count()}
         </button>
