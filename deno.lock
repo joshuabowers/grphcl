@@ -11,6 +11,7 @@
     "npm:@deno/vite-plugin@^2.0.3": "2.0.3_vite@8.2.1_@types+node@24.13.3",
     "npm:@jsr/bowers__mthmtcl@~0.1.1": "0.1.1",
     "npm:@types/node@^24.13.3": "24.13.3",
+    "npm:pegase@~0.6.3": "0.6.3",
     "npm:solid-js@^1.9.14": "1.9.15",
     "npm:typescript@~6.0.2": "6.0.3",
     "npm:vite-plugin-solid@^2.11.13": "2.11.14_solid-js@1.9.15_vite@8.2.1_@types+node@24.13.3",
@@ -589,6 +590,9 @@
         "entities"
       ]
     },
+    "pegase@0.6.3": {
+      "integrity": "sha512-7q4SkMnG56Kc4Co0EZ9PU+2DFbpSD+Zdf3yxyUDSoQri4u0xYD1FvYh/QJTY+rCBUJ72qSA6mK5tkPlxAQ8otg=="
+    },
     "picocolors@1.1.1": {
       "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA=="
     },
@@ -751,7 +755,8 @@
       },
       "packages/mthmtcl": {
         "dependencies": [
-          "npm:@arrows/multimethod@^2.1.0"
+          "npm:@arrows/multimethod@^2.1.0",
+          "npm:pegase@~0.6.3"
         ]
       }
     }

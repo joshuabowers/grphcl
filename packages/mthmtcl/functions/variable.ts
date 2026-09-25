@@ -15,7 +15,7 @@ export function variable(name: string): Variable {
   return new Variable(name);
 }
 
-type Entries = Iterable<readonly [string, TreeNode]>;
+export type Entries = Iterable<readonly [string, TreeNode]>;
 
 /** A mapping of variable identifiers to bound values */
 export type Scope = Map<string, TreeNode>;

@@ -34,7 +34,7 @@ export class Differentiation extends TreeNode {
    *
    * 1 is the first derivative; 2 the second derivative, etc.
    */
-  readonly order: Real;
+  readonly order?: Real;
   /**
    * The variable within {@link expression} to differentiate
    * with respect to.
@@ -50,7 +50,7 @@ export class Differentiation extends TreeNode {
    * @param order the order of the derivative;
    * @param wrt the variable to differentiate with respect to
    */
-  constructor(expression: TreeNode, order: Real, wrt?: Variable) {
+  constructor(expression: TreeNode, order?: Real, wrt?: Variable) {
     super();
     this.expression = expression;
     this.order = order;

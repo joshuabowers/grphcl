@@ -68,7 +68,7 @@ const chain = <U extends UnaryNode>(
 ];
 
 interface DifferentiateFn
-  extends MathFn<Differentiation, [TreeNode, Real, Variable?]> {
+  extends MathFn<Differentiation, [TreeNode, Real?, Variable?]> {
   (expression: Variable): Real;
   (expression: TreeNode): TreeNode;
 }

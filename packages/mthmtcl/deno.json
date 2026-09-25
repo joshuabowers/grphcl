@@ -1,6 +1,6 @@
 {
   "name": "@bowers/mthmtcl",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "exports": {
     "./functions": "./functions/mod.ts",
     "./tree/trigonometric": "./tree/unary/trigonometric/mod.ts",
@@ -14,6 +14,7 @@
     "exclude": ["./**/*.test.ts"]
   },
   "imports": {
-    "@arrows/multimethod": "npm:@arrows/multimethod@^2.1.0"
+    "@arrows/multimethod": "npm:@arrows/multimethod@^2.1.0",
+    "pegase": "npm:pegase@^0.6.3"
   }
 }
