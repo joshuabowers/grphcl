@@ -1,6 +1,5 @@
 [![deno CI](https://github.com/joshuabowers/grphcl/actions/workflows/ci.yml/badge.svg)](https://github.com/joshuabowers/grphcl/actions/workflows/ci.yml)
-
-[Available on Pages](https://joshuabowers/github.io/grphcl)
+| [Available on Pages](https://joshuabowers.github.io/grphcl)
 
 # grphcl
 
@@ -41,9 +40,9 @@ example: `cos(x)` will represent the cosine function applied to the variable
 `x`. Unbound variables do _not_ need to be defined prior to use.
 
 Variables can be assigned expressions in unbound variables. For example,
-`y := x^2 - 3` will assign the value of `y` to the expression on the right-hand
-side. `y` can latter be invoked to evaluate a supplied value for `x`: `y(5)`
-would yield value of `22`.
+`y := x ** 2 - 3` will assign the value of `y` to the expression on the
+right-hand side. `y` can latter be invoked to evaluate a supplied value for `x`:
+`y(5)` would yield value of `22`.
 
 ## Supported Functions
 
