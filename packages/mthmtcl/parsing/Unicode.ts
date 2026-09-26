@@ -1,3 +1,11 @@
+/**
+ * Collects various unicode characters to represent the symbols
+ * used for math functions and constants.
+ *
+ * These generally pull from italicized variants for symbols
+ * close to English; otherwise, they pull from arrows and math
+ * symbols.
+ */
 export enum Unicode {
   angle = "\u{2221}",
   derivative = "\u2202",

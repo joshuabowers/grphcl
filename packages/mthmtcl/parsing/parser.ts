@@ -186,6 +186,38 @@ const functional = peg([...functions.keys()].map(capture).join("|"));
 // - [ ] Nil
 // - [ ] Variable in-situ replace (delay until invoke?)
 
+/**
+ * A Parsing Expression Grammar parser, built from pegase on a
+ * custom grammar.
+ *
+ * The parser takes string input and returns a direct mapping
+ * representation as an Abstract Syntax Tree. Specifically,
+ * return values of this are guaranteed to be a {@link TreeNode}
+ * subclass. An AST describes relationships between data--the leaf
+ * nodes of the tree--and the operations that work on that data--the
+ * internal nodes of the tree. It is abstract as it pares away
+ * syntax, such as parentheses and commas, which are implied by
+ * the nested structure of the tree itself.
+ *
+ * This should be capable of everything realizable via either the
+ * TreeNode subclasses or by functions such as {@link real} or
+ * add. However, note that the parser itself only returns
+ * an AST which is a direct representation of the input it was given;
+ * it does not perform any sort of semantic analysis. To do so,
+ * it would be further necessary to run the output of the parser
+ * through `invoke`.
+ *
+ * @example Parsing input
+ *
+ * Pegase parsers have a variety of methods which can be used for
+ * parsing; `value` directly returns the resolved object, and should
+ * be considered:
+ *
+ * ```ts
+ * const result = parser.value('x ** 2 + 5');
+ * // => add(square(variable('x')), real(5))
+ * ```
+ */
 export const parser: Parser<TreeNode, Scope> = peg<TreeNode, Scope>`
 expression: <a>assignment
 
