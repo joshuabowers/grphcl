@@ -1,0 +1,46 @@
+.calculator {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  box-sizing: border-box;
+}
+
+@media (orientation: portrait) {
+  .calculator {
+    grid: auto 2fr minmax(4em, 1fr) fit-content(40%) / 1fr;
+    grid-template-areas:
+      "header"
+      "graph"
+      "terminal"
+      "keypad";
+  }
+
+  .calculator > header {
+    grid-row: 1;
+  }
+
+  .calculator > :last-child {
+    grid-row: 4;
+  }
+}
+
+@media (orientation: landscape) {
+  .calculator {
+    grid: auto 2fr minmax(4em, 2fr) / 1fr auto;
+    grid-template-areas:
+      "header header"
+      "graph keypad"
+      "terminal keypad";
+  }
+
+  .calculator > header {
+    grid-row: 1;
+    grid-column: 1 / span 2;
+  }
+
+  .calculator > :last-child {
+    grid-row: 2 / span 2;
+    grid-column: 2;
+  }
+}

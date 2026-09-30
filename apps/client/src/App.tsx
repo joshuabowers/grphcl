@@ -13,7 +13,7 @@ function App() {
   const [_count, _setCount] = createSignal(0);
 
   return (
-    <main>
+    <main class="calculator">
       <Header />
       <Graph />
       <Terminal />
