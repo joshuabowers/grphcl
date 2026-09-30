@@ -1,0 +1,14 @@
+.siteHeader {
+  margin-top: 0.5em;
+  margin-bottom: 0.75em;
+  padding: 0em 1em;
+  background: var(--glass);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--normal-shadow);
+}
+
+.siteHeader > h1 {
+  margin: 0.25em 0;
+}

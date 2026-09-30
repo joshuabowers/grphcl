@@ -1,27 +1,28 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@bowers/mthmtcl@~0.5.1": "0.5.1",
+    "jsr:@bowers/mthmtcl@~0.6.1": "0.6.1",
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/expect@^1.0.20": "1.0.20",
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "jsr:@std/internal@^1.0.14": "1.0.14",
     "jsr:@std/path@^1.1.6": "1.1.6",
     "npm:@arrows/multimethod@^2.1.0": "2.1.0",
-    "npm:@deno/vite-plugin@^2.0.3": "2.0.3_vite@8.2.1__@types+node@26.6.2_@types+node@26.6.2",
-    "npm:@jsr/bowers__mthmtcl@~0.5.1": "0.5.1",
+    "npm:@deno/vite-plugin@^2.0.3": "2.0.3_vite@8.2.1_@types+node@26.6.2",
+    "npm:@jsr/bowers__mthmtcl@~0.6.1": "0.6.1",
     "npm:@types/node@^26.6.2": "26.6.2",
     "npm:pegase@~0.6.3": "0.6.3",
     "npm:solid-js@^1.9.15": "1.9.15",
     "npm:typescript@~7.0.2": "7.0.2",
-    "npm:vite-plugin-solid@^2.11.14": "2.11.14_solid-js@1.9.15_vite@8.2.1__@types+node@26.6.2_@types+node@26.6.2",
+    "npm:vite-plugin-solid@^2.11.14": "2.11.14_solid-js@1.9.15_vite@8.2.1_@types+node@26.6.2",
     "npm:vite@^8.2.0": "8.2.1_@types+node@26.6.2"
   },
   "jsr": {
-    "@bowers/mthmtcl@0.5.1": {
-      "integrity": "6e834dd5fb68e638384f44efc50c1455d898fcd29f3ae89694f6c223a934a15e",
+    "@bowers/mthmtcl@0.6.1": {
+      "integrity": "a1ff6b9318978bbe4e345e826bed6efd7a251c46cbca8adad354f9c8f2d74a16",
       "dependencies": [
-        "npm:@arrows/multimethod"
+        "npm:@arrows/multimethod",
+        "npm:pegase"
       ]
     },
     "@std/assert@1.0.19": {
@@ -206,7 +207,7 @@
         "@babel/helper-validator-identifier"
       ]
     },
-    "@deno/vite-plugin@2.0.3_vite@8.2.1__@types+node@26.6.2_@types+node@26.6.2": {
+    "@deno/vite-plugin@2.0.3_vite@8.2.1_@types+node@26.6.2": {
       "integrity": "sha512-TbIawVRFqIfshSa4CYEPMgLbEIKHg+WXymWvvwlsyct1X8tG4O1OrQldvU/faw6bw7NBCyxVYdT4iIv93jQSig==",
       "dependencies": [
         "@deno/loader@npm:@jsr/deno__loader@0.5.0",
@@ -241,12 +242,13 @@
         "@jridgewell/sourcemap-codec"
       ]
     },
-    "@jsr/bowers__mthmtcl@0.5.1": {
-      "integrity": "sha512-gpLyIhNtveFXYrah5pPkXM63x4jObJSTTasG4Hr6Pis1yIxns1xyBi99AKc+fdYmF7kBzA0VtsmZQEAvAOgLWA==",
+    "@jsr/bowers__mthmtcl@0.6.1": {
+      "integrity": "sha512-kUe6L+F/ZO8CaFE9o0JHPKbRIyZ7gCZtCN1mAmt+CyUA5O4PoM1xfhQwx+Db2STKJ5IrNZW3S0N0Uaw+hWG0zw==",
       "dependencies": [
-        "@arrows/multimethod"
+        "@arrows/multimethod",
+        "pegase"
       ],
-      "tarball": "https://npm.jsr.io/~/11/@jsr/bowers__mthmtcl/0.5.1.tgz"
+      "tarball": "https://npm.jsr.io/~/11/@jsr/bowers__mthmtcl/0.6.1.tgz"
     },
     "@jsr/deno__loader@0.5.0": {
       "integrity": "sha512-sf/YBwnyAsbyeYYB71Zdj2Ca2Q9tt25EZpAiZdDA9W7Mm3GcpjA2WMeqj19xPIurZK12G3OAsa5yrtPB7E+gvA==",
@@ -816,7 +818,7 @@
       ],
       "bin": true
     },
-    "vite-plugin-solid@2.11.14_solid-js@1.9.15_vite@8.2.1__@types+node@26.6.2_@types+node@26.6.2": {
+    "vite-plugin-solid@2.11.14_solid-js@1.9.15_vite@8.2.1_@types+node@26.6.2": {
       "integrity": "sha512-7ZVBt8rpoyqmlwin2kRIUveaHoF6/kulY7gsnD+qFh4nS29V4OPAnw+ojoAspXIjObiL9o1xh9a/nTuYHm02Rw==",
       "dependencies": [
         "@babel/core",
@@ -847,7 +849,7 @@
       ],
       "bin": true
     },
-    "vitefu@1.1.3_vite@8.2.1__@types+node@26.6.2_@types+node@26.6.2": {
+    "vitefu@1.1.3_vite@8.2.1_@types+node@26.6.2": {
       "integrity": "sha512-ub4okH7Z5KLjb6hDyjqrGXqWtWvoYdU3IGm/NorpgHncKoLTCfRIbvlhBm7r0YstIaQRYlp4yEbFqDcKSzXSSg==",
       "dependencies": [
         "vite"
@@ -867,12 +869,12 @@
     "members": {
       "apps/client": {
         "dependencies": [
-          "jsr:@bowers/mthmtcl@~0.5.1"
+          "jsr:@bowers/mthmtcl@~0.6.1"
         ],
         "packageJson": {
           "dependencies": [
             "npm:@deno/vite-plugin@^2.0.3",
-            "npm:@jsr/bowers__mthmtcl@~0.5.1",
+            "npm:@jsr/bowers__mthmtcl@~0.6.1",
             "npm:@types/node@^26.6.2",
             "npm:solid-js@^1.9.15",
             "npm:typescript@~7.0.2",

@@ -1,6 +1,23 @@
 {
   "imports": {
-    "@bowers/mthmtcl": "jsr:@bowers/mthmtcl@^0.5.1"
+    "@bowers/mthmtcl": "jsr:@bowers/mthmtcl@^0.6.1"
   },
-  "publish": false
+  "publish": false,
+  "include": ["src/vite-env.d.ts"],
+  "compilerOptions": {
+    "module": "esnext",
+    "lib": ["ES2023", "DOM"],
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  }
 }
