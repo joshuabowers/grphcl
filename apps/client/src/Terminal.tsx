@@ -1,12 +1,28 @@
-import { createEffect } from "solid-js";
-import { interpret } from "@bowers/mthmtcl";
+import { useAppState } from "./AppProvider";
+import { Highlight } from "./Highlight";
+import { For } from "solid-js";
+import styles from "./Terminal.module.css";
 
 export const Terminal = () => {
-  createEffect(() => {
-    console.log(interpret("x+x*x+x"));
-  });
+  const state = useAppState();
   return (
-    <div>
+    <div class={styles.terminal}>
+      <For each={state.history}>
+        {(item) => (
+          <div class={styles.entry}>
+            <div class={styles.input}>
+              <Highlight expression={item.input} />
+            </div>
+            <div class={styles.output}>
+              <Highlight expression={item.output} />
+            </div>
+          </div>
+        )}
+      </For>
+      <div class={styles.currentLine}>
+        {state.currentLine.join("")}
+        <span class={styles.caret}>|</span>
+      </div>
     </div>
   );
 };

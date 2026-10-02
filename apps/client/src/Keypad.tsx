@@ -1,6 +1,7 @@
 import { createMemo, createSignal, Index } from "solid-js";
 import styles from "./Keypad.module.css";
 import { Unicode } from "@bowers/mthmtcl";
+import { useAppActions, useAppState } from "./AppProvider.tsx";
 
 type DistinctMode =
   | "main"
@@ -131,6 +132,7 @@ const allKeys: KeyProp[] = [
   key("f13", "logic", Unicode.nor),
   key("f14", "logic", Unicode.xnor),
   key("raise", "logic", Unicode.converse),
+  key("subtract", "logic", Unicode.not),
   key("diff", "shift", Unicode.integral),
   key("fact", "shift", Unicode.gamma),
   key("comb", "shift", "C"),
@@ -211,11 +213,17 @@ const allKeys: KeyProp[] = [
 ];
 
 export const Keypad = () => {
+  const state = useAppState();
+  const actions = useAppActions();
   const [mode, setMode] = createSignal<DistinctMode>("main");
   const selectMode = (m: DistinctMode): DistinctMode =>
     mode() === m ? "main" : m;
 
   const keys = createMemo(() => {
+    const execute = allKeys.find((k) => k.cell === "execute");
+    const destroy = allKeys.find((k) => k.cell === "delete");
+    if (execute) execute.command = actions.execute;
+    if (destroy) destroy.command = actions.deleteLast;
     const processed = allKeys
       .filter((k) =>
         k.mode === "all" || k.mode === mode() ||
@@ -250,7 +258,10 @@ export const Keypad = () => {
             }}
             style={{ "--cell": item().cell }}
             onclick={item().command ??
-              (() => console.log(item().replaceWith ?? item().display))}
+              (() => {
+                actions.keyPress(item().replaceWith ?? item().display);
+                console.log(state.currentLine);
+              })}
           >
             {item().display}
           </button>

@@ -1,8 +1,5 @@
 import { createSignal } from "solid-js";
-// import { add, real } from "@bowers/mthmtcl/functions";
-// import solidLogo from "./assets/solid.svg";
-// import viteLogo from "./assets/vite.svg";
-// import heroImg from "./assets/hero.png";
+import { AppProvider } from "./AppProvider.tsx";
 import { Header } from "./Header.tsx";
 import { Graph } from "./Graph.tsx";
 import { Terminal } from "./Terminal.tsx";
@@ -13,12 +10,14 @@ function App() {
   const [_count, _setCount] = createSignal(0);
 
   return (
-    <main class="calculator">
-      <Header />
-      <Graph />
-      <Terminal />
-      <Keypad />
-    </main>
+    <AppProvider>
+      <main class="calculator">
+        <Header />
+        <Graph />
+        <Terminal />
+        <Keypad />
+      </main>
+    </AppProvider>
   );
 }
 

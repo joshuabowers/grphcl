@@ -1,0 +1,25 @@
+@keyframes flash {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+
+.terminal {
+  font-family: 'Fira Code', monospace;
+  line-height: 1.5;
+  text-align: left;
+  overflow-y: auto;
+}
+
+.entry > .output::before {
+  margin-right: 0.2em;
+  content: '=>';
+}
+
+.caret {
+  font-variant-ligatures: no-common-ligatures;
+  animation: 1s linear infinite alternate-reverse flash;
+}

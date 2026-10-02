@@ -211,7 +211,7 @@ const evaluate: EvaluateFn = multi(
     is(Invocation),
     (scope, e) =>
       $invoke(scope)(evaluate(scope, e.expression))(
-        e.args.map((a) => evaluate(scope, a)),
+        ...e.args.map((a) => evaluate(scope, a)),
       ),
   ),
   method((scope: Scope, e: TreeNode) => {

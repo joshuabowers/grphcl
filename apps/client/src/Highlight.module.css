@@ -1,0 +1,43 @@
+.parentheses {
+  color: whitesmoke;
+  font-style: normal;
+}
+
+.parentheses .parentheses {
+  color: gray;
+}
+
+.parentheses .parentheses .parentheses {
+  color: hsl(0, 0%, 30%);
+}
+
+.operator {
+  color: white;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.variable {
+  color: gold;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.numeric {
+  color: salmon;
+  font-weight: normal;
+  font-style: normal;
+}
+
+.functional {
+  color: aliceblue;
+  font-style: italic;
+}
+
+.unhandled {
+  background: orange;
+  color: black;
+  border: 0.1em dashed darkmagenta;
+  margin: 0.5em;
+  padding: 0.2em;
+}
