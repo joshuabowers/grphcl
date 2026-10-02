@@ -93,4 +93,10 @@ describe("interpret", () => {
     );
     expect(parsing.output).toEqual(real(100));
   });
+
+  it("does not throw on error, but sets error", () => {
+    expect(interpret("x *&")).not.toThrow();
+    expect(interpret("x *&").error).toBeDefined();
+    expect(interpret("x *&").output).toBeUndefined();
+  });
 });

@@ -45,4 +45,4 @@ export const real: RealFn = canonicalizeFrom($real);
  *
  * @see {@link https://en.wikipedia.org/wiki/Euler%27s_constant | Euler's Constant}.
  */
-export const EulerMascheroni = $real(0.57721566490153286060);
+export const EulerMascheroni: Real = $real(0.57721566490153286060);

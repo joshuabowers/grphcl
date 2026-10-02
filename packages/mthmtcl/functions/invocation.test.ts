@@ -9,6 +9,9 @@ import { $multiply } from "./multiply.ts";
 import { cos } from "./trigonometric.ts";
 import { invoke } from "./invocation.ts";
 import { negate } from "./negate.ts";
+import { Invocation } from "@bowers/mthmtcl";
+import { Degree } from "@bowers/mthmtcl/tree";
+import { square } from "./raise.ts";
 
 describe("invoke", () => {
   describe("with no passed scope", () => {
@@ -152,6 +155,22 @@ describe("invoke", () => {
         invoke()(negate(variable("x")))(real(5)),
       ).toEqual(
         real(-5),
+      );
+    });
+
+    it("evaluates invocations correctly", () => {
+      expect(
+        invoke()(new Invocation(variable("x"), real(5)))(),
+      ).toEqual(
+        real(5),
+      );
+    });
+
+    it("evalutes degrees of polynomials", () => {
+      expect(
+        invoke()(new Degree(square(variable("x"))))(),
+      ).toEqual(
+        real(2),
       );
     });
   });

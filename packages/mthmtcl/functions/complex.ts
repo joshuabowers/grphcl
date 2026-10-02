@@ -62,7 +62,7 @@ export const imaginary: ComplexFn = field(
  * Complex infinity is defined as having an unknown or
  * undefined imaginary part, and an infinite real part.
  */
-export const ComplexInfinity = $complex(Infinity, NaN);
+export const ComplexInfinity: Complex = $complex(Infinity, NaN);
 
 export const isComplexInfinity = (value: unknown): value is Complex =>
   is(

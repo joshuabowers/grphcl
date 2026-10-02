@@ -9,7 +9,13 @@
  * @module
  */
 
-export { type Action, is, type MathFn } from "./factory.ts";
+export {
+  type Action,
+  type Constructor,
+  is,
+  type MathFn,
+  type Predicate,
+} from "./factory.ts";
 export { field, type FieldFn } from "./field.ts";
 export { unary, type UnaryFn } from "./unary.ts";
 export {

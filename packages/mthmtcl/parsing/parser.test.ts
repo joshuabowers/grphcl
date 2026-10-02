@@ -11,6 +11,7 @@ import {
   Complement,
   Conjunction,
   ConverseImplication,
+  Degree,
   Differentiation,
   Disjunction,
   Division,
@@ -43,6 +44,7 @@ import { type Entries, scope } from "../functions/variable.ts";
 import { Unicode } from "./Unicode.ts";
 
 import { parser } from "./parser.ts";
+import { Variable } from "@bowers/mthmtcl";
 
 function parse(input: string, entries?: Entries): TreeNode {
   return parser.value(input, { context: scope(entries) });
@@ -395,6 +397,19 @@ describe("parser", () => {
     it("matches a basic absolute", () => {
       expect(parse("abs(-x)")).toEqual(
         new Absolute(new Negation(variable("x"))),
+      );
+    });
+  });
+
+  describe("of polynomial degree", () => {
+    it("matches big-O notation", () => {
+      expect(parse(`${Unicode.bigO}(x**2)`)).toEqual(
+        new Degree(
+          new Exponentiation(
+            new Variable("x"),
+            real(2),
+          ),
+        ),
       );
     });
   });

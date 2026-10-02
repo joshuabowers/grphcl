@@ -8,6 +8,7 @@ import { variable } from "./variable.ts";
 import { double, multiply } from "./multiply.ts";
 import { raise } from "./raise.ts";
 import { add } from "./add.ts";
+import { negate } from "./negate.ts";
 
 describe("add", () => {
   describe("with pairs of numerics", () => {
@@ -150,6 +151,15 @@ describe("add", () => {
       expect(
         add(variable("x"), variable("x")),
       ).toEqual(double(variable("x")));
+    });
+
+    it("is zero for the additive inverse", () => {
+      expect(
+        add(variable("x"), negate(variable("x"))),
+      ).toEqual(real(0));
+      expect(
+        add(negate(variable("x")), variable("x")),
+      ).toEqual(real(0));
     });
   });
 });

@@ -3,6 +3,7 @@ import {
   Boolean,
   Complex,
   Multiplication,
+  Negation,
   Numeric,
   Real,
   Subtraction,
@@ -62,7 +63,10 @@ export const $add: BinaryFn<Addition> = binary(Addition)(
     deepEquals,
     (l, _r) => [$double(l), Action.Idempotency],
   ),
-  // TODO: additive inverse! (e.g. x - x <-> 0)
+  when( // additive inverse! (e.g. x - x <-> 0)
+    (l, r) => is(Negation)(r) && deepEquals(l, r.child),
+    [$real(0), Action.Annihilator],
+  ),
   when<Multiplication, Multiplication>( // E.g. 2 * x + 3 * x <-> 5 * x
     (l, r) =>
       is(Multiplication)(l) && is(Numeric)(l.left) &&

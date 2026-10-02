@@ -9,6 +9,7 @@ import {
   Complement,
   Conjunction,
   ConverseImplication,
+  Degree,
   Differentiation,
   Disjunction,
   Division,
@@ -112,6 +113,7 @@ const functions = new Map<string, Functional>([
   ["csc", [Trigonometric.Cosecant, [], []]],
   ["cot", [Trigonometric.Tangent, [], []]],
   ["abs", [Absolute, [], []]],
+  [Unicode.bigO, [Degree, [], []]],
   [Unicode.gamma, [Gamma, [], []]],
   [Unicode.squareRoot, [Exponentiation, [], [real(0.5)]]],
 ]);
