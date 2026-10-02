@@ -75,7 +75,7 @@ const itsComplicated: itsComplicatedFn = multi(
   method([is0, _], (_a: number, b: number) => `${b}${Unicode.i}`),
   method([_, is1], (a: number, _b: number) => `${a}+${Unicode.i}`),
   method([_, is0], (a: number, _b: number) => a),
-  method([_, isNeg1], (a: number, b: number) => `${a}-${Unicode.i}`),
+  method([_, isNeg1], (a: number, _b: number) => `${a}-${Unicode.i}`),
   method([_, isNeg], (a: number, b: number) => `${a}${b}${Unicode.i}`),
   method((a: number, b: number) => `${a}+${b}${Unicode.i}`),
 );
@@ -225,6 +225,7 @@ export const highlight: HighlightFn = multi(
         {parenthesize(
           i.args.flatMap((c, j) => [
             highlight(c),
+            // deno-lint-ignore jsx-key
             j < i.args.length - 1 ? <span class={styles.operator}>,</span> : "",
           ]),
         )}

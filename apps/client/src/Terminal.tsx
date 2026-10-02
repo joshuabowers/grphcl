@@ -1,5 +1,5 @@
-import { useAppState } from "./AppProvider";
-import { Highlight } from "./Highlight";
+import { useAppState } from "./AppProvider.tsx";
+import { Highlight } from "./Highlight.tsx";
 import { For } from "solid-js";
 import styles from "./Terminal.module.css";
 
