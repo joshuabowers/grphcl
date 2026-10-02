@@ -1,6 +1,6 @@
+import type { Complex, Real } from "./tree/mod.ts";
 import { real } from "./functions/real.ts";
 import { complex } from "./functions/complex.ts";
-import type { Complex, Real } from "@bowers/mthmtcl/tree";
 
 export { EulerMascheroni } from "./functions/real.ts";
 export { ComplexInfinity } from "./functions/complex.ts";
