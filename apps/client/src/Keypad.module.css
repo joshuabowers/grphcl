@@ -7,7 +7,14 @@
 
 .keypad button {
   grid-area: var(--cell);
-  width: 3em;
+  width: 3.5em;
+  line-height: 1.2;
+  padding: 0.2em 0.1em 0.1em;
+  font-family: 'Fira Code', monospace;
+  display: flex;
+  align-content: baseline;
+  justify-content: center;
+  transition: all 200ms;
 }
 
 .currentMode {
@@ -21,9 +28,27 @@
     grid-template-areas:
       "trig    logic shift   alt    constant alphaMega alphaMinor delete"
       "var     n7    n8      n9     divide   comma     open       close"
-      ".       n4    n5      n6     multiply lb        ln         lg"
+      "sum     n4    n5      n6     multiply log       f13        f14"
       "ans     n1    n2      n3     subtract square    raise      fact"
       "execute n0    decimal assign add      abs       comb       diff";
+  }
+
+  .keypad.trig {
+    grid-template-areas:
+      "trig    logic shift   alt    constant alphaMega alphaMinor delete"
+      "var     abs   comma   log    n7       n4        n1         ."
+      ".       sum   open    f13    n8       n5        n2         ."
+      ".       comb  close   f14    n9       n6        n3         ."
+      "execute fact  square  raise  divide   multiply  subtract   .";
+  }
+
+  .keypad.logic {
+    grid-template-areas:
+      "trig    logic shift   alt    constant alphaMega alphaMinor delete"
+      ".       .     .       .      .        .         .          ."
+      "comma   open  close   square .        .         .          ."
+      "log     f13   f14     raise  .        .         .          ."
+      "execute n0    n1      .      .        .         .          .";
   }
 }
 
@@ -33,9 +58,9 @@
     margin-left: 2em;
     grid-template-areas:
       "trig       var   diff    ans    delete"
-      "logic      abs   .       comb   fact"
+      "logic      abs   sum     comb   fact"
       "shift      comma open    close  square"
-      "alt        lb    ln      lg     raise"
+      "alt        log   f13     f14    raise"
       "constant   n7    n8      n9     divide"
       "alphaMega  n4    n5      n6     multiply"
       "alphaMinor n1    n2      n3     subtract"

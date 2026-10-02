@@ -29,6 +29,7 @@ export enum Unicode {
   euler = "\u{1d6c4}",
   x = "\ud835\udc99",
   y = "\ud835\udc9a",
+  bigO = "\ud835\udcde",
   alphaMega = "\u{1d6a8}",
   alphaMicron = "\u{1d6c2}",
   gamma = "\u{1D6AA}",
@@ -49,4 +50,6 @@ export enum Unicode {
   xor = "\u{2295}",
   xnor = "\u{2194}",
   process = "|",
+  sum = "\u{2211}",
+  product = "\u{220f}",
 }

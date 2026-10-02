@@ -75,6 +75,7 @@ const allKeys: KeyProp[] = [
   key("n7", "main", "7"),
   key("n8", "main", "8"),
   key("n9", "main", "9"),
+  key("square", "main", "**2"),
   key("raise", "main", "**"),
   key("divide", "main", "/"),
   key("multiply", "main", "*"),
@@ -83,33 +84,69 @@ const allKeys: KeyProp[] = [
   key("var", "main", Unicode.x, false, true, "x"),
   key("diff", "main", Unicode.derivative),
   key("ans", "main", "Ans"),
+  key("abs", "main", "abs"),
   key("open", "main", "("),
   key("close", "main", ")"),
   key("fact", "main", "!"),
+  key("comb", "main", "P"),
+  key("log", "main", "ln"),
   key("var", "trig", Unicode.theta),
+  key("abs", "trig", "cos"),
+  key("comma", "trig", "sin"),
+  key("log", "trig", "tan"),
+  key("n7", "trig", "sec"),
+  key("n4", "trig", "csc"),
+  key("n1", "trig", "cot"),
+  key("sum", "trig", "acos"),
+  key("open", "trig", "asin"),
+  key("f13", "trig", "atan"),
+  key("n8", "trig", "asec"),
+  key("n5", "trig", "acsc"),
+  key("n2", "trig", "acot"),
+  key("comb", "trig", "cosh"),
+  key("close", "trig", "sinh"),
+  key("f14", "trig", "tanh"),
+  key("n9", "trig", "sech"),
+  key("n6", "trig", "csch"),
+  key("n3", "trig", "coth"),
+  key("fact", "trig", "acosh"),
+  key("square", "trig", "asinh"),
+  key("raise", "trig", "atanh"),
+  key("divide", "trig", "asech"),
+  key("multiply", "trig", "acsch"),
+  key("subtract", "trig", "acoth"),
   key("n0", "logic", "false"),
   key("n1", "logic", "true"),
   key("", "logic", "=="),
-  key("", "logic", "!="),
   key("", "logic", "<"),
   key("", "logic", ">"),
+  key("", "logic", "!="),
   key("", "logic", "<="),
   key("", "logic", ">="),
-  key("", "logic", Unicode.and),
-  key("", "logic", Unicode.or),
-  key("", "logic", Unicode.xor),
-  key("", "logic", Unicode.implies),
-  key("", "logic", Unicode.nand),
-  key("", "logic", Unicode.nor),
-  key("", "logic", Unicode.xnor),
-  key("", "logic", Unicode.converse),
+  key("comma", "logic", Unicode.and),
+  key("open", "logic", Unicode.or),
+  key("close", "logic", Unicode.xor),
+  key("square", "logic", Unicode.implies),
+  key("log", "logic", Unicode.nand),
+  key("f13", "logic", Unicode.nor),
+  key("f14", "logic", Unicode.xnor),
+  key("raise", "logic", Unicode.converse),
   key("diff", "shift", Unicode.integral),
   key("fact", "shift", Unicode.gamma),
+  key("comb", "shift", "C"),
   key("open", "shift", "{"),
   key("close", "shift", "}"),
+  key("square", "shift", Unicode.squareRoot),
+  key("log", "shift", "lb"),
+  key("raise", "shift", "log"),
+  key("divide", "shift", "**-1"),
+  key("multiply", "shift", "EE", false, true, "E"),
+  key("abs", "alt", "O"), // Change? Big-O for degree?
   key("fact", "alt", Unicode.digamma),
   key("open", "alt", "["),
   key("close", "alt", "]"),
+  key("log", "alt", "lg"),
+  key("comma", ["main", "shift", "alt"], ","),
   key("n1", "constant", Unicode.i),
   key("n2", "constant", Unicode.e),
   key("n3", "constant", Unicode.pi),
@@ -174,8 +211,9 @@ const allKeys: KeyProp[] = [
 ];
 
 export const Keypad = () => {
-  const [mode, setMode] = createSignal<PadMode>("main");
-  const selectMode = (m: PadMode): PadMode => mode() === m ? "main" : m;
+  const [mode, setMode] = createSignal<DistinctMode>("main");
+  const selectMode = (m: DistinctMode): DistinctMode =>
+    mode() === m ? "main" : m;
 
   const keys = createMemo(() => {
     const processed = allKeys
@@ -185,12 +223,12 @@ export const Keypad = () => {
       )
       .map((k) =>
         k.isToggle
-          ? { ...k, command: () => setMode(selectMode(k.cell as PadMode)) }
+          ? { ...k, command: () => setMode(selectMode(k.cell as DistinctMode)) }
           : k
       );
     return processed.concat(
       Array(40 - processed.length).fill(
-        key("", "all", "", false, false, undefined, undefined),
+        key("", "all", "\u{00a0}", false, false, undefined, undefined),
       ),
     );
   });
@@ -199,6 +237,7 @@ export const Keypad = () => {
     <div
       classList={{
         [styles.keypad]: true,
+        [styles[mode()]]: true,
       }}
     >
       <Index each={keys()}>
