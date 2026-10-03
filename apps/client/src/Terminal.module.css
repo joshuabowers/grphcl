@@ -8,15 +8,103 @@
 }
 
 .terminal {
+  align-self: end;
+  overflow-y: scroll;
   font-family: 'Fira Code', monospace;
+  font-size: 1.2em;
   line-height: 1.5;
-  text-align: left;
-  overflow-y: auto;
+  height: 100%;
+  padding: 0.5em;
+  background-color: var(--terminal-background-color);
+  color: var(--terminal-color);
+  display: grid;
+  grid: auto-flow / auto 1fr;
+  gap: 0.5em;
+  align-items: baseline;
+  align-content: start;
+  counter-reset: terminal-entries;
+  box-sizing: border-box;
+}
+
+.markerTrack {
+  align-self: stretch;
+  justify-self: end;
+  box-sizing: border-box;
+}
+
+.marker,
+.currentMarker {
+  color: var(--terminal-color);
+  position: sticky;
+  top: 0;
+  padding: 0.1em 0 0.1em 0.5em;
+  margin: 0.55em 0 1.5em;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.75em;
+}
+
+.markerTrack:has(+ .error) .marker {
+  background-color: var(--entry-error-background-color);
+  color: var(--entry-error-color);
+}
+
+.markerTrack:has(+ .valid) .marker {
+  background-color: var(--entry-valid-background-color);
+  color: var(--entry-valid-color);
+}
+
+.marker::before {
+  counter-increment: terminal-entries;
+  content: counter(terminal-entries);
+}
+
+.reference {
+  grid-column: span 2;
+  height: 0;
+  user-select: none;
+}
+
+.currentMarker {
+  justify-self: end;
+  margin: 0;
+}
+
+.currentMarker::before {
+  content: '\03bb';
+}
+
+.currentMarker,
+.currentLine {
+  background-color: var(--entry-unknown-background-color);
+  color: var(--entry-unknown-color);
+  align-self: center;
+}
+
+.entry {
+  margin-bottom: 0.5em;
+  margin-top: 0.55em;
+}
+
+.entry > .input::before {
+  margin-right: 0.2em;
+  content: '\250c';
+  color: gray;
 }
 
 .entry > .output::before {
+  margin-top: -0.4em;
+  margin-left: 0.2em;
   margin-right: 0.2em;
-  content: '=>';
+  content: '\21b3';
+  color: gray;
+}
+
+.error {
+  background: salmon;
+  color: white;
+  border: 0.1em solid red;
+  margin: 0.5em;
+  padding: 0.5em;
 }
 
 .caret {

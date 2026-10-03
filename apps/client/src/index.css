@@ -4,6 +4,8 @@
   --glass: light-dark(hsla(240, 15%, 65%, 75%), hsla(240, 15%, 40%, 75%));
   --shadow: light-dark(hsla(240, 20%, 20%, 50%), hsla(240, 5%, 10%, 50%));
   --normal-shadow: 0 0.25em 0.5em var(--shadow);
+  --terminal-background-color: light-dark(hsla(0, 0%, 75%, 45%), hsla(0, 0%, 0%, 20%));
+  --terminal-color: light-dark(black, inherit);
 
   @media (max-width: 1024px) {
     font-size: 16px;
@@ -18,10 +20,7 @@ body {
 #root {
   max-width: 100%;
   margin: 0 auto;
-  text-align: center;
   min-height: 100svh;
   max-height: 100svh;
-  display: flex;
-  flex-direction: column;
   box-sizing: border-box;
 }

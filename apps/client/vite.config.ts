@@ -7,7 +7,7 @@ export default defineConfig({
   base: "/grphcl/",
   resolve: {
     alias: {
-      "jsr:@bowers/mthmtcl": "https://esm.jsr.io/@bowers/mthmtcl@0.6.1",
+      "jsr:@bowers/mthmtcl": "https://esm.jsr.io/@bowers/mthmtcl@0.6.2",
     },
   },
 });

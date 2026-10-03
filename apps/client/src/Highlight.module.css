@@ -34,6 +34,14 @@
   font-style: italic;
 }
 
+.error {
+  background: salmon;
+  color: white;
+  border: 0.1em solid red;
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
 .unhandled {
   background: orange;
   color: black;

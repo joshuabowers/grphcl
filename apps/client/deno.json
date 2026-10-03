@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@bowers/mthmtcl": "jsr:@bowers/mthmtcl@^0.6.1"
+    "@bowers/mthmtcl": "jsr:@bowers/mthmtcl@^0.6.2"
   },
   "publish": false,
   "include": ["src/vite-env.d.ts"],

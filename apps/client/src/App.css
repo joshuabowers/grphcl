@@ -28,7 +28,7 @@
 
 @media (orientation: landscape) {
   .calculator {
-    grid: auto 2fr minmax(4em, 2fr) / 1fr auto;
+    grid: auto 1fr minmax(4em, 1fr) / 1fr auto;
     grid-template-areas:
       "header header"
       "graph keypad"

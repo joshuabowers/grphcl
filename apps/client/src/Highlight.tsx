@@ -147,7 +147,7 @@ function binary<T extends BinaryNode>(fnName: string, type: "infix" | "func") {
 }
 
 export interface HighlightFn extends Multi {
-  (expression: TreeNode): JSX.Element;
+  (expression: TreeNode | undefined): JSX.Element;
 }
 
 export const highlight: HighlightFn = multi(
@@ -232,13 +232,19 @@ export const highlight: HighlightFn = multi(
       </span>
     ),
   ),
+  method(
+    (e: unknown) => !e,
+    (_e: unknown) => (
+      <span class={styles.error}>highlight: received undefined node</span>
+    ),
+  ),
   method((e: TreeNode) => (
     <span class={styles.unhandled}>{JSON.stringify(e, null, 2)}</span>
   )),
 );
 
 export interface HighlightProps {
-  expression: TreeNode;
+  expression: TreeNode | undefined;
 }
 
 export const Highlight = (props: HighlightProps) => highlight(props.expression);

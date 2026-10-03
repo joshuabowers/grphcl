@@ -6,6 +6,7 @@ export interface AppState {
   scope: Scope;
   history: Parsing[];
   currentLine: string[];
+  focus?: number;
 }
 
 export interface AppActions {
@@ -22,6 +23,7 @@ export const AppProvider: ParentComponent = (props) => {
     scope: scope(),
     history: [],
     currentLine: [],
+    focus: undefined,
   });
 
   const actions: AppActions = {
@@ -30,7 +32,9 @@ export const AppProvider: ParentComponent = (props) => {
         const parsing = interpret(state.currentLine.join(""), state.scope);
         console.log(parsing);
         setState("currentLine", []);
+        setState("focus", state.history.length);
         setState("history", state.history.length, parsing);
+        console.log("focus:", state.focus);
       } catch (error) {
         console.error(error);
       }
@@ -43,9 +47,13 @@ export const AppProvider: ParentComponent = (props) => {
           console.log("removed:", removed);
         }),
       );
+      setState("focus", undefined);
+      console.log("focus:", state.focus);
     },
     keyPress(value: string) {
       setState("currentLine", state.currentLine.length, value);
+      setState("focus", undefined);
+      console.log("focus:", state.focus);
     },
   };
 
