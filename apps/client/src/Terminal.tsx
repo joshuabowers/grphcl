@@ -1,14 +1,6 @@
 import { useAppState } from "./AppProvider.tsx";
 import { Highlight } from "./Highlight.tsx";
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-  Match,
-  Show,
-  Switch,
-} from "solid-js";
+import { createEffect, createSignal, For, Match, Show, Switch } from "solid-js";
 import styles from "./Terminal.module.css";
 
 export const Terminal = () => {
