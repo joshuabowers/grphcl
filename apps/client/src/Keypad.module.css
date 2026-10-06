@@ -48,7 +48,7 @@
       "trig    logic shift   alt    constant alphaMega alphaMinor delete"
       ".       .     .       .      .        .         .          ."
       "comma   open  close   square .        .         .          ."
-      "log     f13   f14     raise  .        .         .          ."
+      "log     f13   f14     raise  subtract .         .          ."
       "execute n0    n1      .      .        .         .          .";
   }
 }
