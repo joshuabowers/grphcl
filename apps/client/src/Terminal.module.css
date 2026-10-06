@@ -86,17 +86,18 @@
 }
 
 .entry > .input::before {
-  margin-right: 0.2em;
-  content: '\250c';
-  color: gray;
+  content: '\2235';
 }
 
 .entry > .output::before {
-  margin-top: -0.4em;
-  margin-left: 0.2em;
+  content: '\2234';
+}
+
+.entry > .input::before,
+.entry > .output::before {
   margin-right: 0.2em;
-  content: '\21b3';
-  color: gray;
+  color: var(--terminal-chrome);
+  font-weight: bold;
 }
 
 .error {

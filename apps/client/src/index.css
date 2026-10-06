@@ -6,6 +6,7 @@
   --normal-shadow: 0 0.25em 0.5em var(--shadow);
   --terminal-background-color: light-dark(hsla(0, 0%, 75%, 45%), hsla(0, 0%, 0%, 20%));
   --terminal-color: light-dark(black, inherit);
+  --terminal-chrome: light-dark(hsl(0, 0%, 10%), hsl(0, 0%, 60%));
 
   @media (max-width: 1024px) {
     font-size: 16px;
