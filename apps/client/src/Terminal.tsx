@@ -1,6 +1,7 @@
 import { useAppState } from "./AppProvider.tsx";
 import { Highlight } from "./Highlight.tsx";
 import { createEffect, createSignal, For, Match, Show, Switch } from "solid-js";
+import { deepEquals } from "@bowers/mthmtcl";
 import styles from "./Terminal.module.css";
 
 export const Terminal = () => {
@@ -24,11 +25,19 @@ export const Terminal = () => {
               <h2 class={styles.marker} />
             </header>
             <div class={styles.entry}>
-              <div class={styles.input}>
-                <Show when={!!item.input} fallback={<span>{item.source}</span>}>
-                  <Highlight expression={item.input} />
-                </Show>
-              </div>
+              <Show
+                when={item.input && item.output &&
+                  !deepEquals(item.input, item.output)}
+              >
+                <div class={styles.input}>
+                  <Show
+                    when={!!item.input}
+                    fallback={<span>{item.source}</span>}
+                  >
+                    <Highlight expression={item.input} />
+                  </Show>
+                </div>
+              </Show>
               <Switch>
                 <Match when={!!item.output}>
                   <div class={styles.output}>
