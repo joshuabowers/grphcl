@@ -1,4 +1,4 @@
-import { useAppActions, useAppState } from "./AppProvider";
+import { useAppActions, useAppState } from "./AppProvider.tsx";
 import { createEffect } from "solid-js";
 import styles from "./Header.module.css";
 
