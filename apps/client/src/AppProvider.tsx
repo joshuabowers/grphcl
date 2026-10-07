@@ -7,6 +7,7 @@ export interface AppState {
   history: Parsing[];
   currentLine: string[];
   focus?: number;
+  scheme?: "light" | "dark";
 }
 
 export interface AppActions {
@@ -14,6 +15,7 @@ export interface AppActions {
   deleteLast(): void;
   keyPress(value: string): void;
   forget(index: number): void;
+  toggleScheme(): void;
 }
 
 const AppStateContext = createContext<AppState>();
@@ -25,6 +27,7 @@ export const AppProvider: ParentComponent = (props) => {
     history: [],
     currentLine: [],
     focus: undefined,
+    scheme: undefined,
   });
 
   const actions: AppActions = {
@@ -62,6 +65,10 @@ export const AppProvider: ParentComponent = (props) => {
         "history",
         (history) => history.filter((_p, i) => i !== index),
       );
+    },
+    toggleScheme() {
+      setState("scheme", (prev) => !prev || prev === "dark" ? "light" : "dark");
+      console.log("scheme:", state.scheme);
     },
   };
 
