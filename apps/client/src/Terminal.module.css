@@ -20,7 +20,7 @@
   display: grid;
   grid: auto-flow / auto 1fr;
   gap: 0.5em;
-  align-items: baseline;
+  align-items: center;
   align-content: start;
   counter-reset: terminal-entries;
   box-sizing: border-box;
@@ -81,8 +81,51 @@
 }
 
 .entry {
-  margin-bottom: 0.5em;
-  margin-top: 0.55em;
+  display: grid;
+  grid: auto-flow / 1fr auto;
+  align-items: baseline;
+  box-sizing: border-box;
+  place-self: stretch;
+  background-color: var(--entry-unknown-background-color);
+  color: var(--entry-unknown-color);
+  margin-bottom: 1em;
+  padding: 0.5em;
+  border-top-left-radius: 0.75em;
+  border-bottom-left-radius: 1.25em;
+}
+
+:is(.entry).error {
+  background-color: var(--entry-error-background-color);
+  color: var(--entry-error-color);
+}
+
+:is(.entry).valid {
+  background-color: var(--entry-valid-background-color);
+  color: var(--entry-valid-color);
+}
+
+:not(.entry).error {
+  font-size: 0.8em;
+  white-space: pre-wrap;
+  background-color: hsla(0, 0%, 0%, 15%);
+  padding: 0.5em;
+  border-bottom-left-radius: 0.75em;
+}
+
+.entryControls {
+  justify-self: end;
+  align-self: start;
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.entryControls:has(~ .derivation > :global(.visible), ~ .error) {
+  position: sticky;
+  top: 0.25em;
+}
+
+.entry > :not(.entryControls) {
+  grid-column: 1;
 }
 
 .entry > .input::before {
@@ -111,4 +154,48 @@
 .caret {
   font-variant-ligatures: no-common-ligatures;
   animation: 1s linear infinite alternate-reverse flash;
+}
+
+.entryControls {
+  margin-right: 0.5em;
+  z-index: 1;
+}
+
+.entryControls > button {
+  cursor: pointer;
+  background: var(--terminal-chrome);
+  color: black;
+  border: 0;
+  padding: 0.1em;
+  transition: all 0.2s ease-in-out;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.entryControls > .plotColor {
+  cursor: default;
+  color: var(--plotColor);
+}
+
+.entryControls > button:first-child {
+  border-top-left-radius: 0.3em;
+  border-bottom-left-radius: 0.3em;
+}
+
+.entryControls > button:last-child {
+  border-top-right-radius: 0.3em;
+  border-bottom-right-radius: 0.3em;
+}
+
+.entryControls > button:hover {
+  background: var(--terminal-button-hover);
+}
+
+.entryControls > button:active {
+  background: var(--terminal-button-active);
+}
+
+.entryControls > button:disabled:hover {
+  background: var(--terminal-chrome);
 }

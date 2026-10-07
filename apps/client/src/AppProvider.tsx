@@ -13,6 +13,7 @@ export interface AppActions {
   execute(): void;
   deleteLast(): void;
   keyPress(value: string): void;
+  forget(index: number): void;
 }
 
 const AppStateContext = createContext<AppState>();
@@ -54,6 +55,13 @@ export const AppProvider: ParentComponent = (props) => {
       setState("currentLine", state.currentLine.length, value);
       setState("focus", undefined);
       console.log("focus:", state.focus);
+    },
+    forget(index: number) {
+      console.log("forget:", index);
+      setState(
+        "history",
+        (history) => history.filter((_p, i) => i !== index),
+      );
     },
   };
 

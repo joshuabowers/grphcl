@@ -1,4 +1,4 @@
-import { useAppState } from "./AppProvider.tsx";
+import { useAppActions, useAppState } from "./AppProvider.tsx";
 import { Highlight } from "./Highlight.tsx";
 import { createEffect, createSignal, For, Match, Show, Switch } from "solid-js";
 import { deepEquals } from "@bowers/mthmtcl";
@@ -6,6 +6,7 @@ import styles from "./Terminal.module.css";
 
 export const Terminal = () => {
   const state = useAppState();
+  const actions = useAppActions();
   const [currentRef, setCurrentRef] = createSignal<HTMLSpanElement>();
   const handleRef = (node: HTMLSpanElement) => setCurrentRef(node);
 
@@ -25,6 +26,14 @@ export const Terminal = () => {
               <h2 class={styles.marker} />
             </header>
             <div class={styles.entry}>
+              <div class={styles.entryControls}>
+                <button type="button" disabled>
+                  &#9677;
+                </button>
+                <button type="button" onclick={() => actions.forget(index())}>
+                  {"\u{2716}"}
+                </button>
+              </div>
               <Show
                 when={item.input && item.output &&
                   !deepEquals(item.input, item.output)}
