@@ -387,10 +387,10 @@ export function balance<B extends BinaryNode>(
     ...args: TreeNode[]
   ): B => {
     const subdivide = (start: number, end: number): B => {
-      const mid = Math.round((end - start) / 2);
+      const mid = Math.round((end + start) / 2);
       return new ctor(
         (mid - start) > 1 ? subdivide(start, mid) : args[start],
-        (end - (mid + 1)) > 1 ? subdivide(mid + 1, end) : args[mid],
+        (end - mid) > 1 ? subdivide(mid, end) : args[mid],
       );
     };
     return subdivide(0, args.length);

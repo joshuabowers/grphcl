@@ -94,6 +94,35 @@ describe("interpret", () => {
     expect(parsing.output).toEqual(real(100));
   });
 
+  it("does not yeet the right-most subtree of a fractal op (4-leaves)", () => {
+    const { output } = interpret("a * y * b * x");
+    expect(output).toEqual(
+      new Multiplication(
+        new Multiplication(variable("a"), variable("b")),
+        new Multiplication(variable("x"), variable("y")),
+      ),
+    );
+  });
+
+  it("does not yeet the right-most subtree of a fractal op (5-leaves)", () => {
+    const { output } = interpret("z * a * y * b * x");
+    expect(output).toEqual(
+      new Multiplication(
+        new Multiplication(
+          new Multiplication(
+            variable("a"),
+            variable("b"),
+          ),
+          variable("x"),
+        ),
+        new Multiplication(
+          variable("y"),
+          variable("z"),
+        ),
+      ),
+    );
+  });
+
   it("does not throw on error, but sets error", () => {
     expect(interpret("x *&")).not.toThrow();
     expect(interpret("x *&").error).toBeDefined();
