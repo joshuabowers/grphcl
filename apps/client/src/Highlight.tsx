@@ -30,6 +30,7 @@ import {
   LessThan,
   LessThanOrEquals,
   Logarithm,
+  Logical,
   Multiplication,
   Negation,
   Numeric,
@@ -37,7 +38,7 @@ import {
   Polygamma,
   Real,
   Subtraction,
-  type TreeNode,
+  TreeNode,
   Trigonometric,
   UnaryNode,
   Unicode,
@@ -98,6 +99,31 @@ function parenthesize(children: JSX.Element) {
   return <span class={styles.parentheses}>({children})</span>;
 }
 
+function wrapAndHighlight(_parent: BinaryNode, child: TreeNode) {
+  return parenthesize(highlight(child));
+}
+
+interface WrapFn extends Multi {
+  (parent: BinaryNode | UnaryNode, child: TreeNode): JSX.Element;
+}
+
+const wrap: WrapFn = multi(
+  method([is(Multiplication), is(Addition)], wrapAndHighlight),
+  method([is(Multiplication), is(Subtraction)], wrapAndHighlight),
+  method([is(Division), is(Addition)], wrapAndHighlight),
+  method([is(Division), is(Subtraction)], wrapAndHighlight),
+  method([is(Division), is(Multiplication)], wrapAndHighlight),
+  method([is(Division), is(Division)], wrapAndHighlight),
+  method([
+    is(Exponentiation),
+    (c: TreeNode) => ![Real, Variable].some((ctor) => c instanceof ctor),
+  ], wrapAndHighlight),
+  method([is(Negation), is(Addition)], wrapAndHighlight),
+  method([is(Negation), is(Subtraction)], wrapAndHighlight),
+  method([is(Complement), is(Logical)], wrapAndHighlight),
+  method((_p: BinaryNode, c: TreeNode) => highlight(c)),
+);
+
 function functional(fnName: string, child: TreeNode) {
   return (
     <span class={styles.functional}>
@@ -121,7 +147,7 @@ function unaryOp<T extends UnaryNode>(
     <span class={styles.operator}>
       {[
         type === "prefix" && fnName,
-        highlight(expression.child),
+        wrap(expression, expression.child),
         type === "postfix" && fnName,
       ].filter((i) => !!i)}
     </span>
@@ -141,9 +167,9 @@ function binary<T extends BinaryNode>(fnName: string, type: "infix" | "func") {
   return type === "infix"
     ? (expression: T) => (
       <>
-        {highlight(expression.left)}
+        {wrap(expression, expression.left)}
         <span class={styles.operator}>{fnName}</span>
-        {highlight(expression.right)}
+        {wrap(expression, expression.right)}
       </>
     )
     : (expression: T) => (
