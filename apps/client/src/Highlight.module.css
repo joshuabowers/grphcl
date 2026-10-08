@@ -1,37 +1,44 @@
 .parentheses {
-  color: whitesmoke;
+  font-weight: normal;
   font-style: normal;
 }
 
-.parentheses .parentheses {
-  color: gray;
+.parentheses.level-0 {
+  color: light-dark(hsl(165, 100%, 15%), hsl(165, 100%, 75%));
 }
 
-.parentheses .parentheses .parentheses {
-  color: hsl(0, 0%, 30%);
+.parentheses.level-1 {
+  color: light-dark(hsl(260, 100%, 15%), hsl(260, 100%, 75%));
+}
+
+.parentheses.level-2 {
+  color: light-dark(hsl(50, 100%, 15%), hsl(50, 100%, 75%));
 }
 
 .operator {
-  color: white;
+  color: light-dark(black, white);
   font-weight: bold;
   font-style: normal;
 }
 
 .variable {
-  color: gold;
+  color: light-dark(hsl(50, 75%, 45%), hsl(50, 100%, 75%));
   font-weight: bold;
   font-style: normal;
 }
 
 .numeric {
-  color: salmon;
-  font-weight: normal;
+  color: light-dark(hsl(140, 100%, 20%), hsl(140, 100%, 75%));
   font-style: normal;
 }
 
 .functional {
-  color: aliceblue;
+  color: light-dark(black, white);
   font-style: italic;
+}
+
+.functional .parentheses {
+  margin-left: 0.15em;
 }
 
 .error {
@@ -48,4 +55,20 @@
   border: 0.1em dashed darkmagenta;
   margin: 0.5em;
   padding: 0.2em;
+}
+
+@media (prefers-color-scheme: light) {
+  .functional,
+  .numeric,
+  .parentheses {
+    font-weight: bold;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .functional,
+  .numeric,
+  .parentheses {
+    font-weight: normal;
+  }
 }

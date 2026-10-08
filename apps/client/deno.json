@@ -3,6 +3,11 @@
     "@bowers/mthmtcl": "jsr:@bowers/mthmtcl@^0.6.2"
   },
   "publish": false,
+  "lint": {
+    "rules": {
+      "exclude": ["jsx-key"]
+    }
+  },
   "include": ["src/vite-env.d.ts"],
   "compilerOptions": {
     "module": "esnext",

@@ -10,6 +10,7 @@
 .terminal {
   align-self: end;
   overflow-y: scroll;
+  overflow-x: hidden;
   font-family: 'Fira Code', monospace;
   font-size: 1.2em;
   line-height: 1.5;
@@ -159,12 +160,13 @@
 .entryControls {
   margin-right: 0.5em;
   z-index: 1;
+  white-space: nowrap;
 }
 
 .entryControls > button {
   cursor: pointer;
   background: var(--terminal-chrome);
-  color: black;
+  color: light-dark(white, black);
   border: 0;
   padding: 0.1em;
   transition: all 0.2s ease-in-out;

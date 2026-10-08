@@ -83,24 +83,46 @@ const is0 = (v: number) => v === 0;
 const is1 = (v: number) => v === 1;
 const isNeg = (v: number) => v < 0;
 const isNeg1 = (v: number) => v === -1;
+const isInfinite = (v: number) => !Number.isFinite(v);
 
 const itsComplicated: itsComplicatedFn = multi(
+  method(
+    [isInfinite, Number.isNaN],
+    (_a: number, _b: number) => Unicode.complexInfinity,
+  ),
   method([is0, isNeg1], (_a: number, _b: number) => `-${Unicode.i}`),
   method([is0, is1], (_a: number, _b: number) => Unicode.i),
-  method([is0, _], (_a: number, b: number) => `${b}${Unicode.i}`),
-  method([_, is1], (a: number, _b: number) => `${a}+${Unicode.i}`),
-  method([_, is0], (a: number, _b: number) => a),
-  method([_, isNeg1], (a: number, _b: number) => `${a}-${Unicode.i}`),
-  method([_, isNeg], (a: number, b: number) => `${a}${b}${Unicode.i}`),
-  method((a: number, b: number) => `${a}+${b}${Unicode.i}`),
+  method([is0, _], (_a: number, b: number) => `${symbolic(b)}${Unicode.i}`),
+  method([_, is1], (a: number, _b: number) => `${symbolic(a)}+${Unicode.i}`),
+  method([_, is0], (a: number, _b: number) => symbolic(a)),
+  method([_, isNeg1], (a: number, _b: number) => `${symbolic(a)}-${Unicode.i}`),
+  method(
+    [_, isNeg],
+    (a: number, b: number) => `${symbolic(a)}${symbolic(b)}${Unicode.i}`,
+  ),
+  method((a: number, b: number) => `${symbolic(a)}+${symbolic(b)}${Unicode.i}`),
 );
 
+let nestedLevel = 0;
+
 function parenthesize(children: JSX.Element) {
-  return <span class={styles.parentheses}>({children})</span>;
+  return (
+    <span
+      classList={{
+        [styles.parentheses]: true,
+        [styles[`level-${nestedLevel % 3}`]]: true,
+      }}
+    >
+      ({children})
+    </span>
+  );
 }
 
-function wrapAndHighlight(_parent: BinaryNode, child: TreeNode) {
-  return parenthesize(highlight(child));
+function wrapAndHighlight(_parent: unknown, child: TreeNode) {
+  nestedLevel++;
+  const children = highlight(child);
+  nestedLevel--;
+  return parenthesize(children);
 }
 
 interface WrapFn extends Multi {
@@ -121,6 +143,10 @@ const wrap: WrapFn = multi(
   method([is(Negation), is(Addition)], wrapAndHighlight),
   method([is(Negation), is(Subtraction)], wrapAndHighlight),
   method([is(Complement), is(Logical)], wrapAndHighlight),
+  method([is(Factorial), is(Addition)], wrapAndHighlight),
+  method([is(Factorial), is(Subtraction)], wrapAndHighlight),
+  method([is(Factorial), is(Multiplication)], wrapAndHighlight),
+  method([is(Factorial), is(Division)], wrapAndHighlight),
   method((_p: BinaryNode, c: TreeNode) => highlight(c)),
 );
 
@@ -128,7 +154,7 @@ function functional(fnName: string, child: TreeNode) {
   return (
     <span class={styles.functional}>
       {fnName}
-      {parenthesize(highlight(child))}
+      {wrapAndHighlight(undefined, child)}
     </span>
   );
 }
@@ -143,14 +169,15 @@ function unaryOp<T extends UnaryNode>(
   fnName: string,
   type: "prefix" | "postfix",
 ) {
+  const op = () => <span class={styles.operator}>{fnName}</span>;
   return (expression: T) => (
-    <span class={styles.operator}>
+    <>
       {[
-        type === "prefix" && fnName,
+        type === "prefix" && op(),
         wrap(expression, expression.child),
-        type === "postfix" && fnName,
+        type === "postfix" && op(),
       ].filter((i) => !!i)}
-    </span>
+    </>
   );
 }
 
@@ -172,18 +199,24 @@ function binary<T extends BinaryNode>(fnName: string, type: "infix" | "func") {
         {wrap(expression, expression.right)}
       </>
     )
-    : (expression: T) => (
-      <span class={styles.functional}>
-        {fnName}
-        {parenthesize(
-          <>
-            {highlight(expression.left)}
-            <span class={styles.operator}>,</span>
-            {highlight(expression.right)}
-          </>,
-        )}
-      </span>
-    );
+    : (expression: T) => {
+      nestedLevel++;
+      const left = highlight(expression.left),
+        right = highlight(expression.right);
+      nestedLevel--;
+      return (
+        <span class={styles.functional}>
+          {fnName}
+          {parenthesize(
+            <>
+              {left}
+              <span class={styles.operator}>,</span>
+              {right}
+            </>,
+          )}
+        </span>
+      );
+    };
 }
 
 export interface HighlightFn extends Multi {
@@ -279,7 +312,6 @@ export const highlight: HighlightFn = multi(
         {parenthesize(
           i.args.flatMap((c, j) => [
             highlight(c),
-            // deno-lint-ignore jsx-key
             j < i.args.length - 1 ? <span class={styles.operator}>,</span> : "",
           ]),
         )}
