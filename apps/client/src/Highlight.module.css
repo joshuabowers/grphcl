@@ -63,6 +63,10 @@
   .parentheses {
     font-weight: bold;
   }
+
+  .variable {
+    text-shadow: 0 0 0.1em black;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

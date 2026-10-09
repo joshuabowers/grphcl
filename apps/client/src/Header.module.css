@@ -13,6 +13,24 @@
   margin: 0.25em 0;
 }
 
+.siteHeader > nav > button {
+  background-color: var(--terminal-button);
+  color: var(--terminal-button-color);
+  box-shadow: 0 0.1em 0.1em var(--shadow);
+  border: 0;
+  border-radius: 0.2em;
+  line-height: 1.5;
+}
+
+.siteHeader > nav > button:hover {
+  filter: brightness(1.5);
+}
+
+.siteHeader > nav > button:active {
+  background-color: darkkhaki;
+  color: black;
+}
+
 .light .siteHeader .schemeToggle::before {
   content: '\2600';
 }
@@ -22,21 +40,29 @@
 }
 
 @media (prefers-color-scheme: light) {
+  .siteHeader > nav > button {
+    font-weight: bold;
+  }
+
   .siteHeader .schemeToggle::before {
     content: '\2600';
   }
 }
 
 @media (prefers-color-scheme: dark) {
+  .siteHeader > nav > button {
+    font-weight: normal;
+  }
+
   .siteHeader .schemeToggle::before {
     content: '\263D';
   }
 }
 
 .light {
-  color-scheme: light only;
+  color-scheme: light;
 }
 
 .dark {
-  color-scheme: dark only;
+  color-scheme: dark;
 }

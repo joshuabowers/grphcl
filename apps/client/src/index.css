@@ -7,6 +7,8 @@
   --terminal-background-color: light-dark(hsla(0, 0%, 75%, 45%), hsla(0, 0%, 0%, 20%));
   --terminal-color: light-dark(black, inherit);
   --terminal-chrome: light-dark(hsl(0, 0%, 10%), hsl(0, 0%, 60%));
+  --terminal-button: light-dark(hsl(240, 15%, 75%), hsl(240, 15%, 60%));
+  --terminal-button-color: light-dark(black, white);
   --terminal-button-hover: light-dark(hsl(0, 0%, 30%), hsl(0, 0%, 80%));
   --terminal-button-active: light-dark(hsl(135, 50%, 40%), hsl(135, 50%, 60%));
   --plot-color: var(--terminal-chrome);

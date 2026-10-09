@@ -20,8 +20,10 @@
   border-radius: 25% 25% 50% 50%;
   cursor: pointer;
   background: var(--glass);
+  color: light-dark(black, white);
   box-shadow: var(--normal-shadow);
   touch-action: manipulation;
+  user-select: none;
   transition: all 200ms;
 }
 
@@ -51,6 +53,18 @@
   filter: brightness(0.7);
   box-shadow: unset;
   cursor: default;
+}
+
+@media (prefers-color-scheme: light) {
+  .keypad button {
+    font-weight: bold;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .keypad button {
+    font-weight: normal;
+  }
 }
 
 @media (orientation: portrait) {
