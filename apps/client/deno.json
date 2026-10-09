@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@bowers/mthmtcl": "jsr:@bowers/mthmtcl@^0.6.2"
+    "@bowers/mthmtcl": "jsr:@bowers/mthmtcl@^0.6.3"
   },
   "publish": false,
   "lint": {

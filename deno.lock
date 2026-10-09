@@ -1,7 +1,7 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@bowers/mthmtcl@~0.6.2": "0.6.2",
+    "jsr:@bowers/mthmtcl@~0.6.3": "0.6.3",
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/expect@^1.0.20": "1.0.20",
     "jsr:@std/internal@^1.0.12": "1.0.14",
@@ -9,7 +9,7 @@
     "jsr:@std/path@^1.1.6": "1.1.6",
     "npm:@arrows/multimethod@^2.1.0": "2.1.0",
     "npm:@deno/vite-plugin@^2.0.3": "2.0.3_vite@8.2.1_@types+node@26.6.2",
-    "npm:@jsr/bowers__mthmtcl@~0.6.2": "0.6.2",
+    "npm:@jsr/bowers__mthmtcl@~0.6.3": "0.6.3",
     "npm:@types/node@^26.6.2": "26.6.2",
     "npm:pegase@~0.6.3": "0.6.3",
     "npm:solid-js@^1.9.15": "1.9.15",
@@ -18,8 +18,8 @@
     "npm:vite@^8.2.0": "8.2.1_@types+node@26.6.2"
   },
   "jsr": {
-    "@bowers/mthmtcl@0.6.2": {
-      "integrity": "a185c8f77b9bce8aa711d14360027206e6a4a2eade83f5768257651fa303cd19",
+    "@bowers/mthmtcl@0.6.3": {
+      "integrity": "9c890617643cb4bac6c4a735a68090d6056e4d8a3dc6d42eba44ba04df24000a",
       "dependencies": [
         "npm:@arrows/multimethod",
         "npm:pegase"
@@ -242,13 +242,13 @@
         "@jridgewell/sourcemap-codec"
       ]
     },
-    "@jsr/bowers__mthmtcl@0.6.2": {
-      "integrity": "sha512-D3hIPZDIbHdxpXNOX5WRau8oKrLpUb7herwPvBYbCjKThgDF9y0lUnfWSIfvCi6w4D+zza1aijtG51OQkxxtTQ==",
+    "@jsr/bowers__mthmtcl@0.6.3": {
+      "integrity": "sha512-xfqvsvO1o/W9x0rE5N7CbhM8x3f8W5CkBr/Z9UYSCT3QeyUc7+5Dxyh4UErMLExDYhZxyl679ebK+Z9xF4rj8g==",
       "dependencies": [
         "@arrows/multimethod",
         "pegase"
       ],
-      "tarball": "https://npm.jsr.io/~/11/@jsr/bowers__mthmtcl/0.6.2.tgz"
+      "tarball": "https://npm.jsr.io/~/11/@jsr/bowers__mthmtcl/0.6.3.tgz"
     },
     "@jsr/deno__loader@0.5.0": {
       "integrity": "sha512-sf/YBwnyAsbyeYYB71Zdj2Ca2Q9tt25EZpAiZdDA9W7Mm3GcpjA2WMeqj19xPIurZK12G3OAsa5yrtPB7E+gvA==",
@@ -869,12 +869,12 @@
     "members": {
       "apps/client": {
         "dependencies": [
-          "jsr:@bowers/mthmtcl@~0.6.2"
+          "jsr:@bowers/mthmtcl@~0.6.3"
         ],
         "packageJson": {
           "dependencies": [
             "npm:@deno/vite-plugin@^2.0.3",
-            "npm:@jsr/bowers__mthmtcl@~0.6.2",
+            "npm:@jsr/bowers__mthmtcl@~0.6.3",
             "npm:@types/node@^26.6.2",
             "npm:solid-js@^1.9.15",
             "npm:typescript@~7.0.2",
