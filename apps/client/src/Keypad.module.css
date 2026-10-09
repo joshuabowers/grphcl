@@ -6,6 +6,7 @@
 }
 
 .keypad button {
+  z-index: 0;
   grid-area: var(--cell);
   font-size: clamp(1rem, 3.25vmin, 1.5rem);
   width: 3.5em;
@@ -15,11 +16,41 @@
   display: flex;
   align-content: baseline;
   justify-content: center;
+  border: 0;
+  border-radius: 25% 25% 50% 50%;
+  cursor: pointer;
+  background: var(--glass);
+  box-shadow: var(--normal-shadow);
+  touch-action: manipulation;
   transition: all 200ms;
 }
 
-.currentMode {
+.keypad button.currentMode {
+  z-index: 1;
   background-color: forestgreen;
+  box-shadow: var(--normal-shadow), 0 0 1em forestgreen;
+}
+
+.keypad button.command {
+  background-color: darkcyan;
+}
+
+.keypad button:hover {
+  filter: brightness(1.5);
+}
+
+.keypad button:not(:disabled):active {
+  z-index: 1;
+  background-color: darkkhaki;
+  color: black;
+  box-shadow: 0 0 1em darkkhaki;
+}
+
+.keypad button:disabled {
+  z-index: 0;
+  filter: brightness(0.7);
+  box-shadow: unset;
+  cursor: default;
 }
 
 @media (orientation: portrait) {

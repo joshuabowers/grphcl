@@ -218,6 +218,7 @@ export const Keypad = () => {
   const [mode, setMode] = createSignal<DistinctMode>("main");
   const selectMode = (m: DistinctMode): DistinctMode =>
     mode() === m ? "main" : m;
+  const commandKeys = ["execute", "delete"];
 
   const keys = createMemo(() => {
     const execute = allKeys.find((k) => k.cell === "execute");
@@ -255,6 +256,7 @@ export const Keypad = () => {
             disabled={!item().isEnabled}
             classList={{
               [styles.currentMode]: mode() === item().cell,
+              [styles.command]: commandKeys.some((k) => k === item().cell),
             }}
             style={{ "--cell": item().cell }}
             onclick={item().command ??
