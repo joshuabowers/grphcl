@@ -8,5 +8,5 @@ import { BinaryNode } from "../binaryNode.ts";
  * operation subclasses are more firmly identifiable and
  * interrelated.
  */
-export class Logical extends BinaryNode {
+export abstract class Logical extends BinaryNode {
 }

@@ -53,6 +53,16 @@ describe("equals", () => {
       equals(variable("x"), variable("y")),
     ).toEqual(new Equality(new Variable("x"), new Variable("y")));
   });
+
+  it("discovers its variables and labels them", () => {
+    const equality = equals(
+      variable("y"),
+      variable("x"),
+    ) as unknown as Equality;
+    expect(equality.variables).toEqual(new Set(["x", "y"]));
+    expect(equality.dependent).toEqual("y");
+    expect(equality.independent).toEqual(["x"]);
+  });
 });
 
 describe("gt", () => {

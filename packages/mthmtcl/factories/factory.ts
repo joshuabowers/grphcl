@@ -9,6 +9,13 @@ import type { method, Multi } from "@arrows/multimethod";
 export type Constructor<T> = new (...args: any[]) => T;
 
 /**
+ * Represents any constructor function for a class-based
+ * object, including for abstract classes.
+ */
+// deno-lint-ignore no-explicit-any -- unknown[] doesn't work.
+export type AbstractConstructor<T> = abstract new (...args: any[]) => T;
+
+/**
  * Returns A if not void, otherwise B.
  */
 export type Choose<A, B> = A extends void ? B : A;
@@ -101,7 +108,7 @@ export type Rewrite<Output> = [Output, Action];
  * @returns a predicate type guard which can get very specific
  */
 export const is = <T>(
-  ctor: Constructor<T>,
+  ctor: AbstractConstructor<T>,
   inner?: (value: T) => boolean,
 ): Predicate<T> =>
 (value: unknown): value is T =>

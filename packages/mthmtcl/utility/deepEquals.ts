@@ -8,7 +8,7 @@ import {
   UnaryNode,
   Variable,
 } from "../tree/mod.ts";
-import type { Constructor } from "../factories/factory.ts";
+import type { AbstractConstructor } from "../factories/factory.ts";
 import { method, type Multi, multi } from "@arrows/multimethod";
 
 type EvaluationFn<T extends TreeNode> =
@@ -16,7 +16,7 @@ type EvaluationFn<T extends TreeNode> =
   | boolean;
 
 const when = <T extends TreeNode>(
-  ctor: Constructor<T>,
+  ctor: AbstractConstructor<T>,
   evaluate: EvaluationFn<T>,
 ) =>
   method(

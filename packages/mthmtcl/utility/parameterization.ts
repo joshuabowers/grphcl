@@ -1,4 +1,7 @@
-import { BinaryNode, type TreeNode, UnaryNode, Variable } from "../tree/mod.ts";
+import { BinaryNode } from "../tree/binary/binaryNode.ts";
+import { UnaryNode } from "../tree/unary/unaryNode.ts";
+import { Variable } from "../tree/variable.ts";
+import type { TreeNode } from "../tree/treeNode.ts";
 import { is } from "../factories/factory.ts";
 
 function* findVariables(
