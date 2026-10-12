@@ -1,11 +1,12 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
-import { Negation, Variable } from "../tree/mod.ts";
+import { Multiplication, Negation, Variable } from "../tree/mod.ts";
 import { boolean } from "./boolean.ts";
 import { $complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { negate } from "./negate.ts";
+import { multiply } from "./multiply.ts";
 
 describe("negate", () => {
   it("does not alter a boolean input", () => {
@@ -23,6 +24,16 @@ describe("negate", () => {
 
   it("returns the grandchild of a double negation", () => {
     expect(negate(negate(variable("x")))).toEqual(variable("x"));
+  });
+
+  it("coalesces with the coefficient of a multiplication", () => {
+    expect(
+      negate(
+        multiply(real(5), variable("x")),
+      ),
+    ).toEqual(
+      new Multiplication(real(-5), variable("x")),
+    );
   });
 
   it("returns a Negation for unbound input", () => {

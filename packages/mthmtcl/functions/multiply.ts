@@ -5,6 +5,7 @@ import {
   Division,
   Exponentiation,
   Multiplication,
+  Negation,
   Numeric,
   Real,
   TreeNode,
@@ -33,6 +34,7 @@ import { $raise, $reciprocal, $square } from "./raise.ts";
 import { isNegativeOne, isOne, isZero } from "../utility/integers.ts";
 import { monolex } from "../utility/monolex.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
+import { $negate } from "./negate.ts";
 
 /**
  * Internal implementation of {@link multiply}, which does not
@@ -149,6 +151,20 @@ export const $multiply: BinaryFn<Multiplication> = binary(Multiplication)(
         $reciprocal(r.right),
       ),
       Action.Absorption,
+    ],
+  ),
+  when(
+    [is(Negation), is(Negation)],
+    (l, r) => [
+      $multiply(l.child, r.child),
+      Action.Identity,
+    ],
+  ),
+  when(
+    [_, is(Negation)],
+    (l, r) => [
+      $negate($multiply(l, r.child)),
+      Action.Complementation,
     ],
   ),
   rearrange(Multiplication, () => $multiply, monolex),

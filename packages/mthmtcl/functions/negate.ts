@@ -1,7 +1,8 @@
-import { Boolean, Negation, Numeric } from "../tree/mod.ts";
+import { Boolean, Multiplication, Negation, Numeric } from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { canonicalizeFrom, flip } from "../utility/canonicalization.ts";
+import { $multiply } from "./multiply.ts";
 
 /**
  * Internal implementation of {@link negate}, which does not
@@ -11,6 +12,13 @@ export const $negate: UnaryFn<Negation> = unary(Negation)(
   when(is(Boolean), (b) => [b, Action.Application]),
   when(is(Numeric), (n) => [flip(n), Action.Application]),
   when(is(Negation), (e) => [e.child, Action.Identity]),
+  when(
+    is(Multiplication, (m) => is(Numeric)(m.left)),
+    (m) => [
+      $multiply($negate(m.left), m.right),
+      Action.Absorption,
+    ],
+  ),
 );
 
 /**

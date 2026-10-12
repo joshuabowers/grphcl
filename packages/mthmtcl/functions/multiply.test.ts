@@ -5,7 +5,7 @@ import { boolean } from "./boolean.ts";
 import { complex, ComplexInfinity } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { $negate } from "./negate.ts";
+import { $negate, negate } from "./negate.ts";
 import { raise, reciprocal, square } from "./raise.ts";
 import { cos } from "./trigonometric.ts";
 import { $add } from "./add.ts";
@@ -239,6 +239,41 @@ describe("multiply", () => {
           $divide(variable("y"), variable("x")),
         ),
       ).toEqual(real(1));
+    });
+  });
+
+  describe("with negations", () => {
+    it("bubbles a child negation upward", () => {
+      expect(
+        multiply(
+          variable("x"),
+          negate(variable("y")),
+        ),
+      ).toEqual(
+        negate(
+          multiply(variable("x"), variable("y")),
+        ),
+      );
+    });
+
+    it("cancels the multiplication of two negations", () => {
+      expect(
+        multiply(
+          negate(variable("x")),
+          negate(variable("y")),
+        ),
+      ).toEqual(
+        multiply(variable("x"), variable("y")),
+      );
+    });
+
+    it("bubbles and coalesces negations and coefficients", () => {
+      expect(
+        multiply(
+          negate(variable("x")),
+          real(5),
+        ),
+      ).toEqual(multiply(real(-5), variable("x")));
     });
   });
 
