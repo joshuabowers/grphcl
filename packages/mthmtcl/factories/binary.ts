@@ -51,13 +51,14 @@ export type Guard<T> = Predicate<T> | typeof _;
  * this type cannot be used to influence or bias type
  * inference.
  */
-export type Guards<Left, Right> =
+export type Guards<Left extends TreeNode, Right extends TreeNode> =
   | [Guard<Left>, Guard<Right>]
-  | ((
-    guardLeft: Predicate<Left>,
-    guardRight: Predicate<Right>,
-    inner?: (left: Left, right: Right) => boolean,
-  ) => boolean);
+  // | ((
+  //   guardLeft: Predicate<Left>,
+  //   guardRight: Predicate<Right>,
+  //   inner?: (left: Left, right: Right) => boolean,
+  // ) => boolean)
+  | ((left: Left, right: Right) => boolean);
 
 /**
  * Describes a function which takes two inputs and maps them

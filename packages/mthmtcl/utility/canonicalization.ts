@@ -23,7 +23,7 @@ import {
 } from "../factories/factory.ts";
 import { compose } from "./composition.ts";
 import { isBelowThreshold } from "./isBelowThreshold.ts";
-import { type ConstantPredicate, isNegativeOne } from "./integers.ts";
+import { isNegativeOne } from "./integers.ts";
 
 export interface ExpressionFn extends Multi {
   (expression: TreeNode): TreeNode;
@@ -56,7 +56,13 @@ const round = (value: number, precision: number) => {
   return Math.round(value * factor) / factor;
 };
 
-export const flip: ConstantPredicate = multi(
+export interface FlipFn extends Multi {
+  (expression: Real): Real;
+  (expression: Complex): Complex;
+  (expression: TreeNode): TreeNode;
+}
+
+export const flip: FlipFn = multi(
   method(is(Real), (e: Real) => new Real(-e.raw)),
   method(
     is(Complex),

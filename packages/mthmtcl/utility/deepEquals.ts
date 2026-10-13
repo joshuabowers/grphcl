@@ -4,7 +4,7 @@ import {
   Complex,
   type Numeric,
   Real,
-  type TreeNode,
+  TreeNode,
   UnaryNode,
   Variable,
 } from "../tree/mod.ts";
@@ -85,6 +85,7 @@ export const deepEquals: DeepEqualsFn = multi(
  */
 export const isValue =
   <T extends TreeNode>(expected: T) => (actual: unknown): actual is T => (
+    actual instanceof TreeNode &&
     actual instanceof expected.constructor &&
     deepEquals(expected, actual)
   );
