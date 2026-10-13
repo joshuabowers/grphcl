@@ -5,6 +5,8 @@ import { Real } from "../../fields/real.ts";
 import { Variable } from "../../variable.ts";
 import { Addition } from "../addition.ts";
 import { Relation } from "./relation.ts";
+import { Complex } from "../../fields/complex.ts";
+import { Boolean } from "../../fields/boolean.ts";
 
 const R = class extends Relation {};
 const relation = (left: TreeNode, right: TreeNode) => new R(left, right);
@@ -70,6 +72,26 @@ describe("Relation", () => {
     });
   });
 
+  describe("domainType", () => {
+    it("is real for pure variables", () => {
+      expect(
+        relation(new Variable("x"), new Variable("y")).domainType,
+      ).toEqual("real");
+    });
+
+    it("is complex if a complex value present", () => {
+      expect(
+        relation(new Variable("x"), new Complex({ a: 0, b: 1 })).domainType,
+      ).toEqual("complex");
+    });
+
+    it("is boolean if no variables nor other numerics", () => {
+      expect(
+        relation(new Boolean(true), new Boolean(false)).domainType,
+      ).toEqual("boolean");
+    });
+  });
+
   describe("isPlottable", () => {
     it("is false for more than 2 variables", () => {
       expect(
@@ -118,6 +140,18 @@ describe("Relation", () => {
         relation(
           new Variable("y"),
           new Addition(new Variable("x"), new Variable("y")),
+        ).isPlottable,
+      ).toBeFalsy();
+    });
+
+    it("is false if domainType is non-real", () => {
+      expect(
+        relation(
+          new Variable("y"),
+          new Addition(
+            new Variable("x"),
+            new Complex({ a: 0, b: 1 }),
+          ),
         ).isPlottable,
       ).toBeFalsy();
     });
