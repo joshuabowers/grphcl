@@ -29,6 +29,7 @@ export enum Action {
   /** The elimination of all parameters */
   Annihilator,
   Application,
+  Canonicalization,
   /** The creation of a new AST node of the given type */
   Creation,
   Commutation,
