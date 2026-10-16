@@ -1,12 +1,19 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
-import { Multiplication, Negation, Variable } from "../tree/mod.ts";
+import {
+  Multiplication,
+  Negation,
+  Subtraction,
+  Variable,
+} from "../tree/mod.ts";
 import { boolean } from "./boolean.ts";
 import { $complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { negate } from "./negate.ts";
 import { multiply } from "./multiply.ts";
+import { add } from "./add.ts";
+import { subtract } from "./subtract.ts";
+import { negate } from "./negate.ts";
 
 describe("negate", () => {
   it("does not alter a boolean input", () => {
@@ -33,6 +40,26 @@ describe("negate", () => {
       ),
     ).toEqual(
       new Multiplication(real(-5), variable("x")),
+    );
+  });
+
+  it("distributes across an addition", () => {
+    expect(
+      negate(
+        add(variable("x"), real(5)),
+      ),
+    ).toEqual(
+      new Subtraction(negate(variable("x")), real(5)),
+    );
+  });
+
+  it("distributes across a subtraction", () => {
+    expect(
+      negate(
+        subtract(variable("x"), real(5)),
+      ),
+    ).toEqual(
+      new Subtraction(real(5), variable("x")),
     );
   });
 

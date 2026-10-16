@@ -4,6 +4,7 @@ import { Logarithm, Real, Variable } from "../tree/mod.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
+import { raise } from "./raise.ts";
 import { lb, lg, ln, log } from "./log.ts";
 
 describe("log", () => {
@@ -25,6 +26,12 @@ describe("log", () => {
         new Variable("x"),
       ),
     );
+  });
+
+  it("is the identity when composing its inverse", () => {
+    expect(
+      log(real(2), raise(real(2), variable("x"))),
+    ).toEqual(variable("x"));
   });
 });
 

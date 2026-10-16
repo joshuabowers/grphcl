@@ -43,6 +43,7 @@ export enum Action {
   Distribution,
   Idempotency,
   Identity,
+  Inversion,
   Recursion,
   Reflection,
   Singularity,

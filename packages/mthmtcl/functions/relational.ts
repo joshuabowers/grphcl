@@ -15,6 +15,7 @@ import { binary, type BinaryFn, when } from "../factories/binary.ts";
 import { boolean } from "./boolean.ts";
 import { $not } from "./logical/complement.ts";
 import { $abs } from "./absolute.ts";
+import { isolate } from "../utility/isolation.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 /**
@@ -37,6 +38,7 @@ export const $equals: BinaryFn<
     boolean(l.raw === r.raw),
     Action.Application,
   ]),
+  isolate(Equality),
 );
 
 /**

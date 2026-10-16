@@ -45,6 +45,8 @@ export const monolex: MonolexFn = multi(
     [is(Variable), is(Variable)],
     (l, r) => l.name.localeCompare(r.name),
   ),
+  when([is(Numeric), is(Exponentiation)], -1),
+  when([is(Exponentiation), is(Numeric)], 1),
   when(
     [_, is(Exponentiation)],
     (l, r) => monolex(l, r.left),

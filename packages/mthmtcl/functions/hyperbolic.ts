@@ -1,4 +1,11 @@
-import { Boolean, Complex, Hyperbolic, Numeric, Real } from "../tree/mod.ts";
+import {
+  AreaHyperbolic,
+  Boolean,
+  Complex,
+  Hyperbolic,
+  Numeric,
+  Real,
+} from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
@@ -24,6 +31,7 @@ export const $cosh: UnaryFn<Hyperbolic.Cosine> = unary(
     Action.Application,
   ]),
   when(is(Real), (r) => [$real(Math.cosh(r.raw)), Action.Application]),
+  when(is(AreaHyperbolic.Cosine), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -63,6 +71,7 @@ export const $csch: UnaryFn<Hyperbolic.Cosecant> = unary(
     is(Numeric),
     (n) => [preserve(n, $reciprocal($sinh(n))), Action.Application],
   ),
+  when(is(AreaHyperbolic.Cosecant), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -104,6 +113,7 @@ export const $coth: UnaryFn<Hyperbolic.Cotangent> = unary(
     is(Numeric),
     (n) => [preserve(n, $reciprocal($tanh(n))), Action.Application],
   ),
+  when(is(AreaHyperbolic.Cotangent), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -145,6 +155,7 @@ export const $sech: UnaryFn<Hyperbolic.Secant> = unary(
     is(Numeric),
     (n) => [preserve(n, $reciprocal($cosh(n))), Action.Application],
   ),
+  when(is(AreaHyperbolic.Secant), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -189,6 +200,7 @@ export const $sinh: UnaryFn<Hyperbolic.Sine> = unary(
     Action.Application,
   ]),
   when(is(Real), (r) => [$real(Math.sinh(r.raw)), Action.Application]),
+  when(is(AreaHyperbolic.Sine), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -236,6 +248,7 @@ export const $tanh: UnaryFn<Hyperbolic.Tangent> = unary(
     ];
   }),
   when(is(Real), (r) => [$real(Math.tanh(r.raw)), Action.Application]),
+  when(is(AreaHyperbolic.Tangent), (e) => [e.child, Action.Inversion]),
 );
 
 /**

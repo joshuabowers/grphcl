@@ -13,6 +13,7 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
+import { cos, cot, csc, sec, sin, tan } from "./trigonometric.ts";
 import { acos, acot, acsc, asec, asin, atan } from "./arcus.ts";
 
 describe("acos", () => {
@@ -35,6 +36,10 @@ describe("acos", () => {
     expect(acos(variable("x"))).toEqual(
       new Cosine(new Variable("x")),
     );
+  });
+
+  it("is the identity when composing its inverse", () => {
+    expect(acos(cos(variable("x")))).toEqual(variable("x"));
   });
 });
 
@@ -59,6 +64,10 @@ describe("acot", () => {
       new Cotangent(new Variable("x")),
     );
   });
+
+  it("is the identity when composing its inverse", () => {
+    expect(acot(cot(variable("x")))).toEqual(variable("x"));
+  });
 });
 
 describe("acsc", () => {
@@ -81,6 +90,10 @@ describe("acsc", () => {
     expect(acsc(variable("x"))).toEqual(
       new Cosecant(new Variable("x")),
     );
+  });
+
+  it("is the identity when composing its inverse", () => {
+    expect(acsc(csc(variable("x")))).toEqual(variable("x"));
   });
 });
 
@@ -105,6 +118,10 @@ describe("asec", () => {
       new Secant(new Variable("x")),
     );
   });
+
+  it("is the identity when composing its inverse", () => {
+    expect(asec(sec(variable("x")))).toEqual(variable("x"));
+  });
 });
 
 describe("asin", () => {
@@ -128,6 +145,10 @@ describe("asin", () => {
       new Sine(new Variable("x")),
     );
   });
+
+  it("is the identity when composing its inverse", () => {
+    expect(asin(sin(variable("x")))).toEqual(variable("x"));
+  });
 });
 
 describe("atan", () => {
@@ -150,5 +171,9 @@ describe("atan", () => {
     expect(atan(variable("x"))).toEqual(
       new Tangent(new Variable("x")),
     );
+  });
+
+  it("is the identity when composing its inverse", () => {
+    expect(atan(tan(variable("x")))).toEqual(variable("x"));
   });
 });

@@ -1,4 +1,11 @@
-import { Boolean, Complex, Logarithm, Real } from "../tree/mod.ts";
+import {
+  Boolean,
+  Complex,
+  Exponentiation,
+  Logarithm,
+  Real,
+  type TreeNode,
+} from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import {
   binary,
@@ -12,6 +19,7 @@ import { $complex } from "./complex.ts";
 import { $real } from "./real.ts";
 import { $divide } from "./divide.ts";
 import { canonicalizeFrom } from "../utility/canonicalization.ts";
+import { deepEquals } from "../utility/deepEquals.ts";
 
 const lnComplex = (c: Complex) =>
   $complex(
@@ -44,6 +52,10 @@ export const $log: BinaryFn<Logarithm> = binary(Logarithm)(
     $real(Math.log(r.raw) / Math.log(l.raw)),
     Action.Application,
   ]),
+  when<TreeNode, Exponentiation>(
+    (l, r) => is(Exponentiation, (e) => deepEquals(l, e.left))(r),
+    (_l, r) => [r.right, Action.Inversion],
+  ),
 );
 
 /**

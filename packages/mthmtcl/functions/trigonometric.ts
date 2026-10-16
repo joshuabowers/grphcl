@@ -1,4 +1,11 @@
-import { Boolean, Complex, Numeric, Real, Trigonometric } from "../tree/mod.ts";
+import {
+  Arcus,
+  Boolean,
+  Complex,
+  Numeric,
+  Real,
+  Trigonometric,
+} from "../tree/mod.ts";
 import { Action, is } from "../factories/factory.ts";
 import { unary, type UnaryFn, when } from "../factories/unary.ts";
 import { boolean } from "./boolean.ts";
@@ -24,6 +31,7 @@ export const $cos: UnaryFn<Trigonometric.Cosine> = unary(
     Action.Application,
   ]),
   when(is(Real), (r) => [$real(Math.cos(r.raw)), Action.Application]),
+  when(is(Arcus.Cosine), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -63,6 +71,7 @@ export const $csc: UnaryFn<Trigonometric.Cosecant> = unary(
     is(Numeric),
     (n) => [preserve(n, $reciprocal($sin(n))), Action.Application],
   ),
+  when(is(Arcus.Cosecant), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -104,6 +113,7 @@ export const $cot: UnaryFn<Trigonometric.Cotangent> = unary(
     is(Numeric),
     (n) => [preserve(n, $reciprocal($tan(n))), Action.Application],
   ),
+  when(is(Arcus.Cotangent), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -145,6 +155,7 @@ export const $sec: UnaryFn<Trigonometric.Secant> = unary(
     is(Numeric),
     (n) => [preserve(n, $reciprocal($cos(n))), Action.Application],
   ),
+  when(is(Arcus.Secant), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -191,6 +202,7 @@ export const $sin: UnaryFn<Trigonometric.Sine> = unary(
     Action.Application,
   ]),
   when(is(Real), (r) => [$real(Math.sin(r.raw)), Action.Application]),
+  when(is(Arcus.Sine), (e) => [e.child, Action.Inversion]),
 );
 
 /**
@@ -238,6 +250,7 @@ export const $tan: UnaryFn<Trigonometric.Tangent> = unary(
     ];
   }),
   when(is(Real), (r) => [$real(Math.tan(r.raw)), Action.Application]),
+  when(is(Arcus.Tangent), (e) => [e.child, Action.Inversion]),
 );
 
 /**

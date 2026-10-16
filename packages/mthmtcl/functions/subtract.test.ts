@@ -6,6 +6,7 @@ import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
 import { subtract } from "./subtract.ts";
+import { negate } from "./negate.ts";
 
 describe("subtract", () => {
   describe("with pairs of numeric inputs", () => {
@@ -32,6 +33,22 @@ describe("subtract", () => {
         new Variable("x"),
         new Variable("y"),
       ),
+    );
+  });
+
+  it("handles nested right subtractions correctly", () => {
+    expect(
+      subtract(variable("y"), subtract(variable("y"), variable("x"))),
+    ).toEqual(
+      variable("x"),
+    );
+  });
+
+  it("handles nested left subtractions correctly", () => {
+    expect(
+      subtract(subtract(variable("y"), variable("x")), variable("y")),
+    ).toEqual(
+      negate(variable("x")),
     );
   });
 });

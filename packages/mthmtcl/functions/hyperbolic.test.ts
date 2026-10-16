@@ -13,6 +13,7 @@ import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
+import { acosh, acoth, acsch, asech, asinh, atanh } from "./areaHyperbolic.ts";
 import { cosh, coth, csch, sech, sinh, tanh } from "./hyperbolic.ts";
 
 describe("cosh", () => {
@@ -35,6 +36,10 @@ describe("cosh", () => {
     expect(cosh(variable("x"))).toEqual(
       new Cosine(new Variable("x")),
     );
+  });
+
+  it("is the identity when composing its inverse", () => {
+    expect(cosh(acosh(variable("x")))).toEqual(variable("x"));
   });
 });
 
@@ -59,6 +64,10 @@ describe("coth", () => {
       new Cotangent(new Variable("x")),
     );
   });
+
+  it("is the identity when composing its inverse", () => {
+    expect(coth(acoth(variable("x")))).toEqual(variable("x"));
+  });
 });
 
 describe("csch", () => {
@@ -81,6 +90,10 @@ describe("csch", () => {
     expect(csch(variable("x"))).toEqual(
       new Cosecant(new Variable("x")),
     );
+  });
+
+  it("is the identity when composing its inverse", () => {
+    expect(csch(acsch(variable("x")))).toEqual(variable("x"));
   });
 });
 
@@ -105,6 +118,10 @@ describe("sech", () => {
       new Secant(new Variable("x")),
     );
   });
+
+  it("is the identity when composing its inverse", () => {
+    expect(sech(asech(variable("x")))).toEqual(variable("x"));
+  });
 });
 
 describe("sinh", () => {
@@ -128,6 +145,10 @@ describe("sinh", () => {
       new Sine(new Variable("x")),
     );
   });
+
+  it("is the identity when composing its inverse", () => {
+    expect(sinh(asinh(variable("x")))).toEqual(variable("x"));
+  });
 });
 
 describe("tanh", () => {
@@ -150,5 +171,9 @@ describe("tanh", () => {
     expect(tanh(variable("x"))).toEqual(
       new Tangent(new Variable("x")),
     );
+  });
+
+  it("is the identity when composing its inverse", () => {
+    expect(tanh(atanh(variable("x")))).toEqual(variable("x"));
   });
 });

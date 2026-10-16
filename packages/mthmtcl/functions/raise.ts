@@ -73,7 +73,7 @@ export const $raise: BinaryFn<Exponentiation> = binary(Exponentiation)(
   ),
   when<TreeNode, Logarithm>(
     (l, r) => is(Logarithm)(r) && deepEquals(l, r.left),
-    (_l, r) => [r.right, Action.Complementation],
+    (_l, r) => [r.right, Action.Inversion],
   ),
   when(
     [is(Exponentiation), _],
