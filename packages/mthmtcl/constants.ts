@@ -1,3 +1,15 @@
+/**
+ * Provides a uniform access point to (relatively) common
+ * constants used throughout the library, many of which are
+ * likely of interest to consumers of it.
+ *
+ * Note, in many cases, these values can be regenerated on
+ * the fly, as the classes are, themselves, very thin wrappers
+ * around their underlying data.
+ *
+ * @module
+ */
+
 import type { Complex, Real } from "./tree/mod.ts";
 import { real } from "./functions/real.ts";
 import { complex } from "./functions/complex.ts";
@@ -17,5 +29,5 @@ export const Pi: Real = real(Math.PI),
   RealPosInfinity: Real = real(Infinity),
   /** The mathematical constant -Infinity */
   RealNegInfinity: Real = real(-Infinity);
-/** The mathematical constant i */
+/** The mathematical constant i, representing the sqrt(-1) */
 export const I: Complex = complex(0, 1);
