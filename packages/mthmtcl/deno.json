@@ -1,6 +1,6 @@
 {
   "name": "@bowers/mthmtcl",
-  "version": "0.7.0",
+  "version": "0.7.0-alpha.1",
   "exports": {
     "./constants": "./constants.ts",
     "./factories": "./factories/mod.ts",
