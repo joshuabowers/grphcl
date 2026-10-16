@@ -1,6 +1,14 @@
 import { method, type Multi, multi } from "@arrows/multimethod";
 import { is } from "../factories/factory.ts";
-import { Boolean, Complex, Negation, type Numeric, Real } from "../tree/mod.ts";
+import {
+  Boolean,
+  Complex,
+  Multiplication,
+  Negation,
+  type Numeric,
+  Real,
+  type TreeNode,
+} from "../tree/mod.ts";
 
 export interface ConstantPredicate extends Multi {
   (expression: Complex): boolean;
@@ -52,5 +60,17 @@ export const isNegativeOne: ConstantPredicate = multi(
   method(is(Complex), (c: Complex) => c.raw.a === -1 && c.raw.b === 0),
   method(is(Real), (r: Real) => r.raw === -1),
   method(is(Negation), true),
+  method(false),
+);
+
+export interface InformationalFn extends Multi {
+  (expression: TreeNode): boolean;
+}
+
+export const isNegative: InformationalFn = multi(
+  method(is(Complex), (c: Complex) => c.raw.a < 0 && c.raw.b <= 0),
+  method(is(Real), (r: Real) => r.raw < 0),
+  method(is(Negation), true),
+  method(is(Multiplication), (m: Multiplication) => isNegative(m.left)),
   method(false),
 );

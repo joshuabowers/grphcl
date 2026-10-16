@@ -15,4 +15,7 @@ import { BinaryNode } from "./binaryNode.ts";
  * ```
  */
 export class Subtraction extends BinaryNode {
+  get fnName(): string {
+    return "subtract";
+  }
 }

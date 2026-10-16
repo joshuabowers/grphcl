@@ -61,4 +61,8 @@ export class Invocation extends TreeNode {
     this.expression = expression;
     this.args = args;
   }
+
+  get fnName(): string {
+    return "invoke";
+  }
 }

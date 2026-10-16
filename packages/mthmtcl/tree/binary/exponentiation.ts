@@ -21,4 +21,7 @@ import { BinaryNode } from "./binaryNode.ts";
  * `x ** y != y ** x`
  */
 export class Exponentiation extends BinaryNode {
+  get fnName(): string {
+    return "raise";
+  }
 }

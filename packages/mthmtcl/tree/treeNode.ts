@@ -10,4 +10,6 @@ export abstract class TreeNode {
   get isPlottable(): boolean {
     return false;
   }
+
+  abstract get fnName(): string;
 }

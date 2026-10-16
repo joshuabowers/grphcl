@@ -88,4 +88,8 @@ export class Piecewise extends TreeNode {
     super();
     this.subdomains = subdomains;
   }
+
+  get fnName(): string {
+    return "piecewise";
+  }
 }

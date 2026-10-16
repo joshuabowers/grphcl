@@ -9,4 +9,7 @@ import { UnaryNode } from "../unaryNode.ts";
  * ```
  */
 export class Secant extends UnaryNode {
+  get fnName(): string {
+    return "sech";
+  }
 }

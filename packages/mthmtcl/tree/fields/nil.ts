@@ -6,4 +6,8 @@ export class Nil extends Numeric {
   constructor() {
     super();
   }
+
+  get fnName(): string {
+    return "nil";
+  }
 }

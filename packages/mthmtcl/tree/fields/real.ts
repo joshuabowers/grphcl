@@ -6,7 +6,7 @@ import { Field } from "./field.ts";
  * accuracy follows IEEE 754 doubles.
  */
 export class Real extends Field<number> {
-  constructor(raw: number) {
-    super(raw);
+  get fnName(): string {
+    return "real";
   }
 }

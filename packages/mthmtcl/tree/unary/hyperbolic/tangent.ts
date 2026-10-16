@@ -9,4 +9,7 @@ import { UnaryNode } from "../unaryNode.ts";
  * ```
  */
 export class Tangent extends UnaryNode {
+  get fnName(): string {
+    return "tanh";
+  }
 }

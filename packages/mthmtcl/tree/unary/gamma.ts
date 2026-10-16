@@ -16,4 +16,7 @@ import { UnaryNode } from "./unaryNode.ts";
  * ```
  */
 export class Gamma extends UnaryNode {
+  get fnName(): string {
+    return "gamma";
+  }
 }

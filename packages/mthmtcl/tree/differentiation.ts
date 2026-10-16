@@ -56,4 +56,8 @@ export class Differentiation extends TreeNode {
     this.order = order;
     this.wrt = wrt;
   }
+
+  get fnName(): string {
+    return "differentiate";
+  }
 }

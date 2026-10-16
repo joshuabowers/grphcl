@@ -19,4 +19,7 @@ import { BinaryNode } from "./binaryNode.ts";
  * ```
  */
 export class Multiplication extends BinaryNode {
+  get fnName(): string {
+    return "multiply";
+  }
 }

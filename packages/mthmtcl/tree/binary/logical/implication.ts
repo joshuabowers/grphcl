@@ -12,4 +12,7 @@ import { Logical } from "./logical.ts";
  * ```
  */
 export class Implication extends Logical {
+  get fnName(): string {
+    return "implies";
+  }
 }

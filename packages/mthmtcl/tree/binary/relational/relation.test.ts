@@ -8,7 +8,11 @@ import { Relation } from "./relation.ts";
 import { Complex } from "../../fields/complex.ts";
 import { Boolean } from "../../fields/boolean.ts";
 
-const R = class extends Relation {};
+const R = class extends Relation {
+  get fnName(): string {
+    return "relation";
+  }
+};
 const relation = (left: TreeNode, right: TreeNode) => new R(left, right);
 
 describe("Relation", () => {

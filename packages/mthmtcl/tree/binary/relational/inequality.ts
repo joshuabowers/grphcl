@@ -18,4 +18,7 @@ import { Relation } from "./relation.ts";
  * ```
  */
 export class Inequality extends Relation {
+  get fnName(): string {
+    return "nequals";
+  }
 }

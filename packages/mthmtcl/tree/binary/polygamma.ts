@@ -22,4 +22,7 @@ import { BinaryNode } from "./binaryNode.ts";
  * ```
  */
 export class Polygamma extends BinaryNode {
+  get fnName(): string {
+    return "polygamma";
+  }
 }

@@ -10,4 +10,7 @@ import { UnaryNode } from "./unaryNode.ts";
  * ```
  */
 export class Degree extends UnaryNode {
+  get fnName(): string {
+    return "degree";
+  }
 }

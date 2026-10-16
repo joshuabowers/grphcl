@@ -18,4 +18,7 @@ import { BinaryNode } from "./binaryNode.ts";
  * ```
  */
 export class Logarithm extends BinaryNode {
+  get fnName(): string {
+    return "log";
+  }
 }

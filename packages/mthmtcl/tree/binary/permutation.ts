@@ -17,4 +17,7 @@ import { BinaryNode } from "./binaryNode.ts";
  * ```
  */
 export class Permutation extends BinaryNode {
+  get fnName(): string {
+    return "permute";
+  }
 }

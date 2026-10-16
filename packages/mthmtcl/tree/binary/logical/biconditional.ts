@@ -12,4 +12,7 @@ import { Logical } from "./logical.ts";
  * ```
  */
 export class Biconditional extends Logical {
+  get fnName(): string {
+    return "xnor";
+  }
 }

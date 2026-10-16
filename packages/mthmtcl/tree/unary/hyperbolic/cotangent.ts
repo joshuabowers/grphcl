@@ -9,4 +9,7 @@ import { UnaryNode } from "../unaryNode.ts";
  * ```
  */
 export class Cotangent extends UnaryNode {
+  get fnName(): string {
+    return "coth";
+  }
 }

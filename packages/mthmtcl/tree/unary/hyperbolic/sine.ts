@@ -9,4 +9,7 @@ import { UnaryNode } from "../unaryNode.ts";
  * ```
  */
 export class Sine extends UnaryNode {
+  get fnName(): string {
+    return "sinh";
+  }
 }

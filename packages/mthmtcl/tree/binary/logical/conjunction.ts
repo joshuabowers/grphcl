@@ -12,4 +12,7 @@ import { Logical } from "./logical.ts";
  * ```
  */
 export class Conjunction extends Logical {
+  get fnName(): string {
+    return "and";
+  }
 }

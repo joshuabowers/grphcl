@@ -13,4 +13,7 @@ import { UnaryNode } from "./unaryNode.ts";
  * ```
  */
 export class Factorial extends UnaryNode {
+  get fnName(): string {
+    return "factorial";
+  }
 }

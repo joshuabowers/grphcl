@@ -67,4 +67,8 @@ export class Limit extends TreeNode {
     this.direction = direction;
     this.expression = expression;
   }
+
+  get fnName(): string {
+    return "limit";
+  }
 }

@@ -19,4 +19,7 @@ import { Relation } from "./relation.ts";
  * ```
  */
 export class Equality extends Relation {
+  get fnName(): string {
+    return "equals";
+  }
 }

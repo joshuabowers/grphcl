@@ -28,6 +28,7 @@ import {
 } from "../factories/factory.ts";
 import { otherwise } from "../factories/binary.ts";
 import { parameterize } from "./parameterization.ts";
+import { isNegative } from "./integers.ts";
 import { add } from "../functions/add.ts";
 import { subtract } from "../functions/subtract.ts";
 import { multiply } from "../functions/multiply.ts";
@@ -122,10 +123,12 @@ export const inverse: InverseFn = multi(
   when(is(AreaHyperbolic.Cotangent), coth),
 );
 
-export function isolate<R extends Relation>(
-  ctor: Constructor<R>,
+export function isolate<Rn extends Relation, Ri extends Relation = Rn>(
+  nominalCtor: Constructor<Rn>,
+  invertedCtor?: Constructor<Ri>,
 ): When<Context.Otherwise> {
   return otherwise((l, r) => {
+    let ctor: Constructor<Rn | Ri> = nominalCtor;
     let left = l, right = r;
     const lVars = parameterize(l);
     let rVars = parameterize(r);
@@ -136,22 +139,12 @@ export function isolate<R extends Relation>(
       throw new Error("isolate: could not determine dependent variable");
     }
 
-    console.log("isolate:");
-    console.log("left:", left);
-    console.log("right:", right);
-    console.log("lVars:", lVars);
-    console.log("rVars:", rVars);
-    console.log("=> dep:", dep);
-
     const isDepIsolated = is(Variable, (v) => v.name === dep);
     const isUnary = is(UnaryNode);
     const isBinary = is(BinaryNode);
     const isVariable = is(Variable);
-
-    console.log("isDepIsolated(left):", isDepIsolated(left));
-    console.log("rVars.has(dep):", rVars.has(dep));
-
-    console.log("BEGIN LOOP");
+    const flipCtor = () =>
+      !invertedCtor || ctor === invertedCtor ? nominalCtor : invertedCtor;
 
     while (!isDepIsolated(left) || rVars.has(dep)) {
       // 1. Determine which side has precedence based on SADMEP
@@ -165,11 +158,10 @@ export function isolate<R extends Relation>(
         ? right
         : sadmep(left, right);
 
-      console.log("=> child:", child);
-
       // 2. Given side (from 1), determine inverse operation via map/lookup
       if (isUnary(child)) {
         const fn = inverse(child);
+        if (fn === negate) ctor = flipCtor();
 
         // 3. Apply (2) to left & right, setting same to inverted;
         left = fn(left);
@@ -198,7 +190,6 @@ export function isolate<R extends Relation>(
         } else if (child instanceof Logarithm) {
           if (glVars.has(dep)) {
             // i.e.: log(y, 2) == x <-> y == 2 ** (1/x)
-            console.log("child is logarithm with dep-valued base");
             const base = child.right, childIsLeft = child === left;
             left = childIsLeft ? child.left : raise(base, reciprocal(left));
             right = childIsLeft ? raise(base, reciprocal(right)) : child.left;
@@ -246,6 +237,7 @@ export function isolate<R extends Relation>(
           //     manage, and results in separate but equivalent
           //     rearrangement pathways.
           operand = glVars.has(dep) ? child.right : child.left;
+          if (isNegative(operand)) ctor = flipCtor();
           left = divide(left, operand);
           right = divide(right, operand);
         } else if (child instanceof Division) {
@@ -254,6 +246,7 @@ export function isolate<R extends Relation>(
           // 1 == y / x <-> multiply by x
           // 1 == x / y <-> multiply by y
           const denominator = child.right;
+          if (isNegative(denominator)) ctor = flipCtor();
           left = multiply(left, denominator);
           right = multiply(right, denominator);
         }
@@ -267,17 +260,8 @@ export function isolate<R extends Relation>(
       // 4. recalculate rVars
       rVars = parameterize(right);
 
-      console.log("=> left:", left);
-      console.log("=> right:", right);
-      console.log("isDepIsolated(left):", isDepIsolated(left));
-      console.log("rVars.has(dep):", rVars.has(dep));
-
       action = Action.Canonicalization;
     }
-
-    console.log("END LOOP");
-    console.log("=> left:", left);
-    console.log("=> right:", right);
 
     return [new ctor(left, right), action];
   });

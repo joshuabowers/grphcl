@@ -16,4 +16,7 @@ import { BinaryNode } from "./binaryNode.ts";
  * ```
  */
 export class Division extends BinaryNode {
+  get fnName(): string {
+    return "divide";
+  }
 }

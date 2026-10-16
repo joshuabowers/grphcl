@@ -82,6 +82,7 @@ export const $gt: BinaryFn<
     boolean(l.raw > r.raw),
     Action.Application,
   ]),
+  isolate(GreaterThan, LessThan),
 );
 
 /**
@@ -117,6 +118,7 @@ export const $gte: BinaryFn<
     $not($lt(l, r)),
     Action.Delegation,
   ]),
+  isolate(GreaterThanOrEquals, LessThanOrEquals),
 );
 
 /**
@@ -160,6 +162,7 @@ export const $lt: BinaryFn<
     boolean(l.raw < r.raw),
     Action.Application,
   ]),
+  isolate(LessThan, GreaterThan),
 );
 
 /**
@@ -192,6 +195,7 @@ export const $lte: BinaryFn<
     $not($gt(l, r)),
     Action.Delegation,
   ]),
+  isolate(LessThanOrEquals, GreaterThanOrEquals),
 );
 
 /**
@@ -227,6 +231,7 @@ export const $nequals: BinaryFn<
     $not($equals(l, r)),
     Action.Delegation,
   ]),
+  isolate(Inequality),
 );
 
 /**

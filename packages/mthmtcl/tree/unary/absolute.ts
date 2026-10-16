@@ -9,4 +9,7 @@ import { UnaryNode } from "./unaryNode.ts";
  * ```
  */
 export class Absolute extends UnaryNode {
+  get fnName(): string {
+    return "abs";
+  }
 }

@@ -17,4 +17,7 @@ import { BinaryNode } from "./binaryNode.ts";
  * ```
  */
 export class Combination extends BinaryNode {
+  get fnName(): string {
+    return "combine";
+  }
 }

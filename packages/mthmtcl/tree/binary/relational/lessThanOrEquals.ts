@@ -16,4 +16,7 @@ import { Relation } from "./relation.ts";
  * ```
  */
 export class LessThanOrEquals extends Relation {
+  get fnName(): string {
+    return "lte";
+  }
 }

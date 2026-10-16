@@ -82,6 +82,9 @@ describe("equals", () => {
       ).toEqual(
         equals(variable("y"), variable("x")),
       );
+      expect(
+        equals(variable("x"), variable("y")),
+      ).toBeInstanceOf(Equality);
     });
 
     it("inverts trig functions on a left dependent", () => {
@@ -371,8 +374,21 @@ describe("gt", () => {
 
   it("is a GreaterThan for unbound input", () => {
     expect(
-      gt(variable("x"), variable("y")),
-    ).toEqual(new GreaterThan(new Variable("x"), new Variable("y")));
+      gt(variable("y"), variable("x")),
+    ).toEqual(new GreaterThan(new Variable("y"), new Variable("x")));
+  });
+
+  describe("isolation", () => {
+    it("becomes a LessThan when left isolating right dependents", () => {
+      expect(
+        gt(variable("x"), variable("y")),
+      ).toEqual(
+        new LessThan(new Variable("y"), new Variable("x")),
+      );
+      expect(
+        gt(variable("x"), variable("y")),
+      ).toBeInstanceOf(LessThan);
+    });
   });
 });
 
@@ -419,8 +435,21 @@ describe("gte", () => {
 
   it("is a GreaterThanOrEquals for unbound input", () => {
     expect(
-      gte(variable("x"), variable("y")),
-    ).toEqual(new GreaterThanOrEquals(new Variable("x"), new Variable("y")));
+      gte(variable("y"), variable("x")),
+    ).toEqual(new GreaterThanOrEquals(new Variable("y"), new Variable("x")));
+  });
+
+  describe("isolation", () => {
+    it("becomes a LessThanOrEquals when left isolating right dependents", () => {
+      expect(
+        gte(variable("x"), variable("y")),
+      ).toEqual(
+        new LessThanOrEquals(new Variable("y"), new Variable("x")),
+      );
+      expect(
+        gte(variable("x"), variable("y")),
+      ).toBeInstanceOf(LessThanOrEquals);
+    });
   });
 });
 
@@ -451,8 +480,22 @@ describe("lt", () => {
 
   it("is a LessThan for unbound input", () => {
     expect(
-      lt(variable("x"), variable("y")),
-    ).toEqual(new LessThan(new Variable("x"), new Variable("y")));
+      lt(variable("y"), variable("x")),
+    ).toEqual(new LessThan(new Variable("y"), new Variable("x")));
+  });
+
+  describe("isolation", () => {
+    it("becomes a GreaterThan when left isolating right dependents", () => {
+      expect(
+        lt(variable("x"), variable("y")),
+      ).toEqual(
+        new GreaterThan(new Variable("y"), new Variable("x")),
+      );
+
+      expect(
+        lt(variable("x"), variable("y")),
+      ).toBeInstanceOf(GreaterThan);
+    });
   });
 });
 
@@ -499,8 +542,21 @@ describe("lte", () => {
 
   it("is a LessThanOrEquals for unbound input", () => {
     expect(
-      lte(variable("x"), variable("y")),
-    ).toEqual(new LessThanOrEquals(new Variable("x"), new Variable("y")));
+      lte(variable("y"), variable("x")),
+    ).toEqual(new LessThanOrEquals(new Variable("y"), new Variable("x")));
+  });
+
+  describe("isolation", () => {
+    it("becomes a GreaterThanOrEquals when left isolating right dependents", () => {
+      expect(
+        lte(variable("x"), variable("y")),
+      ).toEqual(
+        new GreaterThanOrEquals(new Variable("y"), new Variable("x")),
+      );
+      expect(
+        lte(variable("x"), variable("y")),
+      ).toBeInstanceOf(GreaterThanOrEquals);
+    });
   });
 });
 
@@ -539,7 +595,20 @@ describe("nequals", () => {
 
   it("is an Inequality for unbound input", () => {
     expect(
-      nequals(variable("x"), variable("y")),
-    ).toEqual(new Inequality(new Variable("x"), new Variable("y")));
+      nequals(variable("y"), variable("x")),
+    ).toEqual(new Inequality(new Variable("y"), new Variable("x")));
+  });
+
+  describe("isolation", () => {
+    it("swaps left independent and right dependent variables", () => {
+      expect(
+        nequals(variable("x"), variable("y")),
+      ).toEqual(
+        new Inequality(new Variable("y"), new Variable("x")),
+      );
+      expect(
+        nequals(variable("x"), variable("y")),
+      ).toBeInstanceOf(Inequality);
+    });
   });
 });

@@ -6,4 +6,7 @@ import { Field } from "./field.ts";
  * that z = a + b*i.
  */
 export class Complex extends Field<{ a: number; b: number }> {
+  get fnName(): string {
+    return "complex";
+  }
 }

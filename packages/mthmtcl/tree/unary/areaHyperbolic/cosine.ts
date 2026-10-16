@@ -9,4 +9,7 @@ import { UnaryNode } from "../unaryNode.ts";
  * ```
  */
 export class Cosine extends UnaryNode {
+  get fnName(): string {
+    return "acosh";
+  }
 }

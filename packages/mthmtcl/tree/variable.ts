@@ -15,4 +15,8 @@ export class Variable extends TreeNode {
     super();
     this.name = name;
   }
+
+  get fnName(): string {
+    return "variable";
+  }
 }
