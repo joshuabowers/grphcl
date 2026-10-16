@@ -42,8 +42,10 @@ export const $equals: BinaryFn<
 );
 
 /**
- * Creates {@link Equality} AST nodes for unbound inputs and returns a
- * Boolean-valued result for Boolean, Complex, and Real numeric inputs.
+ * Creates {@link Equality} AST nodes for unbound inputs, rearranging them
+ * with inverse operations to isolate the dependent variable (the
+ * alphabetically last variable) on the left. Returns a Boolean-valued result
+ * for Boolean, Complex, and Real numeric inputs.
  *
  * @example Numeric input:
  * ```ts
@@ -54,7 +56,7 @@ export const $equals: BinaryFn<
  * @example Unbound input:
  * ```ts
  * const result = equals(variable('x'), variable('y'));
- * // => new Equality(new Variable('x'), new Variable('y'))
+ * // => new Equality(new Variable('y'), new Variable('x'))
  * ```
  */
 export const equals: BinaryFn<
@@ -86,8 +88,11 @@ export const $gt: BinaryFn<
 );
 
 /**
- * Creates {@link GreaterThan} AST nodes for unbound inputs and evaluates to
- * a Boolean result for Boolean, Complex, and Real numeric inputs.
+ * Creates {@link GreaterThan} AST nodes for unbound inputs, rearranging them
+ * with inverse operations to isolate the dependent variable (the
+ * alphabetically last variable) on the left and reversing the inequality
+ * direction when required. Evaluates to a Boolean result for Boolean,
+ * Complex, and Real numeric inputs.
  *
  * @example Numeric input:
  * ```ts
@@ -98,7 +103,7 @@ export const $gt: BinaryFn<
  * @example Unbound input:
  * ```ts
  * const result = gt(variable('x'), variable('y'));
- * // => new GreaterThan(new Variable('x'), new Variable('y'))
+ * // => new LessThan(new Variable('y'), new Variable('x'))
  * ```
  */
 export const gt: BinaryFn<
@@ -122,8 +127,11 @@ export const $gte: BinaryFn<
 );
 
 /**
- * Creates {@link GreaterThanOrEquals} AST nodes for unbound inputs and
- * returns a Boolean-valued result for numeric inputs.
+ * Creates {@link GreaterThanOrEquals} AST nodes for unbound inputs,
+ * rearranging them with inverse operations to isolate the dependent variable
+ * (the alphabetically last variable) on the left and reversing the inequality
+ * direction when required. Returns a Boolean-valued result for numeric
+ * inputs.
  *
  * @example Numeric input:
  * ```ts
@@ -134,7 +142,7 @@ export const $gte: BinaryFn<
  * @example Unbound input:
  * ```ts
  * const result = gte(variable('x'), variable('y'));
- * // => new GreaterThanOrEquals(new Variable('x'), new Variable('y'))
+ * // => new LessThanOrEquals(new Variable('y'), new Variable('x'))
  * ```
  */
 export const gte: BinaryFn<
@@ -166,8 +174,11 @@ export const $lt: BinaryFn<
 );
 
 /**
- * Creates {@link LessThan} AST nodes for unbound inputs and evaluates to
- * a Boolean result for Boolean, Complex, and Real numeric inputs.
+ * Creates {@link LessThan} AST nodes for unbound inputs, rearranging them
+ * with inverse operations to isolate the dependent variable (the
+ * alphabetically last variable) on the left and reversing the inequality
+ * direction when required. Evaluates to a Boolean result for Boolean,
+ * Complex, and Real numeric inputs.
  *
  * @example Numeric input:
  * ```ts
@@ -178,7 +189,7 @@ export const $lt: BinaryFn<
  * @example Unbound input:
  * ```ts
  * const result = lt(variable('x'), variable('y'));
- * // => new LessThan(new Variable('x'), new Variable('y'))
+ * // => new GreaterThan(new Variable('y'), new Variable('x'))
  * ```
  */
 export const lt: BinaryFn<LessThan, Boolean> = canonicalizeFrom($lt);
@@ -199,8 +210,11 @@ export const $lte: BinaryFn<
 );
 
 /**
- * Creates {@link LessThanOrEquals} AST nodes for unbound inputs and returns
- * a Boolean-valued result for numeric inputs.
+ * Creates {@link LessThanOrEquals} AST nodes for unbound inputs, rearranging
+ * them with inverse operations to isolate the dependent variable (the
+ * alphabetically last variable) on the left and reversing the inequality
+ * direction when required. Returns a Boolean-valued result for numeric
+ * inputs.
  *
  * @example Numeric input:
  * ```ts
@@ -211,7 +225,7 @@ export const $lte: BinaryFn<
  * @example Unbound input:
  * ```ts
  * const result = lte(variable('x'), variable('y'));
- * // => new LessThanOrEquals(new Variable('x'), new Variable('y'))
+ * // => new GreaterThanOrEquals(new Variable('y'), new Variable('x'))
  * ```
  */
 export const lte: BinaryFn<
@@ -235,8 +249,10 @@ export const $nequals: BinaryFn<
 );
 
 /**
- * Creates {@link Inequality} AST nodes for unbound inputs and returns a
- * Boolean-valued result for numeric inputs.
+ * Creates {@link Inequality} AST nodes for unbound inputs, rearranging them
+ * with inverse operations to isolate the dependent variable (the
+ * alphabetically last variable) on the left. Returns a Boolean-valued result
+ * for numeric inputs.
  *
  * @example Numeric input:
  * ```ts
@@ -247,7 +263,7 @@ export const $nequals: BinaryFn<
  * @example Unbound input:
  * ```ts
  * const result = nequals(variable('x'), variable('y'));
- * // => new Inequality(new Variable('x'), new Variable('y'))
+ * // => new Inequality(new Variable('y'), new Variable('x'))
  * ```
  */
 export const nequals: BinaryFn<
