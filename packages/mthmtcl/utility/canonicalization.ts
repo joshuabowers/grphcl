@@ -23,7 +23,7 @@ import {
 } from "../factories/factory.ts";
 import { compose } from "./composition.ts";
 import { isBelowThreshold } from "./isBelowThreshold.ts";
-import { isNegativeOne } from "./integers.ts";
+import { isNegative, isNegativeOne, isOne } from "./integers.ts";
 
 export interface ExpressionFn extends Multi {
   (expression: TreeNode): TreeNode;
@@ -68,6 +68,7 @@ export const flip: FlipFn = multi(
     is(Complex),
     (e: Complex) => new Complex({ a: -e.raw.a, b: -e.raw.b }),
   ),
+  method(is(Negation), (e: Negation) => e.child),
   method((e: TreeNode) => e),
 );
 
@@ -97,9 +98,18 @@ export const canonicalize: ExpressionFn = multi(
       }),
   ),
   when(is(Real), (e) => new Real(round(e.raw, 15))),
+  // when(
+  //   is(Exponentiation, (e) => isNegativeOne(e.right)),
+  //   (e) => new Division(new Real(1), canonicalize(e.left)),
+  // ),
+  when(is(Exponentiation, (e) => isOne(e.right)), (e) => canonicalize(e.left)),
   when(
-    is(Exponentiation, (e) => isNegativeOne(e.right)),
-    (e) => new Division(new Real(1), canonicalize(e.left)),
+    is(Exponentiation, (e) => isNegative(e.right)),
+    (e) =>
+      new Division(
+        new Real(1),
+        canonicalize(new Exponentiation(e.left, flip(e.right))),
+      ),
   ),
   when(
     is(Addition, (e) => isBelowThreshold(0)(e.right)),

@@ -1,6 +1,12 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
-import { Complex, Exponentiation, Real, Variable } from "../tree/mod.ts";
+import {
+  Complex,
+  Division,
+  Exponentiation,
+  Real,
+  Variable,
+} from "../tree/mod.ts";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
@@ -137,10 +143,14 @@ describe("reciprocal", () => {
 
   it("raises unbound input to -1", () => {
     expect(reciprocal(square(variable("x")))).toEqual(
-      new Exponentiation(
-        new Variable("x"),
-        new Real(-2),
+      new Division(
+        real(1),
+        raise(variable("x"), real(2)),
       ),
+      // new Exponentiation(
+      //   new Variable("x"),
+      //   new Real(-2),
+      // ),
     );
   });
 });

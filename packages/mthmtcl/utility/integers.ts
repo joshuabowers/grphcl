@@ -53,6 +53,7 @@ export const isOne: ConstantPredicate = multi(
   method(is(Boolean), (b: Boolean) => b.raw),
   method(is(Complex), (c: Complex) => c.raw.a === 1 && c.raw.b === 0),
   method(is(Real), (r: Real) => r.raw === 1),
+  method(false),
 );
 
 export const isNegativeOne: ConstantPredicate = multi(

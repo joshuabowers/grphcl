@@ -1,6 +1,7 @@
 import { TreeNode } from "./treeNode.ts";
 import type { Variable } from "./variable.ts";
-import type { Real } from "./fields/real.ts";
+// import type { Real } from "./fields/real.ts";
+import type { Numeric } from "./fields/numeric.ts";
 
 /**
  * Represents the direction {@link Limit.target} is
@@ -11,6 +12,8 @@ export enum Direction {
   Left = 0,
   /** From the right */
   Right,
+  /** From both */
+  Both,
 }
 
 /**
@@ -39,7 +42,7 @@ export class Limit extends TreeNode {
   /** The variable within {@link expression} to evalute wrt */
   readonly variable: Variable;
   /** The value {@link variable} is approaching */
-  readonly target: Real;
+  readonly target: Numeric;
   /**
    * The direction {@link variable} is approaching
    * {@link target} from
@@ -57,7 +60,7 @@ export class Limit extends TreeNode {
    */
   constructor(
     variable: Variable,
-    target: Real,
+    target: Numeric,
     direction: Direction,
     expression: TreeNode,
   ) {

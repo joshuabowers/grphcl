@@ -48,3 +48,4 @@ export * from "./binary/relational/mod.ts";
 
 export { Differentiation } from "./differentiation.ts";
 export { Invocation } from "./invocation.ts";
+export { Direction, Limit } from "./limit.ts";

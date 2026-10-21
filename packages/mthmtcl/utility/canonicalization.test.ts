@@ -1,6 +1,11 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
-import { Division, Multiplication, Subtraction } from "../tree/mod.ts";
+import {
+  Division,
+  Exponentiation,
+  Multiplication,
+  Subtraction,
+} from "../tree/mod.ts";
 import { real } from "../functions/real.ts";
 import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
@@ -49,6 +54,25 @@ describe("canonicalize", () => {
         new Multiplication(
           variable("x"),
           variable("y"),
+        ),
+      ),
+    );
+  });
+
+  it("handles negations with exponentiations correctly", () => {
+    expect(
+      canonicalize(
+        new Exponentiation(
+          real(5),
+          $negate(variable("x")),
+        ),
+      ),
+    ).toEqual(
+      new Division(
+        real(1),
+        new Exponentiation(
+          real(5),
+          variable("x"),
         ),
       ),
     );
