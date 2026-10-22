@@ -10,6 +10,7 @@ import { multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
 import { $raise, raise, reciprocal } from "./raise.ts";
 import { negate } from "./negate.ts";
+import { ln } from "./log.ts";
 
 describe("limit", () => {
   it("is constant for a constant", () => {
@@ -87,7 +88,7 @@ describe("limit", () => {
       );
     });
 
-    it("is inifinity for [x/a] for [a > 0] as [x -> Inf]", () => {
+    it("is infinity for [x/a] for [a > 0] as [x -> Inf]", () => {
       expect(
         limit(
           divide(variable("x"), real(5)),
@@ -134,26 +135,26 @@ describe("limit", () => {
     it("is [c ** a] for [x ** a] as [x -> c]", () => {
       expect(
         limit(
-          raise(variable("x"), real(5)),
+          raise(variable("x"), variable("a")),
           variable("x"),
-          real(2),
+          variable("c"),
           Direction.Both,
         ),
       ).toEqual(
-        real(32),
+        raise(variable("c"), variable("a")),
       );
     });
 
     it("is [c ** (1/a)] for [x ** (1/a)] as [x -> c]", () => {
       expect(
         limit(
-          raise(variable("x"), reciprocal(real(5))),
+          raise(variable("x"), reciprocal(variable("a"))),
           variable("x"),
-          real(10),
+          variable("c"),
           Direction.Both,
         ),
       ).toEqual(
-        real(10 ** 0.2),
+        raise(variable("c"), reciprocal(variable("a"))),
       );
     });
 
@@ -291,6 +292,99 @@ describe("limit", () => {
       expect(
         limit(
           raise(real(0.5), negate(variable("x"))),
+          variable("x"),
+          real(Infinity),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(Infinity),
+      );
+    });
+
+    it("is 1 for [a ** (1/x)] as [x -> Inf] for a > 0", () => {
+      expect(
+        limit(
+          raise(real(5), reciprocal(variable("x"))),
+          variable("x"),
+          real(Infinity),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("is 0 for [a ** (1/x)] as [x -> Inf] for a === 0", () => {
+      expect(
+        limit(
+          raise(real(0), reciprocal(variable("x"))),
+          variable("x"),
+          real(Infinity),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(0),
+      );
+    });
+
+    it("is NaN for [a ** (1/x)] as [x -> Inf] for a < 0", () => {
+      const actual = limit(
+        raise(real(-5), reciprocal(variable("x"))),
+        variable("x"),
+        real(Infinity),
+        Direction.Both,
+      );
+      expect(actual).toBeInstanceOf(Real);
+      expect(
+        (actual as unknown as Real).raw,
+      ).toBeNaN();
+    });
+
+    it("is 1 for [x ** (1/x)] as [x -> Inf]", () => {
+      expect(
+        limit(
+          raise(variable("x"), reciprocal(variable("x"))),
+          variable("x"),
+          real(Infinity),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+  });
+
+  describe("of logarithms", () => {
+    it("is c for [ln(x)] as [x -> c]", () => {
+      expect(
+        limit(
+          ln(variable("x")),
+          variable("x"),
+          variable("c"),
+          Direction.Both,
+        ),
+      ).toEqual(
+        ln(variable("c")),
+      );
+    });
+
+    it("is -Infinity for [ln(x)] as [x -> 0+]", () => {
+      expect(
+        limit(
+          ln(variable("x")),
+          variable("x"),
+          real(0),
+          Direction.Right,
+        ),
+      ).toEqual(
+        real(-Infinity),
+      );
+    });
+
+    it("is Infinity for [ln(x)] as [x -> Inf]", () => {
+      expect(
+        limit(
+          ln(variable("x")),
           variable("x"),
           real(Infinity),
           Direction.Both,
