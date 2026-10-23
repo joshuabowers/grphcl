@@ -1,13 +1,15 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
-import { Division, Variable } from "../tree/mod.ts";
+import { Division, Multiplication, Variable } from "../tree/mod.ts";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { raise, square } from "./raise.ts";
-import { divide } from "./divide.ts";
+import { $raise, raise, square } from "./raise.ts";
+import { $subtract, subtract } from "./subtract.ts";
 import { $multiply } from "./multiply.ts";
+import { $ln, ln } from "./log.ts";
+import { $divide, divide } from "./divide.ts";
 
 describe("divide", () => {
   describe("with pairs of numeric inputs", () => {
@@ -106,6 +108,30 @@ describe("divide", () => {
           $multiply(variable("y"), variable("z")),
         ),
       ).toEqual(divide(variable("x"), variable("z")));
+    });
+  });
+
+  describe("with complicated subexpressions", () => {
+    it("does not mangle a log and a subtraction, raw", () => {
+      expect(
+        $divide($ln(variable("x")), $subtract(variable("x"), real(1))),
+      ).toEqual(
+        new Multiplication(
+          $ln(variable("x")),
+          $raise($subtract(variable("x"), real(1)), real(-1)),
+        ),
+      );
+    });
+
+    it("does not mangle a log and a subtraction, canonicalized", () => {
+      expect(
+        divide(ln(variable("x")), subtract(variable("x"), real(1))),
+      ).toEqual(
+        new Division(
+          ln(variable("x")),
+          subtract(variable("x"), real(1)),
+        ),
+      );
     });
   });
 

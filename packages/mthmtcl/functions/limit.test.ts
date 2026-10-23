@@ -3,14 +3,14 @@ import { expect } from "@std/expect";
 import { Division, Real } from "../tree/mod.ts";
 import { real } from "./real.ts";
 import { variable } from "./variable.ts";
-import { Direction, limit } from "./limit.ts";
-import { add } from "./add.ts";
-import { subtract } from "./subtract.ts";
+import { $add, add } from "./add.ts";
+import { $subtract, subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
-import { divide } from "./divide.ts";
+import { $divide, divide } from "./divide.ts";
 import { $raise, raise, reciprocal } from "./raise.ts";
 import { negate } from "./negate.ts";
-import { ln } from "./log.ts";
+import { $ln, ln } from "./log.ts";
+import { Direction, limit } from "./limit.ts";
 
 describe("limit", () => {
   it("is constant for a constant", () => {
@@ -352,6 +352,19 @@ describe("limit", () => {
         real(1),
       );
     });
+
+    it("is 1 for [x ** x] as [x -> 0]", () => {
+      expect(
+        limit(
+          raise(variable("x"), variable("x")),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
   });
 
   describe("of logarithms", () => {
@@ -391,6 +404,84 @@ describe("limit", () => {
         ),
       ).toEqual(
         real(Infinity),
+      );
+    });
+
+    it("is 1 for [ln(x) / (x-1)] as [x -> 1], raw", () => {
+      expect(
+        limit(
+          $divide($ln(variable("x")), $subtract(variable("x"), real(1))),
+          variable("x"),
+          real(1),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("is 1 for [ln(x) / (x-1)] as [x -> 1], canonicalized", () => {
+      expect(
+        limit(
+          divide(ln(variable("x")), subtract(variable("x"), real(1))),
+          variable("x"),
+          real(1),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("is 1 for [ln(x + 1) / x] as [x -> 0], raw", () => {
+      expect(
+        limit(
+          $divide($ln($add(variable("x"), real(1))), variable("x")),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("is 1 for [ln(x + 1) / x] as [x -> 0], canonicalized", () => {
+      expect(
+        limit(
+          divide(ln(add(variable("x"), real(1))), variable("x")),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("is 0 for [x * ln(x)] as [x -> 0]", () => {
+      expect(
+        limit(
+          multiply(variable("x"), ln(variable("x"))),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(0),
+      );
+    });
+
+    it("is 0 for [ln(x) / x] as [x -> Inf]", () => {
+      expect(
+        limit(
+          divide(ln(variable("x")), variable("x")),
+          variable("x"),
+          real(Infinity),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(0),
       );
     });
   });
