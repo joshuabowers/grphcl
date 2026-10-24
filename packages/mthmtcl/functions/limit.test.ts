@@ -7,9 +7,10 @@ import { $add, add } from "./add.ts";
 import { $subtract, subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { $divide, divide } from "./divide.ts";
-import { $raise, raise, reciprocal } from "./raise.ts";
+import { $raise, raise, reciprocal, square } from "./raise.ts";
 import { negate } from "./negate.ts";
 import { $ln, ln } from "./log.ts";
+import { cos, sin, tan } from "./trigonometric.ts";
 import { Direction, limit } from "./limit.ts";
 
 describe("limit", () => {
@@ -482,6 +483,173 @@ describe("limit", () => {
         ),
       ).toEqual(
         real(0),
+      );
+    });
+  });
+
+  describe("of trigonometric functions", () => {
+    it("is [cos(a)] for [cos(x)] as [x -> a]", () => {
+      expect(
+        limit(
+          cos(variable("x")),
+          variable("x"),
+          variable("a"),
+          Direction.Both,
+        ),
+      ).toEqual(
+        cos(variable("a")),
+      );
+    });
+
+    it("is [sin(a)] for [sin(x)] as [x -> a]", () => {
+      expect(
+        limit(
+          sin(variable("x")),
+          variable("x"),
+          variable("a"),
+          Direction.Both,
+        ),
+      ).toEqual(
+        sin(variable("a")),
+      );
+    });
+
+    it("is 1 for [sin(x) / x] as [x -> 0]", () => {
+      expect(
+        limit(
+          divide(sin(variable("x")), variable("x")),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("is 1 for [x * sin(1/x)] as [x -> Inf]", () => {
+      expect(
+        limit(
+          multiply(
+            variable("x"),
+            sin(reciprocal(variable("x"))),
+          ),
+          variable("x"),
+          real(Infinity),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("is 0 for [(cos(x) - 1) / x] as [x -> 0]", () => {
+      expect(
+        limit(
+          divide(
+            subtract(cos(variable("x")), real(1)),
+            variable("x"),
+          ),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(0),
+      );
+    });
+
+    it("is 0 for [(1 - cos(x)) / x] as [x -> 0]", () => {
+      expect(
+        limit(
+          divide(
+            subtract(real(1), cos(variable("x"))),
+            variable("x"),
+          ),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(0),
+      );
+    });
+
+    it("is 0.5 for [(1 - cos(x)) / x**2] as [x -> 0]", () => {
+      expect(
+        limit(
+          divide(
+            subtract(real(1), cos(variable("x"))),
+            square(variable("x")),
+          ),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(0.5),
+      );
+    });
+
+    it("is [tan(c)] for [tan(x)] as [x -> c]", () => {
+      expect(
+        limit(
+          tan(variable("x")),
+          variable("x"),
+          variable("c"),
+          Direction.Both,
+        ),
+      ).toEqual(
+        tan(variable("c")),
+      );
+    });
+
+    it("is 1 for [tan(x) / x] as [x -> 0]", () => {
+      expect(
+        limit(
+          divide(tan(variable("x")), variable("x")),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(1),
+      );
+    });
+
+    it("is -Infinity for [tan(pi*x + pi/2)] as [x -> n+], for integer n", () => {
+      expect(
+        limit(
+          tan(
+            add(
+              multiply(real(Math.PI), variable("x")),
+              real(Math.PI / 2),
+            ),
+          ),
+          variable("x"),
+          real(1),
+          Direction.Right,
+        ),
+      ).toEqual(
+        real(-Infinity),
+      );
+    });
+
+    it("is Infinity for [tan(pi*x + pi/2)] as [x -> n-], for integer n", () => {
+      expect(
+        limit(
+          tan(
+            add(
+              multiply(real(Math.PI), variable("x")),
+              real(Math.PI / 2),
+            ),
+          ),
+          variable("x"),
+          real(1),
+          Direction.Left,
+        ),
+      ).toEqual(
+        real(Infinity),
       );
     });
   });

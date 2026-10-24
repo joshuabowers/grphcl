@@ -9,9 +9,10 @@ import {
 import { real } from "../functions/real.ts";
 import { variable } from "../functions/variable.ts";
 import { $add } from "../functions/add.ts";
-import { $reciprocal } from "../functions/raise.ts";
+import { $raise, $reciprocal } from "../functions/raise.ts";
 import { $negate } from "../functions/negate.ts";
 import { canonicalize } from "./canonicalization.ts";
+import { $multiply } from "../functions/multiply.ts";
 
 describe("canonicalize", () => {
   it("rounds reals", () => {
@@ -94,6 +95,32 @@ describe("canonicalize", () => {
     expect(
       canonicalize($add(variable("x"), $negate(variable("y")))),
     ).toEqual(new Subtraction(variable("x"), variable("y")));
+  });
+
+  it("transforms a multiplication of a left negated power exponentiation into division", () => {
+    expect(
+      canonicalize(
+        $multiply($raise(variable("x"), real(-2)), variable("y")),
+      ),
+    ).toEqual(
+      new Division(
+        variable("y"),
+        new Exponentiation(variable("x"), real(2)),
+      ),
+    );
+  });
+
+  it("transforms a multiplication of a right negated power exponentiation into division", () => {
+    expect(
+      canonicalize(
+        $multiply(variable("x"), $raise(variable("y"), real(-2))),
+      ),
+    ).toEqual(
+      new Division(
+        variable("x"),
+        new Exponentiation(variable("y"), real(2)),
+      ),
+    );
   });
 
   it("passes through an already canonical TreeNode", () => {

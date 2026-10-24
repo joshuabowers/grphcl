@@ -13,6 +13,8 @@ import {
   Real,
   Subtraction,
   type TreeNode,
+  Trigonometric,
+  type UnaryNode,
   Variable,
 } from "../tree/mod.ts";
 import { _, method, multi } from "@arrows/multimethod";
@@ -25,19 +27,21 @@ import {
   type Rewrite,
 } from "../factories/factory.ts";
 import type { BinaryFn } from "../factories/binary.ts";
+import type { UnaryFn } from "../factories/unary.ts";
 import { $real, real } from "./real.ts";
+import { isInteger, isNegative, isOne, isZero } from "../utility/integers.ts";
 import { scope } from "./variable.ts";
 import { $add, add } from "./add.ts";
 import { $subtract, subtract } from "./subtract.ts";
 import { $invoke } from "./invocation.ts";
 import { $multiply } from "./multiply.ts";
 import { $divide, divide } from "./divide.ts";
-import { $raise } from "./raise.ts";
-import { isNegative, isOne, isZero } from "../utility/integers.ts";
-import { canonicalizeFrom } from "../utility/canonicalization.ts";
+import { $raise, $reciprocal, $square, reciprocal, square } from "./raise.ts";
+import { $ln, $log, ln } from "./log.ts";
+import { $cos, $sin, $tan, cos } from "./trigonometric.ts";
 import { parameterize } from "../utility/parameterization.ts";
 import { deepEquals } from "../utility/deepEquals.ts";
-import { $ln, $log, ln } from "./log.ts";
+import { canonicalizeFrom } from "../utility/canonicalization.ts";
 
 export { Direction };
 
@@ -78,9 +82,17 @@ const binary = <B extends BinaryNode, N extends Numeric>(
   Action.Delegation,
 ];
 
+const unary = <U extends UnaryNode, N extends Numeric>(
+  fn: UnaryFn<U>,
+): RewriteFn<U, N> =>
+(e, v, n, d): Rewrite<TreeNode> => [
+  fn($limit(e.child, v, n, d)),
+  Action.Delegation,
+];
+
 const pattern = <T extends TreeNode, N extends Numeric>(
   expected: (v: Variable) => T,
-  value: N | typeof _ = _,
+  value: N | ((n: N) => boolean) | typeof _ = _,
   direction: Direction = Direction.Both,
 ) =>
 (e: T, v: Variable, n: N, d: Direction) => {
@@ -89,7 +101,10 @@ const pattern = <T extends TreeNode, N extends Numeric>(
   // console.log("expected(v)", expected(v));
   return (
     parameterize(e).has(v.name) &&
-    (typeof value === "symbol" || deepEquals(value, n)) &&
+    (
+      typeof value === "symbol" ||
+      (typeof value === "function" ? value(n) : deepEquals(value, n))
+    ) &&
     (direction === Direction.Both || direction === d) &&
     deepEquals(expected(v), e)
   );
@@ -103,6 +118,10 @@ export interface LimitFn extends
     Direction,
   ]> {}
 
+/**
+ * Internal implementation of {@link limit}, which does not
+ * perform normalization from {@link canonicalizeFrom}
+ */
 export const $limit: LimitFn = multi(
   //   (e: TreeNode, v: Variable, n: Numeric, d: Direction) => {
   //     console.log({ e, v, n, d });
@@ -124,6 +143,14 @@ export const $limit: LimitFn = multi(
       (v) => $multiply($ln(v), $raise($subtract(v, real(1)), real(-1))),
       real(1),
     ),
+    [real(1), Action.Annihilator],
+  ),
+  when( // Not-canonicalized (i.e. v ** -1)
+    pattern((v) => $multiply(v, $sin($reciprocal(v))), real(Infinity)),
+    [real(1), Action.Annihilator],
+  ),
+  when( // Canonicalized (i.e. 1 / v)
+    pattern((v) => $multiply(v, $sin(reciprocal(v))), real(Infinity)),
     [real(1), Action.Annihilator],
   ),
   when(any(Multiplication), binary($multiply)),
@@ -148,6 +175,38 @@ export const $limit: LimitFn = multi(
   ),
   when(
     pattern((v) => divide(ln(add(v, real(1))), v), real(0)),
+    [real(1), Action.Annihilator],
+  ),
+  when(
+    pattern((v) => $divide($sin(v), v), real(0)),
+    [real(1), Action.Annihilator],
+  ),
+  when(
+    pattern((v) => $divide($subtract($cos(v), real(1)), v), real(0)),
+    [real(0), Action.Annihilator],
+  ),
+  when(
+    pattern((v) => divide(subtract(cos(v), real(1)), v), real(0)),
+    [real(0), Action.Annihilator],
+  ),
+  when(
+    pattern((v) => $divide($subtract(real(1), $cos(v)), v), real(0)),
+    [real(0), Action.Annihilator],
+  ),
+  when(
+    pattern((v) => divide(subtract(real(1), cos(v)), v), real(0)),
+    [real(0), Action.Annihilator],
+  ),
+  when(
+    pattern((v) => $divide($subtract(real(1), $cos(v)), $square(v)), real(0)),
+    [real(0.5), Action.Annihilator],
+  ),
+  when(
+    pattern((v) => divide(subtract(real(1), cos(v)), square(v)), real(0)),
+    [real(0.5), Action.Annihilator],
+  ),
+  when(
+    pattern((v) => $divide($tan(v), v), real(0)),
     [real(1), Action.Annihilator],
   ),
   when(any(Division), binary($divide)),
@@ -183,6 +242,37 @@ export const $limit: LimitFn = multi(
   ], [real(NaN), Action.Annihilator]),
   when(any(Exponentiation), binary($raise)),
   when(any(Logarithm), binary($log)),
+  when(any(Trigonometric.Cosine), unary($cos)),
+  when(any(Trigonometric.Sine), unary($sin)),
+  when( // This, and its mirror, are interesting, but probably not useful.
+    pattern<TreeNode, Numeric>(
+      (v) =>
+        $tan(
+          $add(
+            $multiply(real(Math.PI), v),
+            real(Math.PI / 2),
+          ),
+        ),
+      isInteger(),
+      Direction.Left,
+    ),
+    [real(Infinity), Action.Annihilator],
+  ),
+  when(
+    pattern<TreeNode, Numeric>(
+      (v) =>
+        $tan(
+          $add(
+            $multiply(real(Math.PI), v),
+            real(Math.PI / 2),
+          ),
+        ),
+      isInteger(),
+      Direction.Right,
+    ),
+    [real(-Infinity), Action.Annihilator],
+  ),
+  when(any(Trigonometric.Tangent), unary($tan)),
   method((e: TreeNode, v: Variable, n: Numeric, d: Direction) =>
     [
       new Limit(v, n, d, e),
@@ -192,4 +282,33 @@ export const $limit: LimitFn = multi(
   // I.E., for future me who is BLIND: the unwrap returning [0] above.
 );
 
+/**
+ * Calculates the limit of a provided expression as a variable
+ * defined within it approaches a supplied value from a given
+ * direction.
+ *
+ * This is a function which takes four separate parameters, some
+ * of which might be irrelevant depending upon the expression
+ * being evaluated:
+ *
+ * @param expression a {@link TreeNode} to find the limit of
+ * @param variable the variable within {@link expression} which is trending towards {@link target}
+ * @param target the value {@link variable} is trending towards
+ * @param direction the side of {@link target} towards which {@link variable} is trending.
+ *
+ * NB: Unless otherwise specified within the source, most of the
+ * limits provided by this function are adapted from the
+ * {@link https://en.wikipedia.org/w/index.php?title=List_of_limits&oldid=1381165095 | list of limits} maintained
+ * on Wikipedia. The list maintained by wikipedia is non-exhaustive,
+ * so there might very well be aberrant behavior in this function.
+ *
+ * As a further note, limits are mostly found utilizing a very
+ * minimal set of structural rules combined with an effective table
+ * of known patterns; this differs, perhaps, from a more brute-forced
+ * approach of calculating the value of the expression as it moves
+ * closer to the target. This approach works, but suffers from paucity:
+ * if a rule isn't defined within its table of known patterns, it
+ * obviously cannot be matched. Please submit either an issue for
+ * missing limits or a PR if you have a better methodology.
+ */
 export const limit: LimitFn = canonicalizeFrom($limit);

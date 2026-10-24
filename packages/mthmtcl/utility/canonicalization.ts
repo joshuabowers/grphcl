@@ -175,6 +175,38 @@ export const canonicalize: ExpressionFn = multi(
         canonicalize((e.right as Exponentiation).left),
       ),
   ),
+  when(
+    is(
+      Multiplication,
+      (e) => is(Exponentiation, (f) => isNegative(f.right))(e.left),
+    ),
+    (e) =>
+      new Division(
+        canonicalize(e.right),
+        canonicalize(
+          new Exponentiation(
+            (e.left as Exponentiation).left,
+            flip((e.left as Exponentiation).right),
+          ),
+        ),
+      ),
+  ),
+  when(
+    is(
+      Multiplication,
+      (e) => is(Exponentiation, (f) => isNegative(f.right))(e.right),
+    ),
+    (e) =>
+      new Division(
+        canonicalize(e.left),
+        canonicalize(
+          new Exponentiation(
+            (e.right as Exponentiation).left,
+            flip((e.right as Exponentiation).right),
+          ),
+        ),
+      ),
+  ),
   when(is(UnaryNode), makeCanonical),
   when(is(BinaryNode), makeCanonical),
   method((e: TreeNode) => e),

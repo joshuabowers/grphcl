@@ -55,3 +55,4 @@ export {
 
 export { invoke } from "./invocation.ts";
 export { differentiate } from "./differentiation.ts";
+export { limit } from "./limit.ts";
