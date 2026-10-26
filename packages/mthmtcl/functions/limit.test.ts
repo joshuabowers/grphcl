@@ -185,6 +185,32 @@ describe("limit", () => {
       );
     });
 
+    it("is NaN for [x ** -a] as [x -> 0] for a: odd", () => {
+      expect(
+        limit(
+          raise(variable("x"), real(-5)),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(NaN),
+      );
+    });
+
+    it("is Infinity for [x ** -a] as [x -> 0] for a: even", () => {
+      expect(
+        limit(
+          raise(variable("x"), real(-4)),
+          variable("x"),
+          real(0),
+          Direction.Both,
+        ),
+      ).toEqual(
+        real(Infinity),
+      );
+    });
+
     it("is Infinity for [x ** -a] as [x -> 0+]", () => {
       expect(
         limit(

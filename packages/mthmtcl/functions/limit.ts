@@ -165,6 +165,17 @@ export const $limit: LimitFn = multi(
     $real(NaN),
     Action.Annihilator,
   ]),
+  when<TreeNode, Numeric>([ // Canonical (e.g. x ** -a, a: odd)
+    is(Division, (d) => (
+      is(Numeric)(d.left) &&
+      is(Exponentiation, (e) => (
+        is(Real, (r) => r.raw % 2 !== 0)(e.right)
+      ))(d.right)
+    )),
+    _,
+    real(0),
+    Direction.Both,
+  ], [real(NaN), Action.Annihilator]),
   when(
     pattern((v) => $divide($ln(v), v), real(Infinity)),
     [real(0), Action.Annihilator],
@@ -240,6 +251,19 @@ export const $limit: LimitFn = multi(
     real(Infinity),
     Direction.Both,
   ], [real(NaN), Action.Annihilator]),
+  when<TreeNode, Numeric>(
+    [ // Non-canonicalized, (e.g. x ** -a, a: odd)
+      is(Exponentiation, (e) => (
+        is(Numeric, (n) => (
+          isNegative(n) && is(Real, (r) => r.raw % 2 !== 0)(n)
+        ))(e.right)
+      )),
+      _,
+      real(0),
+      Direction.Both,
+    ],
+    [real(NaN), Action.Annihilator],
+  ),
   when(any(Exponentiation), binary($raise)),
   when(any(Logarithm), binary($log)),
   when(any(Trigonometric.Cosine), unary($cos)),

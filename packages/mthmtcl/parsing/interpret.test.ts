@@ -123,6 +123,18 @@ describe("interpret", () => {
     );
   });
 
+  it("properly triggers an [as] limit", () => {
+    const { output } = interpret("lim(1 / x as x -> 0-)");
+    expect(output).toEqual(
+      real(-Infinity),
+    );
+  });
+
+  it("properly triggers a [bfs] limit", () => {
+    const { output } = interpret("lim(1 / x, x -> 0)");
+    expect(output).toEqual(real(NaN));
+  });
+
   it("does not throw on error, but sets error", () => {
     expect(interpret("x *&")).not.toThrow();
     expect(interpret("x *&").error).toBeDefined();

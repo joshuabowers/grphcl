@@ -27,6 +27,7 @@ import {
   JointDenial,
   LessThan,
   LessThanOrEquals,
+  Limit,
   Logarithm,
   Multiplication,
   Negation,
@@ -48,6 +49,7 @@ import {
 import { $fail, type Parser, peg } from "pegase";
 import { Unicode } from "./Unicode.ts";
 import { EulerMascheroni } from "../functions/real.ts";
+import { Direction } from "../tree/limit.ts";
 
 const letterRange = `_a-zA-Z${Unicode.theta}`;
 const validIdentifier = new RegExp(
@@ -125,6 +127,11 @@ const operators = new Map<string, Constructor<TreeNode>>([
   ["/", Division],
   ...inequality,
   ...connectives,
+]);
+
+const directions = new Map<string, Direction>([
+  ["-", Direction.Left],
+  ["+", Direction.Right],
 ]);
 
 type Tail = {
@@ -284,6 +291,9 @@ functional:
   new Combination(n, r)}
 | 'log' '(' <b>expression ',' <v>expression ')' ${({ b, v }) =>
   new Logarithm(b, v)}
+| 'lim' '(' <e>expression ('as'|',') <v>variable '->' <n>(variable|constant) <d>("-"|"+")? ')' ${(
+  { e, v, n, d },
+) => new Limit(v, n, directions.get(d) ?? Direction.Both, e)}
 
 builtInFunction: ${functional}
 

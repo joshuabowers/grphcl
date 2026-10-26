@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
+import { Degree, Direction, Invocation, Limit } from "../tree/mod.ts";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
@@ -7,11 +8,9 @@ import { scope, variable } from "./variable.ts";
 import { $add } from "./add.ts";
 import { $multiply } from "./multiply.ts";
 import { cos } from "./trigonometric.ts";
-import { invoke } from "./invocation.ts";
 import { negate } from "./negate.ts";
-import { Invocation } from "@bowers/mthmtcl";
-import { Degree } from "@bowers/mthmtcl/tree";
-import { square } from "./raise.ts";
+import { reciprocal, square } from "./raise.ts";
+import { invoke } from "./invocation.ts";
 
 describe("invoke", () => {
   describe("with no passed scope", () => {
@@ -171,6 +170,21 @@ describe("invoke", () => {
         invoke()(new Degree(square(variable("x"))))(),
       ).toEqual(
         real(2),
+      );
+    });
+
+    it("evaluates limits correctly", () => {
+      expect(
+        invoke()(
+          new Limit(
+            variable("x"),
+            real(0),
+            Direction.Left,
+            reciprocal(variable("x")),
+          ),
+        )(),
+      ).toEqual(
+        real(-Infinity),
       );
     });
   });

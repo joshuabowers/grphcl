@@ -29,6 +29,7 @@ import {
   JointDenial,
   LessThan,
   LessThanOrEquals,
+  Limit,
   Logarithm,
   Multiplication,
   Negation,
@@ -37,6 +38,7 @@ import {
   Subtraction,
   type TreeNode,
   Trigonometric,
+  Variable,
 } from "../tree/mod.ts";
 import { boolean, complex, real, variable } from "../functions/mod.ts";
 import { EulerMascheroni } from "../functions/real.ts";
@@ -44,7 +46,7 @@ import { type Entries, scope } from "../functions/variable.ts";
 import { Unicode } from "./Unicode.ts";
 
 import { parser } from "./parser.ts";
-import { Variable } from "@bowers/mthmtcl";
+import { Direction } from "@bowers/mthmtcl";
 
 function parse(input: string, entries?: Entries): TreeNode {
   return parser.value(input, { context: scope(entries) });
@@ -641,6 +643,119 @@ describe("parser", () => {
         new Differentiation(
           new Exponentiation(variable("x"), real(2)),
           real(2),
+        ),
+      );
+    });
+  });
+
+  describe("of limits", () => {
+    it("matches a full limit using as keyword", () => {
+      expect(
+        parse("lim(ln(x) as x -> c)"),
+      ).toEqual(
+        new Limit(
+          variable("x"),
+          variable("c"),
+          Direction.Both,
+          new Logarithm(
+            real(Math.E),
+            new Variable("x"),
+          ),
+        ),
+      );
+    });
+
+    it("matches a limit from the left with [as] and [-]", () => {
+      expect(
+        parse(`lim(ln(x) as x -> ${Unicode.infinity}-)`),
+      ).toEqual(
+        new Limit(
+          variable("x"),
+          real(Infinity),
+          Direction.Left,
+          new Logarithm(
+            real(Math.E),
+            variable("x"),
+          ),
+        ),
+      );
+    });
+
+    it("matches a limit from the right with [as] and [+]", () => {
+      expect(
+        parse("lim(ln(x) as x -> 0+)"),
+      ).toEqual(
+        new Limit(
+          variable("x"),
+          real(0),
+          Direction.Right,
+          new Logarithm(
+            real(Math.E),
+            variable("x"),
+          ),
+        ),
+      );
+    });
+
+    it("matches a full limit with binary function syntax", () => {
+      expect(
+        parse("lim(1/x, x -> c)"),
+      ).toEqual(
+        new Limit(
+          variable("x"),
+          variable("c"),
+          Direction.Both,
+          new Division(
+            real(1),
+            variable("x"),
+          ),
+        ),
+      );
+    });
+
+    it("matches a left limit with binary function syntax", () => {
+      expect(
+        parse("lim(1 / x, x -> 0-)"),
+      ).toEqual(
+        new Limit(
+          variable("x"),
+          real(0),
+          Direction.Left,
+          new Division(
+            real(1),
+            variable("x"),
+          ),
+        ),
+      );
+    });
+
+    it("matches a right limit with binary function syntax", () => {
+      expect(
+        parse("lim(1 / x, x -> 0+)"),
+      ).toEqual(
+        new Limit(
+          variable("x"),
+          real(0),
+          Direction.Right,
+          new Division(
+            real(1),
+            variable("x"),
+          ),
+        ),
+      );
+    });
+
+    it("matches a complex right limit with binary function syntax", () => {
+      expect(
+        parse(`lim(cos(z), z -> -3 - 5${Unicode.i}+)`),
+      ).toEqual(
+        new Limit(
+          variable("z"),
+          complex(-3, -5),
+          Direction.Right,
+          new Trigonometric.Cosine(
+            variable("z"),
+          ),
         ),
       );
     });

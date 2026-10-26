@@ -30,6 +30,7 @@ import {
   JointDenial,
   LessThan,
   LessThanOrEquals,
+  Limit,
   Logarithm,
   Multiplication,
   Negation,
@@ -87,6 +88,7 @@ import { $negate } from "./negate.ts";
 import { $polygamma } from "./polygamma.ts";
 import { degree } from "./degree.ts";
 import { $differentiate } from "./differentiation.ts";
+import { $limit } from "./limit.ts";
 
 type RewriteFn<T extends TreeNode> = (
   scope: Scope,
@@ -213,6 +215,12 @@ const evaluate: EvaluateFn = multi(
       $invoke(scope)(evaluate(scope, e.expression))(
         ...e.args.map((a) => evaluate(scope, a)),
       ),
+  ),
+  //
+  when(
+    is(Limit),
+    (scope, e) =>
+      $limit(evaluate(scope, e.expression), e.variable, e.target, e.direction),
   ),
   method((scope: Scope, e: TreeNode) => {
     console.log("invoke: unhandled");
