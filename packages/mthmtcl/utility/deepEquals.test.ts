@@ -10,6 +10,7 @@ import {
   sin,
   variable,
 } from "../functions/mod.ts";
+import { nil } from "../constants.ts";
 import { deepEquals } from "./deepEquals.ts";
 
 describe("deepEquals", () => {
@@ -37,11 +38,11 @@ describe("deepEquals", () => {
     expect(deepEquals(boolean(true), boolean(false))).toBeFalsy();
   });
 
-  // TODO: Add these back in when Nil and NaN properly implemented.
-  //   it('returns true for equivalent nil inputs', () => {
-  //     expect(deepEquals(nil, nil)).toBeTruthy()
-  //   })
+  it("returns true for equivalent nil inputs", () => {
+    expect(deepEquals(nil, nil)).toBeTruthy();
+  });
 
+  // TODO: Add these back in when Nil and NaN properly implemented.
   //   it('returns false for equivalent NaN inputs', () => {
   //     expect(deepEquals(nan, nan)).toBeFalsy()
   //   })

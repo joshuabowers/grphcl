@@ -2,11 +2,13 @@ import {
   type BinaryNode,
   Boolean,
   Complex,
+  Nil,
   Numeric,
+  QNaN,
   Real,
   type TreeNode,
 } from "../tree/mod.ts";
-import { type _, fromMulti, method, multi } from "@arrows/multimethod";
+import { _, fromMulti, method, multi } from "@arrows/multimethod";
 import {
   Action,
   type Choose,
@@ -21,6 +23,7 @@ import {
 } from "./factory.ts";
 import { $complex } from "../functions/complex.ts";
 import { $real } from "../functions/real.ts";
+import { qNaN } from "../functions/qNaN.ts";
 
 export const are = <Left, Right>(
   guardLeft: Predicate<Left>,
@@ -53,11 +56,6 @@ export type Guard<T> = Predicate<T> | typeof _;
  */
 export type Guards<Left extends TreeNode, Right extends TreeNode> =
   | [Guard<Left>, Guard<Right>]
-  // | ((
-  //   guardLeft: Predicate<Left>,
-  //   guardRight: Predicate<Right>,
-  //   inner?: (left: Left, right: Right) => boolean,
-  // ) => boolean)
   | ((left: Left, right: Right) => boolean);
 
 /**
@@ -180,6 +178,8 @@ export interface BinaryFn<
   (left: Real, right: Complex): Choose<R, Complex>;
   (left: Real, right: Real): Choose<R, Real>;
   (left: Numeric, right: Numeric): Choose<R, Numeric>;
+  (left: Nil | QNaN, right: TreeNode): QNaN;
+  (left: TreeNode, right: Nil | QNaN): QNaN;
 }
 
 /**
@@ -225,6 +225,9 @@ export function binary<
     const last = edgeCases.findLast((ec) => ec.context === Context.Otherwise) ??
       otherwise((left, right) => [new ctor(left, right), Action.Creation]);
     const fn: BinaryFn<T, R> = multi(
+      // TODO: The following two need updating for logging.
+      method([(e: TreeNode) => is(Nil)(e) || is(QNaN)(e), _], qNaN),
+      method([_, (e: TreeNode) => is(Nil)(e) || is(QNaN)(e)], qNaN),
       ...edgeCases
         .filter((ec) => ec.context === Context.Algebraic)
         .map((ec) => ec.method),

@@ -49,6 +49,7 @@ import {
 import { $fail, type Parser, peg } from "pegase";
 import { Unicode } from "./Unicode.ts";
 import { EulerMascheroni } from "../functions/real.ts";
+import { nil } from "../functions/nil.ts";
 import { Direction } from "../tree/limit.ts";
 
 const letterRange = `_a-zA-Z${Unicode.theta}`;
@@ -305,6 +306,7 @@ derivative:
   new Differentiation(expression)}
 
 primitive:
+| $nil ${() => nil}
 | variable
 | constant
 

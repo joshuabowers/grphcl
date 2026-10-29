@@ -42,6 +42,7 @@ import {
 } from "../tree/mod.ts";
 import { boolean, complex, real, variable } from "../functions/mod.ts";
 import { EulerMascheroni } from "../functions/real.ts";
+import { nil } from "../functions/nil.ts";
 import { type Entries, scope } from "../functions/variable.ts";
 import { Unicode } from "./Unicode.ts";
 
@@ -98,9 +99,9 @@ describe("parser", () => {
       expect(parse(`${Unicode.pi}${Unicode.i}`)).toEqual(complex(0, Math.PI));
     });
 
-    // it("matches nil", () => {
-    //   expect(parse("nil")).toEqual(nil);
-    // });
+    it("matches nil", () => {
+      expect(parse("nil")).toEqual(nil);
+    });
 
     it("matches true", () => {
       expect(parse("true")).toEqual(boolean(true));

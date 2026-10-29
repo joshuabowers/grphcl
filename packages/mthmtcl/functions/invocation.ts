@@ -34,6 +34,7 @@ import {
   Logarithm,
   Multiplication,
   Negation,
+  Nil,
   type Numeric,
   Permutation,
   Polygamma,
@@ -122,6 +123,7 @@ interface EvaluateFn extends Multi {
 }
 
 const evaluate: EvaluateFn = multi(
+  when(is(Nil), numeric<Nil>()),
   when(is(Boolean), numeric<Boolean>()),
   when(is(Complex), numeric<Complex>()),
   when(is(Real), numeric<Real>()),

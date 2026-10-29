@@ -1,6 +1,7 @@
 import { describe, it } from "node:test";
 import { expect } from "@std/expect";
 import { Degree, Direction, Invocation, Limit } from "../tree/mod.ts";
+import { nil } from "./nil.ts";
 import { boolean } from "./boolean.ts";
 import { complex } from "./complex.ts";
 import { real } from "./real.ts";
@@ -68,6 +69,14 @@ describe("invoke", () => {
   });
 
   describe("of specific node types", () => {
+    it("returns nil directly", () => {
+      expect(
+        invoke()(nil)(),
+      ).toEqual(
+        nil,
+      );
+    });
+
     it("returns reals directly", () => {
       expect(
         invoke()(real(5))(),

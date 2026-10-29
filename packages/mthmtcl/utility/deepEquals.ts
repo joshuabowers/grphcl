@@ -2,6 +2,7 @@ import {
   BinaryNode,
   Boolean,
   Complex,
+  Nil,
   type Numeric,
   Real,
   TreeNode,
@@ -27,6 +28,7 @@ const when = <T extends TreeNode>(
   );
 
 export interface DeepEqualsFn extends Multi {
+  (left: Nil, right: Nil): boolean;
   (left: Boolean, right: Boolean): boolean;
   (left: Complex, right: Complex): boolean;
   (left: Real, right: Real): boolean;
@@ -52,6 +54,7 @@ export interface DeepEqualsFn extends Multi {
  * ```
  */
 export const deepEquals: DeepEqualsFn = multi(
+  when(Nil, true),
   when(Boolean, (l, r) => l.raw === r.raw),
   when(
     Complex,

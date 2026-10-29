@@ -4,20 +4,24 @@ import {
   type Constructor,
   Context,
   type EdgeCaseFn,
+  is,
   type MathFn,
   type Predicate,
   type Rewrite,
   type When,
 } from "./factory.ts";
-import type {
-  Boolean,
-  Complex,
-  Numeric,
-  Real,
-  TreeNode,
-  UnaryNode,
+import {
+  type Boolean,
+  type Complex,
+  Nil,
+  type Numeric,
+  QNaN,
+  type Real,
+  type TreeNode,
+  type UnaryNode,
 } from "../tree/mod.ts";
 import { method, multi } from "@arrows/multimethod";
+import { qNaN } from "../functions/qNaN.ts";
 
 /**
  * The type signature for a rewrite rule, mapping a T to an R.
@@ -86,6 +90,8 @@ export interface UnaryFn<
   (expression: Complex): Choose<R, Complex>;
   (expression: Real): Choose<R, Real>;
   (expression: Numeric): Choose<R, Numeric>;
+  (expression: Nil | QNaN): QNaN;
+  (expression: TreeNode): U;
 }
 
 /**
@@ -120,6 +126,9 @@ export function unary<U extends UnaryNode, R extends TreeNode | void = void>(
     const last = edgeCases.findLast((ec) => ec.context === Context.Otherwise) ??
       otherwise((e) => [new ctor(e), Action.Creation]);
     return multi(
+      // TODO: These will need to be updated for logging.
+      method(is(Nil), qNaN),
+      method(is(QNaN), qNaN),
       ...edgeCases.filter((ec) => ec.context === Context.Algebraic).map((ec) =>
         ec.method
       ),

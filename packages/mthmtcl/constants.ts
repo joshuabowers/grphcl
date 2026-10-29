@@ -16,6 +16,8 @@ import { complex } from "./functions/complex.ts";
 
 export { EulerMascheroni } from "./functions/real.ts";
 export { ComplexInfinity } from "./functions/complex.ts";
+export { nil } from "./functions/nil.ts";
+export { qNaN } from "./functions/qNaN.ts";
 
 /** The mathematical constant pi */
 export const Pi: Real = real(Math.PI),

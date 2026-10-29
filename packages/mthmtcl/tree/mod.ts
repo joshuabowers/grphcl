@@ -18,6 +18,7 @@ export { Numeric } from "./fields/numeric.ts";
 export { Field } from "./fields/field.ts";
 export { Boolean } from "./fields/boolean.ts";
 export { Nil } from "./fields/nil.ts";
+export { QNaN } from "./fields/qnan.ts";
 export { Real } from "./fields/real.ts";
 export { Complex } from "./fields/complex.ts";
 

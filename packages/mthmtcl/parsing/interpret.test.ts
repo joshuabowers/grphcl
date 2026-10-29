@@ -8,6 +8,7 @@ import {
   Negation,
 } from "../tree/mod.ts";
 import { real, scope, variable } from "../functions/mod.ts";
+import { nil, qNaN } from "../constants.ts";
 import { interpret } from "./interpret.ts";
 
 describe("interpret", () => {
@@ -133,6 +134,28 @@ describe("interpret", () => {
   it("properly triggers a [bfs] limit", () => {
     const { output } = interpret("lim(1 / x, x -> 0)");
     expect(output).toEqual(real(NaN));
+  });
+
+  describe("of nil", () => {
+    it("evaluates nil", () => {
+      const { output } = interpret("nil");
+      expect(output).toEqual(nil);
+    });
+
+    it("is NaN for unary functions", () => {
+      const { output } = interpret("cos(nil)");
+      expect(output).toEqual(qNaN);
+    });
+
+    it("is NaN for binary functions for left subtrees", () => {
+      const { output } = interpret("nil + 5");
+      expect(output).toEqual(qNaN);
+    });
+
+    it("is NaN for binary functions for right subtrees", () => {
+      const { output } = interpret("log(2, nil)");
+      expect(output).toEqual(qNaN);
+    });
   });
 
   it("does not throw on error, but sets error", () => {
