@@ -1,4 +1,5 @@
-import { type TreeNode, Variable } from "../tree/mod.ts";
+import { is } from "../factories/factory.ts";
+import { Nil, type TreeNode, Variable } from "../tree/mod.ts";
 
 /**
  * A thin-wrapper around the {@link Variable} constructor,
@@ -33,3 +34,26 @@ export type Scope = Map<string, TreeNode>;
  */
 export const scope = (entries: Entries = []): Scope =>
   new Map<string, TreeNode>(entries);
+
+/**
+ * Assigns {@link expression} to the name of {@link variable} within
+ * the supplied {@link scope}, overwriting any previous value which
+ * may have been bound to that variable.
+ *
+ * NB: should {@link expression} be {@link Nil}, this will *remove*
+ * the {@link variable} entry from {@link scope}!
+ *
+ * This returns {@link expression} as an effective passthrough.
+ */
+export const assign = (
+  scope: Scope,
+  variable: Variable,
+  expression: TreeNode,
+): TreeNode => {
+  if (is(Nil)(expression)) {
+    scope.delete(variable.name);
+  } else {
+    scope.set(variable.name, expression);
+  }
+  return expression;
+};

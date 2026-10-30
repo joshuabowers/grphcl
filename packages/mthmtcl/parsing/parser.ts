@@ -40,13 +40,14 @@ import {
 } from "../tree/mod.ts";
 import type { Constructor } from "../factories/factory.ts";
 import {
+  assign,
   boolean,
   complex,
   real,
   type Scope,
   variable,
 } from "../functions/mod.ts";
-import { $fail, type Parser, peg } from "pegase";
+import { $context, $fail, type Parser, peg } from "pegase";
 import { Unicode } from "./Unicode.ts";
 import { EulerMascheroni } from "../functions/real.ts";
 import { nil } from "../functions/nil.ts";
@@ -191,11 +192,6 @@ const connectiveOperators = peg([...connectives.keys()].map(capture).join("|"));
 const inequalityOperators = peg([...inequality.keys()].map(capture).join("|"));
 const functional = peg([...functions.keys()].map(capture).join("|"));
 
-// TODO:
-// - [ ] Assignments
-// - [ ] Nil
-// - [ ] Variable in-situ replace (delay until invoke?)
-
 /**
  * A Parsing Expression Grammar parser, built from pegase on a
  * custom grammar.
@@ -229,9 +225,10 @@ const functional = peg([...functions.keys()].map(capture).join("|"));
  * ```
  */
 export const parser: Parser<TreeNode, Scope> = peg<TreeNode, Scope>`
-expression: <a>assignment
+expression: <a>assignment ${({ a }) => assign($context(), variable("Ans"), a)}
 
 assignment:
+| <v>variable ':=' <e>expression ${({ v, e }) => assign($context(), v, e)}
 | connectives
 
 connectives: leftAssociative(inequality, ${connectiveOperators})

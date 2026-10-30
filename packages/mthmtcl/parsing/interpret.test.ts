@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import { expect } from "@std/expect";
 import {
   Addition,
+  Differentiation,
   Division,
   Exponentiation,
   Multiplication,
@@ -9,6 +10,7 @@ import {
 } from "../tree/mod.ts";
 import { real, scope, variable } from "../functions/mod.ts";
 import { nil, qNaN } from "../constants.ts";
+import { Unicode } from "./Unicode.ts";
 import { interpret } from "./interpret.ts";
 
 describe("interpret", () => {
@@ -155,6 +157,21 @@ describe("interpret", () => {
     it("is NaN for binary functions for right subtrees", () => {
       const { output } = interpret("log(2, nil)");
       expect(output).toEqual(qNaN);
+    });
+  });
+
+  describe("of assignments", () => {
+    it("captures differentiations", () => {
+      const s = scope();
+      const { output } = interpret(`y := ${Unicode.derivative}(x**2)`, s);
+      expect(output).toEqual(
+        new Multiplication(real(2), variable("x")),
+      );
+      expect(s.get("y")).toEqual(
+        new Differentiation(
+          new Exponentiation(variable("x"), real(2)),
+        ),
+      );
     });
   });
 

@@ -13,6 +13,7 @@ import {
   ConverseImplication,
   Degree,
   Differentiation,
+  Direction,
   Disjunction,
   Division,
   Equality,
@@ -43,14 +44,13 @@ import {
 import { boolean, complex, real, variable } from "../functions/mod.ts";
 import { EulerMascheroni } from "../functions/real.ts";
 import { nil } from "../functions/nil.ts";
-import { type Entries, scope } from "../functions/variable.ts";
+import { type Scope, scope } from "../functions/variable.ts";
 import { Unicode } from "./Unicode.ts";
 
 import { parser } from "./parser.ts";
-import { Direction } from "@bowers/mthmtcl";
 
-function parse(input: string, entries?: Entries): TreeNode {
-  return parser.value(input, { context: scope(entries) });
+function parse(input: string, s: Scope = scope()): TreeNode {
+  return parser.value(input, { context: s });
 }
 
 describe("parser", () => {
@@ -160,18 +160,6 @@ describe("parser", () => {
     it("does not match reserved words", () => {
       expect(() => parser.value("cos")).toThrow();
     });
-
-    // it("returns the value of the variable if present in scope", () => {
-    //   const s = scope();
-    //   s.set("x", variable("x", real(5)));
-    //   expectInScope(s, "x", variable("x", real(5)));
-    // });
-
-    // it("returns an unbound variable if set to nil", () => {
-    //   const s = scope();
-    //   s.set("x", variable("x", nil));
-    //   expect("x", variable("x"), s);
-    // });
   });
 
   describe("of additions", () => {
@@ -221,10 +209,6 @@ describe("parser", () => {
         ),
       );
     });
-
-    // it('matches an alternative symbol for subtraction', () => {
-    //   expect(`1 ${Unicode.minus} 2`, subtract(real(1), real(2)))
-    // })
   });
 
   describe("of multiplications", () => {
@@ -253,10 +237,6 @@ describe("parser", () => {
         ),
       );
     });
-
-    // it('matches an alternative symbol for multiplication', () => {
-    //   expect(`2 ${Unicode.multiplication} 3`, multiply(real(2), real(3)))
-    // })
   });
 
   describe("of divisions", () => {
@@ -304,10 +284,6 @@ describe("parser", () => {
         ),
       );
     });
-
-    // it('matches an alternative symbol for division', () => {
-    //   expect(`1 ${Unicode.division} 2`, divide(real(1), real(2)))
-    // })
   });
 
   describe("of exponentiations", () => {
@@ -390,10 +366,6 @@ describe("parser", () => {
         new Negation(complex(-1, -1)),
       );
     });
-
-    // it("matches an alternative symbol for negations", () => {
-    //   expect(parse(`${Unicode.minus}1`)).toEqual(new Negation(real(1)));
-    // });
   });
 
   describe("of absolute values", () => {
@@ -762,45 +734,71 @@ describe("parser", () => {
     });
   });
 
-  //   describe("of assignments", () => {
-  //     it("matches a basic assignment", () => {
-  //       expectInScope(scope(), "x := 2", variable("x", real(2)));
-  //     });
+  describe("of assignments", () => {
+    it("matches a basic assignment", () => {
+      const s = scope();
+      expect(
+        parse("x := 2", s),
+      ).toEqual(
+        real(2),
+      );
+      expect(s.has("x")).toBeTruthy();
+      expect(s.get("x")).toEqual(real(2));
+    });
 
-  //     it("matches the assignment of a variable expression", () => {
-  //       expectInScope(
-  //         scope(),
-  //         "y := 2 * x**2",
-  //         variable("y", double(square(variable("x")))),
-  //         variable("x"),
-  //       );
-  //     });
+    it("matches the assignment of a variable expression", () => {
+      const s = scope();
+      const expected = new Multiplication(
+        real(2),
+        new Exponentiation(
+          variable("x"),
+          real(2),
+        ),
+      );
 
-  //     it("matches assignments right-associatively", () => {
-  //       expectInScope(
-  //         scope(),
-  //         "z := y := x",
-  //         variable("z", variable("x")),
-  //         variable("y", variable("x")),
-  //         variable("x"),
-  //       );
-  //     });
+      expect(
+        parse("y := 2 * x**2", s),
+      ).toEqual(
+        expected,
+      );
+      expect(s.get("y")).toEqual(expected);
+    });
 
-  //     it("matches assignments of nil by unsetting variable", () => {
-  //       expectInScope(scope(), "x := nil", variable("x", nil));
-  //     });
+    it("matches assignments right-associatively", () => {
+      const s = scope();
+      expect(
+        parse("z := y := x", s),
+      ).toEqual(
+        variable("x"),
+      );
+      expect(s.get("z")).toEqual(variable("x"));
+      expect(s.get("y")).toEqual(variable("x"));
+    });
 
-  //     it("assigns the value of the expression automatically to Ans", () => {
-  //       // NOTE: multiplication used to ensure proper log information is
-  //       // added to the Writer for comparison against the actual result.
-  //       // Otherwise, would have to ignore log info on variable comparisons.
-  //       expectInScope(
-  //         scope(),
-  //         "2 * 5",
-  //         variable("Ans", new Multiplication(real(2), real(5))),
-  //       );
-  //     });
-  //   });
+    it("matches assignments of nil by unsetting variable", () => {
+      const s = scope([["x", real(5)]]);
+      expect(
+        parse("x := nil", s),
+      ).toEqual(
+        nil,
+      );
+      expect(s.has("x")).toBeFalsy();
+      expect(s.get("x")).toBeUndefined();
+    });
+
+    it("assigns the value of the expression automatically to Ans", () => {
+      const s = scope();
+      const expected = new Multiplication(real(2), real(5));
+
+      expect(
+        parse("2 * 5", s),
+      ).toEqual(
+        expected,
+      );
+      expect(s.has("Ans")).toBeTruthy();
+      expect(s.get("Ans")).toEqual(expected);
+    });
+  });
 
   describe("of invocations", () => {
     it("matches a basic invocation", () => {
@@ -955,13 +953,16 @@ describe("parser", () => {
       );
     });
 
-    // it("matches inequalities with higher precedence than assignments", () => {
-    //   expectInScope(
-    //     scope(),
-    //     "y := x < 10",
-    //     variable("y", lessThan(variable("x"), real(10))),
-    //   );
-    // });
+    it("matches inequalities with higher precedence than assignments", () => {
+      const s = scope();
+      const expected = new LessThan(variable("x"), real(10));
+
+      expect(
+        parse("y := x < 10", s),
+      ).toEqual(expected);
+
+      expect(s.get("y")).toEqual(expected);
+    });
 
     it("matches inequalities with left associativity", () => {
       expect(
@@ -1064,15 +1065,17 @@ describe("parser", () => {
       );
     });
 
-    // it("matches connectives with greater precedence than assignment", () => {
-    //   // NOTE: using the 'or' function to generate log information for
-    //   // the Writer for the value bound to the variable.
-    //   expectInScope(
-    //     scope(),
-    //     `y := false ${Unicode.or} true`,
-    //     variable("y", or(boolean(false), boolean(true))),
-    //   );
-    // });
+    it("matches connectives with greater precedence than assignment", () => {
+      const s = scope();
+      const expected = new Disjunction(boolean(false), boolean(true));
+
+      expect(
+        parse(`y := false ${Unicode.or} true`, s),
+      ).toEqual(
+        expected,
+      );
+      expect(s.get("y")).toEqual(expected);
+    });
 
     it("matches connectives with lower precedence than inequalities", () => {
       expect(

@@ -18,7 +18,7 @@ export { boolean } from "./boolean.ts";
 export { complex } from "./complex.ts";
 export { real } from "./real.ts";
 
-export { type Scope, scope, variable } from "./variable.ts";
+export { assign, type Scope, scope, variable } from "./variable.ts";
 
 export { abs } from "./absolute.ts";
 export { negate } from "./negate.ts";
