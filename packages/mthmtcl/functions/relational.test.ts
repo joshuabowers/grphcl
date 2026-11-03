@@ -22,7 +22,7 @@ import { subtract } from "./subtract.ts";
 import { multiply } from "./multiply.ts";
 import { divide } from "./divide.ts";
 import { negate } from "./negate.ts";
-import { raise, reciprocal } from "./raise.ts";
+import { raise, reciprocal, square } from "./raise.ts";
 import { log } from "./log.ts";
 import { equals, gt, gte, lt, lte, nequals } from "./relational.ts";
 
@@ -325,6 +325,35 @@ describe("equals", () => {
         equals(
           variable("y"),
           log(real(2), multiply(real(1024), variable("x"))),
+        ),
+      );
+    });
+
+    it("solves single variate expressions", () => {
+      expect(
+        equals(
+          multiply(real(2), acos(variable("x"))),
+          real(Math.PI),
+        ),
+      ).toEqual(
+        equals(
+          variable("x"),
+          real(Math.cos(Math.PI / 2)),
+        ),
+      );
+    });
+
+    it("finds roots of single variate expressions", () => {
+      expect(
+        equals(
+          subtract(square(variable("x")), real(4)),
+          real(0),
+        ),
+      ).toEqual(
+        // NB: Wrong, as principal branch only
+        equals(
+          variable("x"),
+          real(2),
         ),
       );
     });
