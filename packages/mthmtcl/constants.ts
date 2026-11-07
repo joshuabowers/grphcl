@@ -33,3 +33,5 @@ export const Pi: Real = real(Math.PI),
   RealNegInfinity: Real = real(-Infinity);
 /** The mathematical constant i, representing the sqrt(-1) */
 export const I: Complex = complex(0, 1);
+
+export { Empty, Universe } from "./functions/collectional/set.ts";

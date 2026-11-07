@@ -21,6 +21,9 @@ export { Nil } from "./fields/nil.ts";
 export { QNaN } from "./fields/qnan.ts";
 export { Real } from "./fields/real.ts";
 export { Complex } from "./fields/complex.ts";
+export { Set } from "./fields/set.ts";
+export { Rostered } from "./fields/rostered.ts";
+export { Built } from "./fields/built.ts";
 
 export { UnaryNode } from "./unary/unaryNode.ts";
 export { Absolute } from "./unary/absolute.ts";
@@ -46,6 +49,7 @@ export { Polygamma } from "./binary/polygamma.ts";
 export { Subtraction } from "./binary/subtraction.ts";
 export * from "./binary/logical/mod.ts";
 export * from "./binary/relational/mod.ts";
+export * from "./binary/collectional/mod.ts";
 
 export { Differentiation } from "./differentiation.ts";
 export { Invocation } from "./invocation.ts";

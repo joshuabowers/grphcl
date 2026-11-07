@@ -1,14 +1,17 @@
-import {
-  BinaryNode,
-  Boolean,
-  Complex,
-  Nil,
-  type Numeric,
-  Real,
-  TreeNode,
-  UnaryNode,
-  Variable,
-} from "../tree/mod.ts";
+/**
+ * NB: TreeNode classes imported in the following fashion as
+ * "../tree/mod.ts" reexports Set, Rostered, & Built, which
+ * require deepEquals to work.
+ */
+import { TreeNode } from "../tree/treeNode.ts";
+import type { Numeric } from "../tree/fields/numeric.ts";
+import { Boolean } from "../tree/fields/boolean.ts";
+import { Complex } from "../tree/fields/complex.ts";
+import { Real } from "../tree/fields/real.ts";
+import { Nil } from "../tree/fields/nil.ts";
+import { Variable } from "../tree/variable.ts";
+import { BinaryNode } from "../tree/binary/binaryNode.ts";
+import { UnaryNode } from "../tree/unary/unaryNode.ts";
 import type { AbstractConstructor } from "../factories/factory.ts";
 import { method, type Multi, multi } from "@arrows/multimethod";
 

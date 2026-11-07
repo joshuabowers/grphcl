@@ -10,6 +10,7 @@ import {
 } from "../tree/mod.ts";
 import { _, fromMulti, method, multi } from "@arrows/multimethod";
 import {
+  type AbstractConstructor,
   Action,
   type Choose,
   type Constructor,
@@ -219,7 +220,8 @@ export function binary<
   R extends TreeNode | void = void,
 >(
   ctor: Constructor<T>,
-  _ctorR?: Constructor<R>,
+  // _ctorR?: Constructor<R>,
+  _ctorR?: AbstractConstructor<R>,
 ): EdgeCaseFn<BinaryFn<T, R>> {
   return (...edgeCases): BinaryFn<T, R> => {
     const last = edgeCases.findLast((ec) => ec.context === Context.Otherwise) ??
